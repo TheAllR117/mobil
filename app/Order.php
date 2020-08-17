@@ -31,6 +31,6 @@ class Order extends Model
     }
     
     protected $fillable = [
-        'id','control_id', 'estacion_id', 'terminal_id', 'status_id', 'producto', 'so_number', 'cantidad_lts','costo_aprox','dia_entrega','po',
+        'id','control_id', 'estacion_id', 'terminal_id', 'status_id', 'camino', 'producto', 'so_number', 'cantidad_lts','costo_aprox','dia_entrega','po',
     ];
 }

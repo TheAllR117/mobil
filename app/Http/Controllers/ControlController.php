@@ -10,7 +10,7 @@ use App\Pipe;
 use App\Tractor;
 use App\Driver;
 use App\Control;
-use App\Freight;
+use App\Freight; 
 use App\NameFreight;
 
 
@@ -43,7 +43,7 @@ class ControlController extends Controller
         }
 
         $estaciones = $estacion::select('id','razon_social','nombre_sucursal')->get();
-        $orders = $order::where('dia_entrega',date("Y-m-d",strtotime($fecha)))->where('status_id',2)->get();
+        $orders = $order::where('status_id',2)->orderByDesc('id')->get();
 
         return view('control.create', ['orders' => $orders, 'estaciones'=>$estaciones, 'terminals'=>$terminal::all(), 'pipes'=>$pipe::all(), 'tractores' => $tractor::all(), 'drivers' => $driver::all(),'fecha'=>date("d/m/Y",strtotime($fecha)), 'namefreights'=>$namefreight::all()]);   
     }
@@ -81,6 +81,14 @@ class ControlController extends Controller
 
         return json_encode($selecion);
     }
+    public function fletes_contador(Request $request)
+    {
+        $dia_entrega = $request->dia_entrega;
+        $fletes = Control::where('dia_entrega', $dia_entrega)->get();
+        $count_fletes = count($fletes);
+
+        return $count_fletes;
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -91,7 +99,6 @@ class ControlController extends Controller
     public function store(Request $request,Control $control,Order $order,Pipe $pipe, Tractor $tractor,Driver $driver)
     {
         $request->user()->authorizeRoles(['Administrador','Logistica']);
-
         $tractor::where('id', $request->tractor_id)->update(['id_status' => 2]);
 
         $pipas_selec = explode(',', $request->pipa_id);

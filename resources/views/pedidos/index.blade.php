@@ -207,7 +207,7 @@
                               <td>${{ number_format($order->costo_aprox, 2) }}</td>
                               <td>
                                 @if(auth()->user()->roles[0]->name == 'Administrador' || auth()->user()->roles[0]->name == 'Logistica' )
-                                  <select name="estatus_pedido" class="estatus_pedido">
+                                  <select name="estatus_pedido" class="estatus_pedido selectpicker" data-style="btn-danger" style="background: #fff">
                                   @switch($order->camino)
                                       @case(1)
                                           <option value="{{$order->camino}}" hidden>En espera de la Fletera</option>

@@ -91,7 +91,6 @@ class ControlController extends Controller
     public function store(Request $request,Control $control,Order $order,Pipe $pipe, Tractor $tractor,Driver $driver)
     {
         $request->user()->authorizeRoles(['Administrador','Logistica']);
-
         $tractor::where('id', $request->tractor_id)->update(['id_status' => 2]);
 
         $pipas_selec = explode(',', $request->pipa_id);

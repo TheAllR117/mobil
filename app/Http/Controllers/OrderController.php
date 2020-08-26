@@ -40,7 +40,7 @@ class OrderController extends Controller
 
         if($request->user()->roles[0]->name == "Administrador" || $request->user()->roles[0]->name == "Logistica") {
 
-            return view('pedidos.index', ['orders' => $model::whereBetween('dia_entrega', [date("Y-m-d"), date("Y-m-d", strtotime($fecha))])->get(), 'fecha'=>date("d/m/Y"), 'fecha_sig'=>'a '.date("d/m/Y", strtotime($fecha)), 'freights'=>$freight::all(),'controls'=>$control::whereBetween('created_at', [date("Y-m-d"), date("Y-m-d", strtotime($fecha))])->get(),'terminals'=>$terminal::all()]);
+            return view('pedidos.index', ['orders' => $model::all(), 'fecha'=>date("d/m/Y"), 'fecha_sig'=>'a '.date("d/m/Y", strtotime($fecha)), 'freights'=>$freight::all(),'controls'=>$control::all(),'terminals'=>$terminal::all()]);
 
         }else{
 
@@ -50,7 +50,7 @@ class OrderController extends Controller
                 array_push($estaciones, $request->user()->estacions[$i]->id);
             }
 
-            return view('pedidos.index', ['orders' => $model::whereIn('estacion_id',$estaciones)->whereBetween('dia_entrega',[date("Y-m-d"), date("Y-m-d", strtotime($fecha))])->get(), 'fecha'=>date("d/m/Y", strtotime($fecha)), 'fecha_sig'=>'','controls'=>$control::whereBetween('created_at', [date("Y-m-d"), date("Y-m-d", strtotime($fecha))])->get(), 'terminals'=>$terminal::all(),'freights'=>$freight::all(),]);
+            return view('pedidos.index', ['orders' => $model::all(), 'fecha'=>date("d/m/Y", strtotime($fecha)), 'fecha_sig'=>'','controls'=>$control::all(), 'terminals'=>$terminal::all(),'freights'=>$freight::all(),]);
         }
           
     }
@@ -154,6 +154,13 @@ class OrderController extends Controller
             //var_dump( $fletera[$i]->Tractors[0]->id_status);
         }
         //dd($fletera[0]->Tractors[0]->id_status);
+    }
+    public function updateEstatus(Request $request, Order $order){
+        $request->user()->authorizeRoles(['Administrador','Logistica']);
+        $camino = $request->camino;
+        $id_pedido = $request->id_pedido;
+        $order::where('id', $id_pedido)->update(['camino' => $camino]);
+        return ["Actualizado" => true, "campo seleccionado" => $camino, "id del pedido" => $id_pedido];
     }
 
     public function emergencia(Request $request,Order $order)

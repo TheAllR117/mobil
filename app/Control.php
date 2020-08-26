@@ -19,6 +19,6 @@ class Control extends Model
     }
 
     protected $fillable = [
-        'id','id_freights', 'terminal_id','created_at','updated_at',
+        'id','id_freights', 'terminal_id', 'dia_entrega', 'created_at','updated_at',
     ];
 }

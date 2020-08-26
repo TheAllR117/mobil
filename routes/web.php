@@ -140,7 +140,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('fleteras/edit', 'FreightController@edit');
 });
 
-// rutas de pedidos
+// rutas de pedidos 
 Route::group(['middleware' => 'auth'], function () {
 	Route::resource('pedidos','OrderController');
 	Route::post('pedidos/update/{id}','OrderController@update')->name('pedidos.update');
@@ -154,11 +154,13 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('pedidos/liberar_flete','OrderController@liberar_flete')->name('pedidos.liberar_flete');
 	Route::post('pedidos/sonomber', 'OrderController@sonomber');
 	Route::post('pedidos/individual','OrderController@individual')->name('pedidos.individual');
-	Route::post('pedidos/emergencia','OrderController@emergencia')->name('pedidos.emergencia');;
+	Route::post('pedidos/emergencia','OrderController@emergencia')->name('pedidos.emergencia');
+	Route::post('pedidos/updateEstatus','OrderController@updateEstatus');
+
 	/*Route::post('pedidos/create_flete','OrderController@create_flete')->name('pedidos.crete_flete');
 	Route::post('pedidos/store_flete', 'OrderController@store_flete');*/
 });
-
+ 
 // rutas de control
 Route::group(['middleware' => 'auth'], function () {
 	Route::resource('control','ControlController');
@@ -166,6 +168,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('control/store','ControlController@store');
 	Route::post('control/seleccionar_tractor','ControlController@seleccionar_tractor');
 	Route::post('control/seleccionar_pipa','ControlController@seleccionar_pipa');
+	Route::post('control/fletes_contador','ControlController@fletes_contador');
 });
 
 // rutas de facturas

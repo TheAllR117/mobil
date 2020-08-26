@@ -10,7 +10,7 @@ use App\Pipe;
 use App\Tractor;
 use App\Driver;
 use App\Control;
-use App\Freight;
+use App\Freight; 
 use App\NameFreight;
 
 
@@ -43,7 +43,7 @@ class ControlController extends Controller
         }
 
         $estaciones = $estacion::select('id','razon_social','nombre_sucursal')->get();
-        $orders = $order::where('dia_entrega',date("Y-m-d",strtotime($fecha)))->where('status_id',2)->get();
+        $orders = $order::where('status_id',2)->orderByDesc('id')->get();
 
         return view('control.create', ['orders' => $orders, 'estaciones'=>$estaciones, 'terminals'=>$terminal::all(), 'pipes'=>$pipe::all(), 'tractores' => $tractor::all(), 'drivers' => $driver::all(),'fecha'=>date("d/m/Y",strtotime($fecha)), 'namefreights'=>$namefreight::all()]);   
     }
@@ -80,6 +80,14 @@ class ControlController extends Controller
         $selecion = array('pipas' => $pipas_total, 'conductores' => $conductores_total);
 
         return json_encode($selecion);
+    }
+    public function fletes_contador(Request $request)
+    {
+        $dia_entrega = $request->dia_entrega;
+        $fletes = Control::where('dia_entrega', $dia_entrega)->get();
+        $count_fletes = count($fletes);
+
+        return $count_fletes;
     }
 
     /**

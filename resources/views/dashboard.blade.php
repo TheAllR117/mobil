@@ -12,7 +12,7 @@
                   <div class="card-icon">
                     <i class="material-icons">attach_money</i>
                   </div>
-                  <p class="card-category">Saldo de los clientes</p>
+                  <p class="card-category">Saldo de los clientes </p>
                   <h4 class="card-title">$ {{ number_format($saldo_total, 2) }}</h4>
                 </div>
               </div>

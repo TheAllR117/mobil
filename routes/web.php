@@ -137,7 +137,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('fleteras/edit/{id}','FreightController@edit')->name('fleteras.edit');
 	Route::post('fleteras/update/{id}','FreightController@update')->name('fleteras.update');
 	Route::post('fleteras/store','FreightController@store');
-	Route::post('fleteras/edit', 'FreightController@edit');
+	Route::delete('fleteras/destroy/{id}','FreightController@destroy')->name('fleteras.destroy');
 });
 
 // rutas de pedidos 
@@ -193,6 +193,7 @@ Route::group(['middleware' => 'auth'], function () {
 	//Route::get('estaciones/show/{id}','EstacionController@show')->name('estaciones.show');
 	Route::post('estaciones/create','EstacionController@create');
 	Route::post('estaciones/store','EstacionController@store');
+	Route::post('estaciones/import_excel','EstacionController@import_excel')->name('estaciones.import_excel');
 	Route::post('estaciones/edit', 'EstacionController@edit');
 	Route::delete('estaciones/destroy/{id}','EstacionController@destroy')->name('estaciones.destroy');
 });

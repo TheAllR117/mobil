@@ -77,9 +77,11 @@ class FreightController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request,NameFreight $freight,Estacion $estacion, Pipe $pipe, Tractor $tractor,Driver $driver, Freight $freig, $id)
     {
-        //
+        $request->user()->authorizeRoles(['Administrador','Logistica']);
+        // dd($freig::find($id));
+        return view('fleteras.edit', ['freights' => $freight::all(), 'estacions'=>$estacion::where("id","!=",1)->get(),'pipes'=>$pipe::all(), 'tractors'=>$tractor::all(), 'drivers'=>$driver::all(), 'fletera'=> $freig::find($id)]);
     }
 
     /**
@@ -89,9 +91,13 @@ class FreightController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Freight $freig, $id)
     {
-        //
+        $request->user()->authorizeRoles(['Administrador','Logistica']);
+        $fletera = $freig::findorfail($id);
+        $fletera->update(['id_freights' => $request->id_freights, 'id_estacion' => $request->id_estacion, 'id_tractor' => $request->id_tractor ,'id_pipa_1' => $request->id_pipa[0], 'id_pipa_2' => $request->id_pipa[1], 'id_chofer' => $request->id_chofer]);
+        // dd($request->all());
+        return redirect()->route('fleteras.index')->withStatus(__('Edición exitosamente.'));
     }
 
     /**
@@ -100,8 +106,13 @@ class FreightController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, Freight $freig, $id)
     {
-        //
+        $request->user()->authorizeRoles(['Administrador','Logistica']);
+
+        $fletera = $freig::findorfail($id);
+        $fletera->delete();
+
+        return redirect()->route('fleteras.index')->withStatus(__('Relación eliminada correctamente.'));
     }
 }

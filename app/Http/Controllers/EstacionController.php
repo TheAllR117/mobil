@@ -10,6 +10,8 @@ use App\Estacion;
 use App\Terminal;
 use DB;
 use Mail;
+use Excel;
+use App\Imports\PriceImport;
 
 class EstacionController extends Controller
 {
@@ -21,27 +23,22 @@ class EstacionController extends Controller
     public function index(Request $request, Estacion $model)
     {
         $request->user()->authorizeRoles(['Administrador','Logistica','Admin-Estacion']);
-        $sucursal_usuario = $request->user()->estacions[0]->nombre_sucursal;
+        // $sucursal_usuario = $request->user()->estacions[0]->nombre_sucursal;
 
         if($request->user()->roles[0]->name == "Administrador" || $request->user()->roles[0]->name == "Logistica") {
 
             return view('estaciones.index', ['estaciones' => $model::where("id","!=",1)->get()]);
 
-        }else{
+        } else {
 
             $estaciones = array();
             
             for($i=0; $i<count($request->user()->estacions); $i++){
                 array_push($estaciones, $request->user()->estacions[$i]->nombre_sucursal);
-                //echo $request->user()->estacions[$i]->razon_social;
             }
-            //dd($estaciones);
-            //echo $sucursal_usuario = $request->user()->estacions[1]->nombre_sucursal;
-            //dd($model::whereIn('nombre_sucursal',$estaciones)->get());
-            return view('estaciones.index', ['estaciones' => $model::whereIn('nombre_sucursal',$estaciones)->get()]);
 
-        }
-        
+            return view('estaciones.index', ['estaciones' => $model::whereIn('nombre_sucursal', $estaciones)->get()]);
+        } 
     }
 
     /**
@@ -165,5 +162,19 @@ class EstacionController extends Controller
 
         return redirect()->route('estaciones.index')->withStatus(__('Estación eliminada exitosamente.'));
 
+    }
+
+    public function import_excel(Request $request) {
+        $request->user()->authorizeRoles(['Administrador']);
+
+        $path = $request->file('select_file');
+
+        if(Excel::import(new PriceImport, $path)) {
+            return redirect()->route('estaciones.index')->withStatus(__('Excel importado correctamente.'));
+        } else {
+            return redirect()->route('estaciones.index')->withStatus(__('Error al importar el archivo Excel.'));
+        }
+
+        
     }
 }

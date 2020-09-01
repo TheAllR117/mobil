@@ -36,6 +36,7 @@
                                         @else
                                             <option data-tokens="" value=""> Selecciona una opcion </option>
                                         @endif
+
                                         @foreach($namefreights as $namefreight)
                                             @if ($namefreight->id != $idFreight)
                                                 <option data-tokens="{{$namefreight->name}}" value="{{$namefreight->id}}">{{$namefreight->name}}</option>
@@ -294,6 +295,7 @@
         inputFletera()
     }
     $("#input-fletera").change(function() {
+
         inputFletera()
     });
     // LLamando la lista de tractores
@@ -325,6 +327,7 @@
     });
    
    function inputFletera(){
+
         $.ajax({
             url: 'seleccionar_tractor',
             type: 'POST',
@@ -337,6 +340,7 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 
             },
             success: function(response){
+
                 $('#input-tractor_id').children('option:not(:first)').remove();
                 console.log(response);
                 for(i=0; i<response.tractores.length; i++){
@@ -344,6 +348,7 @@
                         if(response.tractores[i][j].id != {{$idTractor}}){
                             $('#input-tractor_id').append('<option value="'+response.tractores[i][j].id+'">'+response.tractores[i][j].tractor+' - '+response.tractores[i][j].placas+'</option>');
                         }
+
                     }  
                 }
                 $('#input-tractor_id').selectpicker('render');
@@ -354,6 +359,20 @@
                 $('#input-pipa_id').selectpicker('render');
                 $('#input-pipa_id').selectpicker('refresh');
                 $("#id_freights").val(response.id);
+   
+              
+            },
+            error: function(error){
+                console.log('no');
+                $('#input-tractor_id').children('option:not(:first)').remove();
+                $('#input-tractor_id').selectpicker('render');
+                $('#input-tractor_id').selectpicker('refresh');
+
+                //refresh select pipas
+                $('#input-pipa_id').children('option:not(:first)').remove();
+                $('#input-pipa_id').selectpicker('render');
+                $('#input-pipa_id').selectpicker('refresh');
+                
             }
         });
    }

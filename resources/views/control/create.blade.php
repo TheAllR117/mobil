@@ -26,7 +26,7 @@
                                 <div class="col-sm-2">
                                     <label class="label-control">Fletera</label><br>
                                     <select class="selectpicker" data-live-search="true" id="input-fletera" data-width="100%" data-style="btn-danger">
-                                        <option data-tokens="" value="">Selecciona una opción</option>
+                                        <option data-tokens="" value=""></option>
                                         @foreach($namefreights as $namefreight)
                                         <option data-tokens="{{$namefreight->name}}" value="{{$namefreight->id}}">{{$namefreight->name}}</option>
                                         @endforeach
@@ -214,6 +214,7 @@
     }
 
     $("#input-fletera").change(function() {
+
         $.ajax({
             url: 'seleccionar_tractor',
             type: 'POST',
@@ -226,21 +227,37 @@
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 
             },
             success: function(response){
-              $('#input-tractor_id').children('option:not(:first)').remove();
-              console.log(response);
-              for(i=0; i<response.tractores.length; i++){
-                for(j=0;j<response.tractores[i].length;j++){
-                    $('#input-tractor_id').append('<option value="'+response.tractores[i][j].id+'">'+response.tractores[i][j].tractor+' - '+response.tractores[i][j].placas+'</option>');
-                }  
-              }
-              $('#input-tractor_id').selectpicker('render');
-              $('#input-tractor_id').selectpicker('refresh');
+                console.log('si');
+                $('#input-tractor_id').children('option:not(:first)').remove();
+                
+              
+                for(i=0; i<response.tractores.length; i++){
+                    for(j=0;j<response.tractores[i].length;j++){
+                        $('#input-tractor_id').append('<option value="'+response.tractores[i][j].id+'">'+response.tractores[i][j].tractor+' - '+response.tractores[i][j].placas+'</option>');
+                    }  
+                }
+                $('#input-tractor_id').selectpicker('render');
+                $('#input-tractor_id').selectpicker('refresh');
 
-              //refresh select pipas
-              $('#input-pipa_id').children('option:not(:first)').remove();
-              $('#input-pipa_id').selectpicker('render');
-              $('#input-pipa_id').selectpicker('refresh');
-              $("#id_freights").val(response.id);
+                //refresh select pipas
+                $('#input-pipa_id').children('option:not(:first)').remove();
+                $('#input-pipa_id').selectpicker('render');
+                $('#input-pipa_id').selectpicker('refresh');
+                $("#id_freights").val(response.id);
+              
+              
+            },
+            error: function(error){
+                console.log('no');
+                $('#input-tractor_id').children('option:not(:first)').remove();
+                $('#input-tractor_id').selectpicker('render');
+                $('#input-tractor_id').selectpicker('refresh');
+
+                //refresh select pipas
+                $('#input-pipa_id').children('option:not(:first)').remove();
+                $('#input-pipa_id').selectpicker('render');
+                $('#input-pipa_id').selectpicker('refresh');
+                
             }
         });
     });

@@ -147,7 +147,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('pedidos/seleccionado', 'OrderController@seleccionado');
 	Route::post('pedidos/create','OrderController@create');
 	Route::post('pedidos/store','OrderController@store');
-	Route::post('pedidos/edit', 'OrderController@edit');
+	Route::post('pedidos/edit/', 'OrderController@edit')->name('pedidos.eliminar');
 	Route::get('pedidos/cambiar_status/{id}', 'OrderController@cambiar_status')->name('pedidos.cambiar_status');
 	Route::delete('pedidos/destroy/{id}','OrderController@destroy')->name('pedidos.destroy');
 	Route::delete('pedidos/destroy_order/{id}','OrderController@destroy_order')->name('pedidos.destroy_order');
@@ -156,9 +156,6 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('pedidos/individual','OrderController@individual')->name('pedidos.individual');
 	Route::post('pedidos/emergencia','OrderController@emergencia')->name('pedidos.emergencia');
 	Route::post('pedidos/updateEstatus','OrderController@updateEstatus');
-
-	/*Route::post('pedidos/create_flete','OrderController@create_flete')->name('pedidos.crete_flete');
-	Route::post('pedidos/store_flete', 'OrderController@store_flete');*/
 });
  
 // rutas de control
@@ -169,6 +166,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('control/seleccionar_tractor','ControlController@seleccionar_tractor');
 	Route::post('control/seleccionar_pipa','ControlController@seleccionar_pipa');
 	Route::post('control/fletes_contador','ControlController@fletes_contador');
+	Route::post('control/update','ControlController@update')->name('control.update');
 });
 
 // rutas de facturas

@@ -6,9 +6,8 @@ function dividir(a) {
     return a / 1000;
 }
 
-function conseguir_valores(id,utilidad_r,utilidad_p,utilidad_d){
+function conseguir_valores(id, utilidad_r, utilidad_p, utilidad_d){
 
-	//console.log($("#id").val(id));
 	$("#id").val(id);
 	$("#utilidad_r").val(utilidad_r);
 	$("#utilidad_p").val(utilidad_p);

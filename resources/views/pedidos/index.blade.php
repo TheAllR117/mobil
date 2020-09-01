@@ -26,31 +26,37 @@
                 @endif
 
                 <ul class="nav nav-pills nav-pills-primary" role="tablist">
+
                   <li class="nav-item">
                     <a class="nav-link active" data-toggle="tab" href="#link1" role="tablist" aria-expanded="true">
                       Pedidos Pendientes
                     </a>
                   </li>
+
                   <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#link2" role="tablist" aria-expanded="false">
                       Pedidos Autorizados
                     </a>
                   </li>
+
                   <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#link3" role="tablist" aria-expanded="false">
                       Pedidos en Camino
                     </a>
                   </li>
+
                   <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#link4" role="tablist" aria-expanded="false">
                       Pedidos Entregados
                     </a>
                   </li>
+
                   <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#link5" role="tablist" aria-expanded="false">
                       Pedidos Cancelados
                     </a>
                   </li>
+
                 </ul>
                 <div class="tab-content tab-space">
                   <div class="tab-pane active" id="link1" aria-expanded="true">
@@ -60,6 +66,7 @@
                         <a href="{{ route('pedidos.create') }}" class="btn btn-sm btn-primary">{{ __('Hacer Pedido') }}</a>
                       </div>
                     </div>
+
                     <div class="table-responsive">
                       <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables">
                         <thead class=" text-primary">
@@ -110,6 +117,7 @@
                     </div>
 
                   </div>
+
                   <div class="tab-pane" id="link2" aria-expanded="false">
                     <!--Tabla 2 con sonumber asignado-->
                     <div class="row">
@@ -176,6 +184,7 @@
                     </div>
 
                   </div>
+
                   <div class="tab-pane" id="link3" aria-expanded="false">
                     <!-- pedidos en camino -->
                     <div class="table-responsive">
@@ -305,6 +314,7 @@
                     </div>
 
                   </div>
+
                   <div class="tab-pane" id="link4" aria-expanded="false">
 
                     <div class="table-responsive">
@@ -317,160 +327,250 @@
                           <th>{{ __('Pipa 2') }}</th>
                           <th>{{ __('Conductor') }}</th>
                           @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
-                          <th class="text-center th-actions">{{ __('Acciones') }}</th>
+                            <th class="text-center th-actions">{{ __('Acciones') }}</th>
                           @endif
                         </thead>
                         <tbody>
                           @foreach($controls as $control)
-                            @if(count($control->orders) == 1)
-                              @if($control->orders[0]->status_id == 4)
-                                <tr>
-                                  <td>{{ $control->id }}</td>
-                                  <td>
-                                    @if($control->freights[0]->namefreights == '[]')
-                                      {{ $control->freights[0]->estacions[0]->nombre_sucursal }}
-                                    @else
-                                      {{ $control->freights[0]->namefreights[0]->name  }}
+                            @switch(count($control->orders))
+                              @case(1)
+                                @if(($control->orders[0]->status_id == 4) or ($control->orders[0]->status_id == 3))
+                                  <tr>
+                                    <td>{{ $control->id }}</td>
+                                    <td>
+                                      @if($control->freights[0]->namefreights == '[]')
+                                        {{ $control->freights[0]->estacions[0]->nombre_sucursal }}
+                                      @else
+                                        {{ $control->freights[0]->namefreights[0]->name  }}
+                                      @endif
+                                    </td>
+                                    <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
+                                    <td>{{ $control->freights[0]->pipes[0]->numero_economico }}</td>
+                                    <td>
+                                      @if($control->freights[0]->pipes2 != '[]')
+                                        {{ $control->freights[0]->pipes2[0]->numero_economico }}
+                                      @else
+                                        No hay segunda pipa.
+                                      @endif 
+                                    </td>
+                                    <td>{{ $control->freights[0]->drivers[0]->name }}</td>
+                                    @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
+                                      <td class="td-actions">
+                                        @if ($control->orders[0]->status_id == 4)
+                                          <form action="{{ route('pedidos.liberar_flete') }}" method="post">
+                                            @csrf
+                                            @method('post')
+                                            <input type="hidden" name="id" value="{{$control->id}}">
+                                            <button type="button" class="btn btn-success btn-link" data-original-title="" title="Liberar Flete" onclick="confirm('{{ __("¿Estás seguro de liberar el flete?") }}') ? this.parentElement.submit() : ''">
+                                              <i class="material-icons">lock_open</i>
+                                              <div class="ripple-container"></div>
+                                            </button>
+                                          </form>
+                                        @else
+                                          <form action="{{ route('control.create') }}" method="post">
+                                            @csrf
+                                            @method('post')
+                                            <input type="hidden" name="control" value="{{$control->id}}">
+                                            <input type="hidden" name="freight" value="{{ $control->freights[0]->namefreights[0]->id  }}">
+                                            <button type="submit" class="btn btn-success btn-link">
+                                              <i class="material-icons">edit</i>
+                                              <div class="ripple-container"></div>
+                                            </button>
+                                          </form>
+                                          <form action="{{ route('pedidos.eliminar') }}" method="post">
+                                            @csrf
+                                            @method('post')
+                                            <input type="hidden" name="id" value="{{$control->id}}">
+                                            <button type="button" class="btn btn-danger btn-link" data-original-title="" title="" onclick="confirm('{{ __("¿Estás seguro de que deseas eliminar este pedido?") }}') ? this.parentElement.submit() : ''">
+                                              <i class="material-icons">close</i>
+                                              <div class="ripple-container"></div>
+                                            </button>
+                                          </form>    
+                                        @endif
+                                      </td>
                                     @endif
-                                  </td>
-                                  <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
-                                  <td>{{ $control->freights[0]->pipes[0]->numero_economico }}</td>
-                                  <td>
-                                    @if($control->freights[0]->pipes2 != '[]')
-                                      {{ $control->freights[0]->pipes2[0]->numero_economico }}
-                                    @else
-                                      No hay segunda pipa.
-                                    @endif 
-                                  </td>
-                                  <td>{{ $control->freights[0]->drivers[0]->name }}</td>
-                                  @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
-                                  <td class="td-actions">
-                                    <form action="{{ route('pedidos.liberar_flete') }}" method="post">
-                                      @csrf
-                                      @method('post')
-                                      <input type="hidden" name="id" value="{{$control->id}}">
-                                      <button type="button" class="btn btn-success btn-link" data-original-title="" title="Liberar Flete" onclick="confirm('{{ __("¿Estás seguro de liberar el flete?") }}') ? this.parentElement.submit() : ''">
-                                        <i class="material-icons">lock_open</i>
-                                        <div class="ripple-container"></div>
-                                      </button>
-                                    </form>
-                                  </td>
-                                  @endif
-                                </tr>
-                              @endif
-                            @elseif(count($control->orders) == 2)
-                              @if($control->orders[0]->status_id == 4 && $control->orders[1]->status_id == 4)
-                                <tr>
-                                  <td>{{ $control->id }}</td>
-                                  <!--td>{{-- $order->controls[0]->freights[0]->namefreights[0]->name --}}</td-->
-                                  <td>
-                                     @if($control->freights[0]->namefreights == '[]')
-                                      {{ $control->freights[0]->estacions[0]->nombre_sucursal }}
-                                    @else
-                                      {{ $control->freights[0]->namefreights[0]->name  }}
+                                  </tr>
+                                @endif
+                              @break
+                              @case(2)
+                                @if(($control->orders[0]->status_id == 4 && $control->orders[1]->status_id == 4) or ($control->orders[0]->status_id == 3 || $control->orders[1]->status_id == 3))
+                                  <tr>
+                                    <td>{{ $control->id }}</td>
+                                    <!--td>{{-- $order->controls[0]->freights[0]->namefreights[0]->name --}}</td-->
+                                    <td>
+                                      @if($control->freights[0]->namefreights == '[]')
+                                        {{ $control->freights[0]->estacions[0]->nombre_sucursal }}
+                                      @else
+                                        {{ $control->freights[0]->namefreights[0]->name  }}
+                                      @endif
+                                    </td>
+                                    <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
+                                    <td>{{ $control->freights[0]->pipes[0]->numero_economico }}</td>
+                                    <td>
+                                      @if($control->freights[0]->pipes2 != '[]')
+                                        {{ $control->freights[0]->pipes2[0]->numero_economico }}
+                                      @else
+                                        No hay segunda pipa.
+                                      @endif  
+                                    </td>
+                                    <td>{{ $control->freights[0]->drivers[0]->name }}</td>
+                                    @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
+                                      <td class="td-actions">
+                                        @if ($control->orders[0]->status_id == 4 && $control->orders[1]->status_id == 4)
+                                          <form action="{{ route('pedidos.liberar_flete') }}" method="post">
+                                            @csrf
+                                            @method('post')
+                                            <input type="hidden" name="id" value="{{$control->id}}">
+                                            <button type="button" class="btn btn-success btn-link" data-original-title="" title="Liberar Flete" onclick="confirm('{{ __("¿Estás seguro de liberar el flete?") }}') ? this.parentElement.submit() : ''">
+                                              <i class="material-icons">lock_open</i>
+                                              <div class="ripple-container"></div>
+                                            </button>
+                                          </form>
+                                        @else
+                                          <form action="{{ route('control.create') }}" method="post">
+                                            @csrf
+                                            @method('post')
+                                            <input type="hidden" name="control" value="{{$control->id}}">
+                                            <input type="hidden" name="freight" value="{{ $control->freights[0]->namefreights[0]->id  }}">
+                                            <button type="submit" class="btn btn-success btn-link">
+                                              <i class="material-icons">edit</i>
+                                              <div class="ripple-container"></div>
+                                            </button>
+                                          </form>
+                                          <form action="{{ route('pedidos.eliminar') }}" method="post">
+                                            @csrf
+                                            @method('post')
+                                            <input type="hidden" name="id" value="{{$control->id}}">
+                                            <button type="button" class="btn btn-danger btn-link" data-original-title="" title="" onclick="confirm('{{ __("¿Estás seguro de que deseas eliminar este pedido?") }}') ? this.parentElement.submit() : ''">
+                                              <i class="material-icons">close</i>
+                                              <div class="ripple-container"></div>
+                                            </button>
+                                          </form>    
+                                        @endif
+                                      </td>
                                     @endif
-                                  </td>
-                                  <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
-                                  <td>{{ $control->freights[0]->pipes[0]->numero_economico }}</td>
-                                  <td>
-                                    @if($control->freights[0]->pipes2 != '[]')
-                                      {{ $control->freights[0]->pipes2[0]->numero_economico }}
-                                    @else
-                                      No hay segunda pipa.
+                                  </tr>
+                                @endif
+                              @break
+                              @case(3)
+                                @if(($control->orders[0]->status_id == 4 && $control->orders[1]->status_id == 4 && $control->orders[2]->status_id == 4) or ($control->orders[0]->status_id == 3 || $control->orders[1]->status_id == 3 || $control->orders[2]->status_id == 3))
+                                  <tr>
+                                    <td>{{ $control->id }}</td>
+                                    <td>
+                                      @if($control->freights[0]->namefreights == '[]')
+                                        {{ $control->freights[0]->estacions[0]->nombre_sucursal }}
+                                      @else
+                                        {{ $control->freights[0]->namefreights[0]->name  }}
+                                      @endif
+                                    </td>
+                                    <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
+                                    <td>{{ $control->freights[0]->pipes[0]->numero_economico }}</td>
+                                    <td>
+                                      @if($control->freights[0]->pipes2 != '[]')
+                                        {{ $control->freights[0]->pipes2[0]->numero_economico }}
+                                      @else
+                                        No hay segunda pipa.
+                                      @endif            
+                                    </td>
+                                    <td>{{ $control->freights[0]->drivers[0]->name }}</td>
+                                    @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
+                                      <td class="td-actions">
+                                        @if ($control->orders[0]->status_id == 4 && $control->orders[1]->status_id == 4 && $control->orders[2]->status_id == 4)
+                                          <form action="{{ route('pedidos.liberar_flete') }}" method="post">
+                                            @csrf
+                                            @method('post')
+                                            <input type="hidden" name="id" value="{{$control->id}}">
+                                            <button type="button" class="btn btn-success btn-link" data-original-title="" title="Liberar Flete" onclick="confirm('{{ __("¿Estás seguro de liberar el flete?") }}') ? this.parentElement.submit() : ''">
+                                              <i class="material-icons">lock_open</i>
+                                              <div class="ripple-container"></div>
+                                            </button>
+                                          </form>
+                                        @else
+                                          <form action="{{ route('control.create') }}" method="post">
+                                            @csrf
+                                            @method('post')
+                                            <input type="hidden" name="control" value="{{$control->id}}">
+                                            <input type="hidden" name="freight" value="{{ $control->freights[0]->namefreights[0]->id  }}">
+                                            <button type="submit" class="btn btn-success btn-link">
+                                              <i class="material-icons">edit</i>
+                                              <div class="ripple-container"></div>
+                                            </button>
+                                          </form>
+                                          <form action="{{ route('pedidos.eliminar') }}" method="post">
+                                            @csrf
+                                            @method('post')
+                                            <input type="hidden" name="id" value="{{$control->id}}">
+                                            <button type="button" class="btn btn-danger btn-link" data-original-title="" title="" onclick="confirm('{{ __("¿Estás seguro de que deseas eliminar este pedido?") }}') ? this.parentElement.submit() : ''">
+                                              <i class="material-icons">close</i>
+                                              <div class="ripple-container"></div>
+                                            </button>
+                                          </form>    
+                                        @endif
+                                      </td>
                                     @endif
-                                    
-                                  </td>
-                                  <td>{{ $control->freights[0]->drivers[0]->name }}</td>
-                                  @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
-                                  <td class="td-actions">
-                                    <form action="{{ route('pedidos.liberar_flete') }}" method="post">
-                                      @csrf
-                                      @method('post')
-                                      <input type="hidden" name="id" value="{{$control->id}}">
-                                      <button type="button" class="btn btn-success btn-link" data-original-title="" title="Liberar Flete" onclick="confirm('{{ __("¿Estás seguro de liberar el flete?") }}') ? this.parentElement.submit() : ''">
-                                        <i class="material-icons">lock_open</i>
-                                        <div class="ripple-container"></div>
-                                      </button>
-                                    </form>
-                                  </td>
-                                  @endif
-                                </tr>
-                              @endif
-                            @elseif(count($control->orders) == 3)
-                              @if($control->orders[0]->status_id == 4 && $control->orders[1]->status_id == 4 && $control->orders[2]->status_id == 4)
-                                <tr>
-                                  <td>{{ $control->id }}</td>
-                                  <td>
-                                    @if($control->freights[0]->namefreights == '[]')
-                                      {{ $control->freights[0]->estacions[0]->nombre_sucursal }}
-                                    @else
-                                      {{ $control->freights[0]->namefreights[0]->name  }}
+                                  </tr>
+                                @endif
+                              @break
+                              @case(4)
+                                @if(($control->orders[0]->status_id == 4 && $control->orders[1]->status_id == 4 && $control->orders[2]->status_id == 4 && $control->orders[3]->status_id == 4) or ($control->orders[0]->status_id == 3 || $control->orders[1]->status_id == 3 || $control->orders[2]->status_id == 3 || $control->orders[3]->status_id == 3))
+                                  <tr>
+                                    <td>{{ $control->id }}</td>
+                                    <td>
+                                      @if($control->freights[0]->namefreights == '[]')
+                                        {{ $control->freights[0]->estacions[0]->nombre_sucursal }}
+                                      @else
+                                        {{ $control->freights[0]->namefreights[0]->name  }}
+                                      @endif
+                                    </td>
+                                    <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
+                                    <td>{{ $control->freights[0]->pipes[0]->numero_economico }}</td>
+                                    <td>
+                                      @if($control->freights[0]->pipes2 != '[]')
+                                        {{ $control->freights[0]->pipes2[0]->numero_economico }}
+                                      @else
+                                        No hay segunda pipa.
+                                      @endif      
+                                    </td>
+                                    <td>{{ $control->freights[0]->drivers[0]->name }}</td>
+                                    @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
+                                      <td class="td-actions">
+                                        @if ($control->orders[0]->status_id == 4 && $control->orders[1]->status_id == 4 && $control->orders[2]->status_id == 4 && $control->orders[3]->status_id == 4)
+                                          <form action="{{ route('pedidos.liberar_flete') }}" method="post">
+                                            @csrf
+                                            @method('post')
+                                            <input type="hidden" name="id" value="{{$control->id}}">
+                                            <button type="button" class="btn btn-success btn-link" data-original-title="" title="Liberar Flete" onclick="confirm('{{ __("¿Estás seguro de liberar el flete?") }}') ? this.parentElement.submit() : ''">
+                                              <i class="material-icons">lock_open</i>
+                                              <div class="ripple-container"></div>
+                                            </button>
+                                          </form>    
+                                        @else
+                                          <form action="{{ route('control.create') }}" method="post">
+                                            @csrf
+                                            @method('post')
+                                            <input type="hidden" name="control" value="{{$control->id}}">
+                                            <input type="hidden" name="freight" value="{{ $control->freights[0]->namefreights[0]->id  }}">
+                                            <button type="submit" class="btn btn-success btn-link">
+                                              <i class="material-icons">edit</i>
+                                              <div class="ripple-container"></div>
+                                            </button>
+                                          </form>
+                                          <form action="{{ route('pedidos.eliminar') }}" method="post">
+                                            @csrf
+                                            @method('post')
+                                            <input type="hidden" name="id" value="{{$control->id}}">
+                                            <button type="button" class="btn btn-danger btn-link" data-original-title="" title="" onclick="confirm('{{ __("¿Estás seguro de que deseas eliminar este pedido?") }}') ? this.parentElement.submit() : ''">
+                                              <i class="material-icons">close</i>
+                                              <div class="ripple-container"></div>
+                                            </button>
+                                          </form>    
+                                        @endif
+                                      </td>
                                     @endif
-                                  </td>
-                                  <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
-                                  <td>{{ $control->freights[0]->pipes[0]->numero_economico }}</td>
-                                  <td>
-                                    @if($control->freights[0]->pipes2 != '[]')
-                                      {{ $control->freights[0]->pipes2[0]->numero_economico }}
-                                    @else
-                                      No hay segunda pipa.
-                                    @endif
-                                    
-                                  </td>
-                                  <td>{{ $control->freights[0]->drivers[0]->name }}</td>
-                                  @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
-                                  <td class="td-actions">
-                                    <form action="{{ route('pedidos.liberar_flete') }}" method="post">
-                                      @csrf
-                                      @method('post')
-                                      <input type="hidden" name="id" value="{{$control->id}}">
-                                      <button type="button" class="btn btn-success btn-link" data-original-title="" title="Liberar Flete" onclick="confirm('{{ __("¿Estás seguro de liberar el flete?") }}') ? this.parentElement.submit() : ''">
-                                        <i class="material-icons">lock_open</i>
-                                        <div class="ripple-container"></div>
-                                      </button>
-                                    </form>
-                                  </td>
-                                  @endif
-                                </tr>
-                              @endif
-                            @elseif(count($control->orders) == 4)
-                              @if($control->orders[0]->status_id == 4 && $control->orders[1]->status_id == 4 && $control->orders[2]->status_id == 4 && $control->orders[3]->status_id == 4)
-                                <tr>
-                                  <td>{{ $control->id }}</td>
-                                  <td>
-                                    @if($control->freights[0]->namefreights == '[]')
-                                      {{ $control->freights[0]->estacions[0]->nombre_sucursal }}
-                                    @else
-                                      {{ $control->freights[0]->namefreights[0]->name  }}
-                                    @endif
-                                  </td>
-                                  <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
-                                  <td>{{ $control->freights[0]->pipes[0]->numero_economico }}</td>
-                                  <td>
-                                    @if($control->freights[0]->pipes2 != '[]')
-                                      {{ $control->freights[0]->pipes2[0]->numero_economico }}
-                                    @else
-                                      No hay segunda pipa.
-                                    @endif
-                                    
-                                  </td>
-                                  <td>{{ $control->freights[0]->drivers[0]->name }}</td>
-                                  @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
-                                  <td class="td-actions">
-                                    <form action="{{ route('pedidos.liberar_flete') }}" method="post">
-                                      @csrf
-                                      @method('post')
-                                      <input type="hidden" name="id" value="{{$control->id}}">
-                                      <button type="button" class="btn btn-success btn-link" data-original-title="" title="Liberar Flete" onclick="confirm('{{ __("¿Estás seguro de liberar el flete?") }}') ? this.parentElement.submit() : ''">
-                                        <i class="material-icons">lock_open</i>
-                                        <div class="ripple-container"></div>
-                                      </button>
-                                    </form>
-                                  </td>
-                                  @endif
-                                </tr>
-                              @endif
-                            @endif
+                                  </tr>
+                                @endif
+                              @break
+                            @endswitch
                           @endforeach
                         </tbody>
                       </table>

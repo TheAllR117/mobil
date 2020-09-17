@@ -32,13 +32,13 @@ class EstacionController extends Controller
         } else {
 
             $estaciones = array();
-            
+
             for($i=0; $i<count($request->user()->estacions); $i++){
                 array_push($estaciones, $request->user()->estacions[$i]->nombre_sucursal);
             }
 
             return view('estaciones.index', ['estaciones' => $model::whereIn('nombre_sucursal', $estaciones)->get()]);
-        } 
+        }
     }
 
     /**
@@ -84,7 +84,7 @@ class EstacionController extends Controller
             $datos_fiscales = '0';
         }
 
-        
+
         $model->create($request->merge(['status' => $status,'linea_credito' => $linea_credito,'datos_fiscales'=>$datos_fiscales])->all());
         return redirect()->route('estaciones.index')->withStatus(__('Estación creada exitosamente.'));
     }
@@ -168,6 +168,9 @@ class EstacionController extends Controller
         $request->user()->authorizeRoles(['Administrador']);
 
         $path = $request->file('select_file');
+        $fecha = $request->post('fecha_precio_sugerido');
+
+        session(['fecha_precio_sugerido' => $fecha]);
 
         if(Excel::import(new PriceImport, $path)) {
             return redirect()->route('estaciones.index')->withStatus(__('Excel importado correctamente.'));
@@ -175,6 +178,6 @@ class EstacionController extends Controller
             return redirect()->route('estaciones.index')->withStatus(__('Error al importar el archivo Excel.'));
         }
 
-        
+
     }
 }

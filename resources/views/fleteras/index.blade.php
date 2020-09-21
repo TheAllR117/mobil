@@ -59,9 +59,6 @@
                         {{ __('Pipa 2') }}
                       </th>
                       <th>
-                        {{ __('Conductor') }}
-                      </th>
-                      <th>
                         {{ __('Fecha de Alta') }}
                       </th>
                       <th class="text-right">
@@ -87,9 +84,6 @@
                             @else
                             No hay segunda pipa
                             @endif
-                          </td>
-                          <td>
-                            {{ $freight->drivers[0]->name }}
                           </td>
                           <td>
                             {{ $freight->created_at->format('d/m/Y') }}
@@ -145,9 +139,6 @@
                         {{ __('Pipa 2') }}
                       </th>
                       <th>
-                        {{ __('Conductor') }}
-                      </th>
-                      <th>
                         {{ __('Fecha de Alta') }}
                       </th>
                       <th class="text-right">
@@ -173,9 +164,6 @@
                             @else
                             No hay segunda pipa
                             @endif
-                          </td>
-                          <td>
-                            {{ $freight->drivers[0]->name }}
                           </td>
                           <td>
                             {{ $freight->created_at->format('d/m/Y') }}

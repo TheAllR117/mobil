@@ -36,9 +36,6 @@ class FreightRequest extends FormRequest
             'id_tractor' => [
                 'required'
             ],
-            'id_chofer' => [
-                'required'
-            ],
         ];
     }
 }

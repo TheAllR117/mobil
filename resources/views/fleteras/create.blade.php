@@ -108,25 +108,6 @@
 		                    </span>
 		                 @endif
 	                </div>
-
-	                <div class="form-group{{ $errors->has('id_chofer') ? ' has-danger' : '' }} mt-5 col-md-4">
-
-	            		<label for="id_chofer" class="">
-	            			{{ __('Conductor') }}
-	            		</label>
-
-	            		<select class="selectpicker show-tick show-menu-arrow bfh-languages" data-live-search="true" data-style="btn-danger" id="input-id_chofer" data-language="es_MX" data-available="es_MX"  name="id_chofer">
-	            			<option data-tokens="Selecciona una estación" value="">Selecciona un conductor</option>
-	            			@foreach($drivers as $driver)
-	            			<option value="{{ $driver->id }}" data-tokens="{{ $driver->name }}">{{ $driver->name }}</option>
-	            			@endforeach
-						</select><br>
-						 @if ($errors->has('id_chofer'))
-		                    <span class="error text-danger" for="input-id_chofer" id="id_chofer-error">
-		                      {{ $errors->first('id_chofer') }}
-		                    </span>
-		                 @endif
-	                </div>
 	            </div>
 
 	            <div class="card-footer ml-auto mr-auto">

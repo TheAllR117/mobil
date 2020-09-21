@@ -72,7 +72,6 @@ class ControlController extends Controller
         }
         $estaciones = $estacion::select('id','razon_social','nombre_sucursal')->get();
         $orders = $order::where('status_id',2)->orderByDesc('id')->get();
-        
         $data=[
             'orders' => $orders,
             'estaciones'=>$estaciones,
@@ -92,7 +91,7 @@ class ControlController extends Controller
             'idTerminal'=>$idTerminal
         ];
 
-        return view('control.create', $data);   
+        return view('control.create', $data);  
     }
 
 
@@ -115,16 +114,16 @@ class ControlController extends Controller
     {
         $request->user()->authorizeRoles(['Administrador','Logistica']);
         $pipas_total = array();
-        $conductores_total = array();
+        // $conductores_total = array();
         
         $pipas = $freight::where('id_tractor',$request->id_tractor)->get();
 
         for($i=0; $i<count($pipas); $i++){
             array_push($pipas_total, $pipas[$i]->pipes,$pipas[$i]->pipes2);
-            array_push($conductores_total, $pipas[$i]->drivers);
+            // array_push($conductores_total, $pipas[$i]->drivers);
         }
 
-        $selecion = array('pipas' => $pipas_total, 'conductores' => $conductores_total);
+        $selecion = array('pipas' => $pipas_total);
 
         return json_encode($selecion);
     }
@@ -146,6 +145,7 @@ class ControlController extends Controller
     public function store(Request $request,Control $control,Order $order,Pipe $pipe, Tractor $tractor,Driver $driver)
     {
         $request->user()->authorizeRoles(['Administrador','Logistica']);
+        // return $request->all();
         $tractor::where('id', $request->tractor_id)->update(['id_status' => 2]);
 
         $pipas_selec = explode(',', $request->pipa_id);
@@ -153,12 +153,12 @@ class ControlController extends Controller
             $pipe::where('id', $pipas_selec[$i])->update(['id_status' => 2]);
         }
 
-        $driver::where('id', $request->conductor_id)->update(['id_status' => 2]);
+        $driver::where('id', $request->chofer_id)->update(['id_status' => 2]);
 
-        $control->create($request->except('_token','_method','pipa_id','tractor_id','conductor_id','0','1','2','4'));
+        $control->create($request->except('_token','_method','pipa_id','tractor_id','0','1','2','4'));
 
         $id_control = $control->get()->last();
-        $pedidos = $request->except('_token','_method','pipa_id','tractor_id','terminal_id','conductor_id','fletera','id_freights');
+        $pedidos = $request->except('_token','_method','pipa_id','tractor_id','terminal_id','chofer_id','fletera','id_freights');
         //dd($pedidos);
         sort($pedidos);
 
@@ -212,8 +212,9 @@ class ControlController extends Controller
         $driver::where('id', $request->conductor_id)->update(['id_status' => 2]);
         
         $id_control = $control::find($request->idOrderControler);
+        $id_control->update($request->except('_token','_method','pipa_id','tractor_id','0','1','2','4'));
         
-        $pedidos = $request->except('_token','_method','pipa_id','tractor_id','terminal_id','conductor_id','fletera','id_freights','controlers','idOrderControler','dia_entrega');
+        $pedidos = $request->except('_token','_method','pipa_id','tractor_id','terminal_id','chofer_id','fletera','id_freights','controlers','idOrderControler','dia_entrega');
 
         $pedidosOriginales= $id_control->orders;
 

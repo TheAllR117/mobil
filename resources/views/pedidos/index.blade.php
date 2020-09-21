@@ -353,7 +353,7 @@
                                         No hay segunda pipa.
                                       @endif 
                                     </td>
-                                    <td>{{ $control->freights[0]->drivers[0]->name }}</td>
+                                    <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                                       <td class="td-actions">
                                         @if ($control->orders[0]->status_id == 4)
@@ -413,7 +413,7 @@
                                         No hay segunda pipa.
                                       @endif  
                                     </td>
-                                    <td>{{ $control->freights[0]->drivers[0]->name }}</td>
+                                    <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                                       <td class="td-actions">
                                         @if ($control->orders[0]->status_id == 4 && $control->orders[1]->status_id == 4)
@@ -472,7 +472,7 @@
                                         No hay segunda pipa.
                                       @endif            
                                     </td>
-                                    <td>{{ $control->freights[0]->drivers[0]->name }}</td>
+                                    <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                                       <td class="td-actions">
                                         @if ($control->orders[0]->status_id == 4 && $control->orders[1]->status_id == 4 && $control->orders[2]->status_id == 4)
@@ -531,7 +531,7 @@
                                         No hay segunda pipa.
                                       @endif      
                                     </td>
-                                    <td>{{ $control->freights[0]->drivers[0]->name }}</td>
+                                    <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                                       <td class="td-actions">
                                         @if ($control->orders[0]->status_id == 4 && $control->orders[1]->status_id == 4 && $control->orders[2]->status_id == 4 && $control->orders[3]->status_id == 4)

@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\FreightRequest;
-use Illuminate\Support\Facades\Hash;
 use App\Freight;
 use App\NameFreight;
 use App\Estacion;
 use App\Pipe;
 use App\Tractor;
-use App\Driver;
 
 
 class FreightController extends Controller
@@ -31,10 +29,10 @@ class FreightController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request,NameFreight $freight,Estacion $estacion, Pipe $pipe, Tractor $tractor,Driver $driver)
+    public function create(Request $request,NameFreight $freight,Estacion $estacion, Pipe $pipe, Tractor $tractor)
     {
         $request->user()->authorizeRoles(['Administrador','Logistica']);
-        return view('fleteras.create',['freights' => $freight::all(), 'estacions'=>$estacion::where("id","!=",1)->get(),'pipes'=>$pipe::all(), 'tractors'=>$tractor::all(), 'drivers'=>$driver::all()]);
+        return view('fleteras.create',['freights' => $freight::all(), 'estacions'=>$estacion::where("id","!=",1)->get(),'pipes'=>$pipe::all(), 'tractors'=>$tractor::all()]);
     }
 
     /**
@@ -77,11 +75,10 @@ class FreightController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request,NameFreight $freight,Estacion $estacion, Pipe $pipe, Tractor $tractor,Driver $driver, Freight $freig, $id)
+    public function edit(Request $request,NameFreight $freight,Estacion $estacion, Pipe $pipe, Tractor $tractor,Freight $freig, $id)
     {
         $request->user()->authorizeRoles(['Administrador','Logistica']);
-        // dd($freig::find($id));
-        return view('fleteras.edit', ['freights' => $freight::all(), 'estacions'=>$estacion::where("id","!=",1)->get(),'pipes'=>$pipe::all(), 'tractors'=>$tractor::all(), 'drivers'=>$driver::all(), 'fletera'=> $freig::find($id)]);
+        return view('fleteras.edit', ['freights' => $freight::all(), 'estacions'=>$estacion::where("id","!=",1)->get(),'pipes'=>$pipe::all(), 'tractors'=>$tractor::all(), 'fletera'=> $freig::find($id)]);
     }
 
     /**
@@ -95,8 +92,7 @@ class FreightController extends Controller
     {
         $request->user()->authorizeRoles(['Administrador','Logistica']);
         $fletera = $freig::findorfail($id);
-        $fletera->update(['id_freights' => $request->id_freights, 'id_estacion' => $request->id_estacion, 'id_tractor' => $request->id_tractor ,'id_pipa_1' => $request->id_pipa[0], 'id_pipa_2' => $request->id_pipa[1], 'id_chofer' => $request->id_chofer]);
-        // dd($request->all());
+        $fletera->update(['id_freights' => $request->id_freights, 'id_estacion' => $request->id_estacion, 'id_tractor' => $request->id_tractor ,'id_pipa_1' => $request->id_pipa[0], 'id_pipa_2' => $request->id_pipa[1]]);
         return redirect()->route('fleteras.index')->withStatus(__('Edición exitosamente.'));
     }
 

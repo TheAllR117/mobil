@@ -18,11 +18,14 @@ class CreateControlsTable extends Migration
             $table->unsignedBigInteger('id_freights');
             //$table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('terminal_id');
+            $table->unsignedBigInteger('id_chofer');
             $table->timestamps();
 
             $table->foreign('id_freights')->references('id')->on('freights')->onDelete('cascade')->onUpdate('cascade');
             //$table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('terminal_id')->references('id')->on('terminals')->onDelete('cascade')->onUpdate('cascade');
+
+            $table->foreign('id_chofer')->references('id')->on('drivers')->onDelete('cascade')->onUpdate('cascade');
             
         });
     }

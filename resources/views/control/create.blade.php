@@ -69,7 +69,7 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <label class="label-control">Conductor</label><br>
-                                    <select class="selectpicker" data-style="btn-danger" data-width="100%" id="input-conductor_id">
+                                    <select class="selectpicker" data-live-search="true" data-style="btn-danger" data-width="100%" id="input-conductor_id">
                                         @if ($idConductor != -1)
                                             @foreach ($drivers as $driver)
                                                 @if ($driver->id == $idConductor)
@@ -80,6 +80,11 @@
                                         @else
                                             <option data-tokens="" value="">Selecciona una opción</option>
                                         @endif
+                                        @foreach ($drivers as $driver)
+                                            @if ($driver->id != $idConductor)
+                                                <option value="{{$driver->id}}"> {{$driver->name}} </option>
+                                            @endif
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-sm-2">
@@ -216,7 +221,7 @@
                                                 <input type="hidden" name="pipa_id" id="pipa_id" value="">
                                                 <input type="hidden" name="tractor_id" id="tractor_id" value="">
                                                 <input type="hidden" name="terminal_id" id="terminal_id" value="">
-                                                <input type="hidden" name="conductor_id" id="conductor_id" value="">
+                                                <input type="hidden" name="id_chofer" id="id_chofer" value="">
                                                 <input type="hidden" name="idOrderControler" id="idOrderControler" value="{{$idOrderControler}}">
 
                                                 <ul class="facet-list ml-0" id="userFacets" style=" height: auto; min-height: 41px;">
@@ -274,12 +279,11 @@
 @push('js')
   <script>
 
-
     $(".selectpicker").change(function() {
         $("#pipa_id").val( $("#input-pipa_id").val());
         $("#tractor_id").val($("#input-tractor_id").val());
         $("#terminal_id").val($("#input-terminal_id").val());
-        $("#conductor_id").val($("#input-conductor_id").val());
+        $("#id_chofer").val($("#input-conductor_id").val());
         //$("#fletera").val($("#input-fletera").val());
         visible($("#input-pipa_id").val(),$("#input-tractor_id").val(),$("#input-terminal_id").val(),$("#input-conductor_id").val(), $("#fletera").val());
       
@@ -295,7 +299,6 @@
         inputFletera()
     }
     $("#input-fletera").change(function() {
-
         inputFletera()
     });
     // LLamando la lista de tractores
@@ -392,34 +395,34 @@
             success: function(response){
                 console.log(response);
               $('#input-pipa_id').children('option:not(:first)').remove();
-              $('#input-conductor_id').children('option:not(:first)').remove();
+            //   $('#input-conductor_id').children('option:not(:first)').remove();
               
               for(i=0; i<response.pipas.length; i++){
                 for(j=0;j<response.pipas[i].length;j++){
                     //console.log(response[i][j]);
                     if(response.pipas[i][j].id == {{$idPipaUno}}){
-                        $('#input-pipa_id').append('<option value="'+response.pipas[i][j].id+'" selected>'+response.pipas[i][j].numero+' - '+response.pipas[i][j].numero_economico+' - '+response.pipas[i][j].capacidad+'LTS</option>');
+                        $('#input-pipa_id').append('<option value="'+response.pipas[i][j].id+'" selected>'+response.pipas[i][j].numero_economico+' - '+response.pipas[i][j].capacidad+'LTS</option>');
                     }
                     if(response.pipas[i][j].id == {{$idPipaDos}}){
-                        $('#input-pipa_id').append('<option value="'+response.pipas[i][j].id+'" selected>'+response.pipas[i][j].numero+' - '+response.pipas[i][j].numero_economico+' - '+response.pipas[i][j].capacidad+'LTS</option>');
+                        $('#input-pipa_id').append('<option value="'+response.pipas[i][j].id+'" selected>'+response.pipas[i][j].numero_economico+' - '+response.pipas[i][j].capacidad+'LTS</option>');
                     }
                     if (response.pipas[i][j].id != {{$idPipaUno}} && response.pipas[i][j].id != {{$idPipaDos}}) {
-                        $('#input-pipa_id').append('<option value="'+response.pipas[i][j].id+'">'+response.pipas[i][j].numero+' - '+response.pipas[i][j].numero_economico+' - '+response.pipas[i][j].capacidad+'LTS</option>');
+                        $('#input-pipa_id').append('<option value="'+response.pipas[i][j].id+'">'+response.pipas[i][j].numero_economico+' - '+response.pipas[i][j].capacidad+'LTS</option>');
                     }
                 }  
               }
-              for(i=0; i<response.conductores.length; i++){
+              /* for(i=0; i<response.conductores.length; i++){
                 for(j=0;j<response.conductores[i].length;j++){
                     //console.log(response[i][j]);
                     if (response.conductores[i][j].id != {{$idConductor}}){
                         $('#input-conductor_id').append('<option value="'+response.conductores[i][j].id+'">'+response.conductores[i][j].name+'</option>');
                     }
                 }  
-              }
+              } */
               $('#input-pipa_id').selectpicker('render');
               $('#input-pipa_id').selectpicker('refresh');
-              $('#input-conductor_id').selectpicker('render');
-              $('#input-conductor_id').selectpicker('refresh');
+            //   $('#input-conductor_id').selectpicker('render');
+            //   $('#input-conductor_id').selectpicker('refresh');
             }
         });
     }

@@ -34,14 +34,8 @@ class Freight extends Model
     {
         return $this->hasMany('App\Tractor','id', 'id_tractor');
     }
-    
-    // relacionamos la fletera con el conductor
-    public function drivers()
-    {
-        return $this->hasMany('App\Driver','id', 'id_chofer');
-    }
 
     protected $fillable = [
-        'id','id_freights','id_estacion','id_pipa_1','id_pipa_2','id_tractor','id_chofer'
+        'id','id_freights','id_estacion','id_pipa_1','id_pipa_2','id_tractor'
     ];
 }

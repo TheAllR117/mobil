@@ -93,6 +93,17 @@
                                 </select>
                               </div>
 
+                              <div class="col-sm-4">
+                                <select class="selectpicker" data-style="btn btn-primary btn-round" title="Single Select" id="input-tractor_id" name="tractor_id" data-width="100%">
+                                  <option disabled selected>Tractores</option>
+                                  @foreach($tractors as $tractor)
+                                    @if (count($tractor->pipes)<3)
+                                      <option value="{{ $tractor->id }}">{{ $tractor->tractor }}</option>  
+                                    @endif
+                                  @endforeach
+                                </select>
+                              </div>
+
                             </div>
                             <div class="card-footer ml-auto mr-auto">
                                 <button class="btn btn-primary" type="submit">

@@ -59,6 +59,9 @@
                         {{ __('Pipa 2') }}
                       </th>
                       <th>
+                        {{ __('Pipa 3') }}
+                      </th>
+                      <th>
                         {{ __('Fecha de Alta') }}
                       </th>
                       <th class="text-right">
@@ -75,16 +78,19 @@
                           <td>
                             {{ $freight->tractors[0]->tractor }}
                           </td>
-                          <td>
-                            {{ $freight->pipes[0]->numero_economico }}
-                          </td>
-                          <td>
-                            @if($freight->id_pipa_2 != "")
-                            {{ $freight->pipes2[0]->numero_economico }}
-                            @else
-                            No hay segunda pipa
-                            @endif
-                          </td>
+                          @foreach ($freight->tractors as $tractor)
+                            @for ($i = 0; $i < 3; $i++)
+                                @if (isset($tractor->pipes[$i]))
+                                <td>
+                                  {{$tractor->pipes[$i]->numero_economico}}
+                                </td>    
+                                @else
+                                <td>
+                                  No hay pipa
+                                </td>            
+                                @endif
+                            @endfor
+                          @endforeach
                           <td>
                             {{ $freight->created_at->format('d/m/Y') }}
                           </td>
@@ -139,6 +145,9 @@
                         {{ __('Pipa 2') }}
                       </th>
                       <th>
+                        {{ __('Pipa 3') }}
+                      </th>
+                      <th>
                         {{ __('Fecha de Alta') }}
                       </th>
                       <th class="text-right">
@@ -155,16 +164,19 @@
                           <td>
                             {{ $freight->tractors[0]->tractor }}
                           </td>
-                          <td>
-                            {{ $freight->pipes[0]->numero_economico }}
-                          </td>
-                          <td>
-                            @if($freight->id_pipa_2 != "")
-                            {{ $freight->pipes2[0]->numero_economico }}
-                            @else
-                            No hay segunda pipa
-                            @endif
-                          </td>
+                          @foreach ($freight->tractors as $tractor)
+                            @for ($i = 0; $i < 3; $i++)
+                                @if (isset($tractor->pipes[$i]))
+                                <td>
+                                  {{$tractor->pipes[$i]->numero_economico}}
+                                </td>    
+                                @else
+                                <td>
+                                  No hay pipa
+                                </td>            
+                                @endif
+                            @endfor
+                          @endforeach
                           <td>
                             {{ $freight->created_at->format('d/m/Y') }}
                           </td>

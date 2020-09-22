@@ -55,7 +55,7 @@
                                                 @endif
                                             @endforeach
                                         @else
-                                            <option value="" disabled selected>Selecciona una opción</option>
+                                            <option value="" selected>Selecciona una opción</option>
                                         @endif
                                     </select>
                                 </div> 
@@ -397,7 +397,7 @@
               $('#input-pipa_id').children('option:not(:first)').remove();
             //   $('#input-conductor_id').children('option:not(:first)').remove();
               
-              for(i=0; i<response.pipas.length; i++){
+              /* for(i=0; i<response.pipas.length; i++){
                 for(j=0;j<response.pipas[i].length;j++){
                     //console.log(response[i][j]);
                     if(response.pipas[i][j].id == {{$idPipaUno}}){
@@ -410,6 +410,24 @@
                         $('#input-pipa_id').append('<option value="'+response.pipas[i][j].id+'">'+response.pipas[i][j].numero_economico+' - '+response.pipas[i][j].capacidad+'LTS</option>');
                     }
                 }  
+              } */
+              
+              for(i=0; i<response.pipas.length; i++){
+                // console.log(response.pipas[i].numero_economico)
+                $('#input-pipa_id').append('<option value="'+response.pipas[i].id+'">'+response.pipas[i].numero_economico+' - '+response.pipas[i].capacidad+'LTS</option>');
+                    
+                    //console.log(response[i][j]);
+                    /* if(response.pipas[i][j].id == {{$idPipaUno}}){
+                        $('#input-pipa_id').append('<option value="'+response.pipas[i][j].id+'" selected>'+response.pipas[i][j].numero_economico+' - '+response.pipas[i][j].capacidad+'LTS</option>');
+                    }
+                    if(response.pipas[i][j].id == {{$idPipaDos}}){
+                        $('#input-pipa_id').append('<option value="'+response.pipas[i][j].id+'" selected>'+response.pipas[i][j].numero_economico+' - '+response.pipas[i][j].capacidad+'LTS</option>');
+                    }
+                    if (response.pipas[i][j].id != {{$idPipaUno}} && response.pipas[i][j].id != {{$idPipaDos}}) {
+                        $('#input-pipa_id').append('<option value="'+response.pipas[i][j].id+'">'+response.pipas[i][j].numero_economico+' - '+response.pipas[i][j].capacidad+'LTS</option>');
+                    } */
+                    
+                
               }
               /* for(i=0; i<response.conductores.length; i++){
                 for(j=0;j<response.conductores[i].length;j++){

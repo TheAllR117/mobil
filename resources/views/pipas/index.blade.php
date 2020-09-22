@@ -53,6 +53,9 @@
                         {{ __('Capacidad Compartimiento') }}
                       </th>
                       <th>
+                        {{ __('Tractor') }}
+                      </th>
+                      <th>
                         {{ __('Fecha de Alta') }}
                       </th>
                       <th class="text-right">
@@ -76,6 +79,9 @@
                           </td>
                           <td>
                             {{ number_format($pipa->capacidad_compartimiento,0) }}L
+                          </td>
+                          <td>
+                            {{ $pipa->tractors->tractor }}L
                           </td>
                           <td>
                             {{ $pipa->created_at->format('d/m/Y') }}

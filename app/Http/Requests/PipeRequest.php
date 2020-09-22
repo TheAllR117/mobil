@@ -47,8 +47,9 @@ class PipeRequest extends FormRequest
             'contenedor_disponible' => [
                 'nullable'
             ],
-    
+            'tractor_id' => [
+                'required'
+            ],
         ];
-        
     }
 }

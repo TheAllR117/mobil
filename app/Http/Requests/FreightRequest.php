@@ -30,9 +30,6 @@ class FreightRequest extends FormRequest
             'id_estacion' => [
                 'nullable'
             ],
-            'id_pipa' => [
-                'required'
-            ],
             'id_tractor' => [
                 'required'
             ],

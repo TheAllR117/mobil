@@ -22,9 +22,13 @@ class CreatePipesTable extends Migration
             $table->string('compartimentos');
             $table->string('capacidad_compartimiento');
             $table->string('contenedor_disponible')->nullable();
+            $table->unsignedBigInteger('tractor_id');
             $table->timestamps();
-            
+
             $table->foreign('id_status')->references('id')->on('states')->onDelete('cascade')
+                ->onUpdate('cascade');
+
+            $table->foreign('tractor_id')->references('id')->on('tractors')->onDelete('cascade')
                 ->onUpdate('cascade');
         });
     }

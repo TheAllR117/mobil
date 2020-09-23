@@ -413,7 +413,6 @@
               } */
               
               for(i=0; i<response.pipas.length; i++){
-                // console.log(response.pipas[i].numero_economico)
                 $('#input-pipa_id').append('<option value="'+response.pipas[i].id+'">'+response.pipas[i].numero_economico+' - '+response.pipas[i].capacidad+'LTS</option>');
                     
                     //console.log(response[i][j]);

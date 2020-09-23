@@ -34,7 +34,7 @@ class CreateOrdersTable extends Migration
                 ->onUpdate('cascade');
             $table->foreign('estacion_id')->references('id')->on('estacions')->onDelete('cascade')
                 ->onUpdate('cascade');
-           /* $table->foreign('factura_id')->references('id')->on('invoices')->onDelete('cascade')
+            /* $table->foreign('factura_id')->references('id')->on('invoices')->onDelete('cascade')
                 ->onUpdate('cascade');*/
             $table->foreign('status_id')->references('id')->on('statu_orders')->onDelete('cascade')
                 ->onUpdate('cascade');

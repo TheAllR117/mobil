@@ -143,25 +143,35 @@ class ControlController extends Controller
     public function store(Request $request, Control $control, Order $order, Pipe $pipe, Tractor $tractor, Driver $driver)
     {
         $request->user()->authorizeRoles(['Administrador', 'Logistica']);
-        // return $request->all();
+
         $tractor::where('id', $request->tractor_id)->update(['id_status' => 2]);
 
         $pipas_selec = explode(',', $request->pipa_id);
-        for ($i = 0; $i < count($pipas_selec); $i++) {
+
+        /* for ($i = 0; $i < count($pipas_selec); $i++) {
             $pipe::where('id', $pipas_selec[$i])->update(['id_status' => 2]);
+        } */
+        $pipes = array();
+        for ($i = 0; $i < 3; $i++) {
+            try {
+                $pipe::where('id', $pipas_selec[$i])->update(['id_status' => 2]);
+                $pipes[$i] = $pipas_selec[$i];
+            } catch (Exception $e) {
+                $pipes[$i] = null;
+            }
         }
 
         $driver::where('id', $request->chofer_id)->update(['id_status' => 2]);
-
-        $control->create($request->except('_token', '_method', 'pipa_id', 'tractor_id', '0', '1', '2', '4'));
-
-        $id_control = $control->get()->last();
+        
+        $request->merge(['pipe_id_1' => $pipes[0], 'pipe_id_2' => $pipes[1], 'pipe_id_3' => $pipes[2]])->all();
+        $lastControl=$control->create($request->except('_token', '_method', 'pipa_id', 'tractor_id', 'conductor_id', '0', '1', '2', '4'));
+        
         $pedidos = $request->except('_token', '_method', 'pipa_id', 'tractor_id', 'terminal_id', 'chofer_id', 'fletera', 'id_freights');
         //dd($pedidos);
         sort($pedidos);
 
         for ($i = 0; $i < count($pedidos); $i++) {
-            $order::where('id', $pedidos[$i])->update(['control_id' => $id_control->id, 'status_id' => 3]);
+            $order::where('id', $pedidos[$i])->update(['control_id' => $lastControl->id, 'status_id' => 3]);
         }
         return redirect()->route('pedidos.index')->withStatus(__('Armado de pedido exitoso.'));
     }

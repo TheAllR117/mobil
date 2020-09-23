@@ -325,6 +325,7 @@
                           <th>{{ __('Tractor') }}</th>
                           <th>{{ __('Pipa 1') }}</th>
                           <th>{{ __('Pipa 2') }}</th>
+                          <th>{{ __('Pipa 3') }}</th>
                           <th>{{ __('Conductor') }}</th>
                           @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                             <th class="text-center th-actions">{{ __('Acciones') }}</th>
@@ -345,14 +346,29 @@
                                       @endif
                                     </td>
                                     <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
-                                    <td>{{ $control->freights[0]->pipes[0]->numero_economico }}</td>
+                                    <td>{{ $control->pipeUno->numero_economico }}</td>
+
                                     <td>
+                                      @if($control->pipeDos != null)
+                                        {{ $control->pipeDos->numero_economico }}
+                                      @else
+                                        No hay segunda pipa.
+                                      @endif 
+                                    </td>
+                                    <td>
+                                      @if($control->pipeTres != null)
+                                        {{ $control->pipeTres->numero_economico }}
+                                      @else
+                                        No hay tercera pipa.
+                                      @endif 
+                                    </td>
+                                    {{-- <td>
                                       @if($control->freights[0]->pipes2 != '[]')
                                         {{ $control->freights[0]->pipes2[0]->numero_economico }}
                                       @else
                                         No hay segunda pipa.
                                       @endif 
-                                    </td>
+                                    </td> --}}
                                     <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                                       <td class="td-actions">
@@ -405,14 +421,29 @@
                                       @endif
                                     </td>
                                     <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
-                                    <td>{{ $control->freights[0]->pipes[0]->numero_economico }}</td>
+                                    <td>{{ $control->pipeUno->numero_economico }}</td>
+
                                     <td>
+                                      @if($control->pipeDos != null)
+                                        {{ $control->pipeDos->numero_economico }}
+                                      @else
+                                        No hay segunda pipa.
+                                      @endif 
+                                    </td>
+                                    <td>
+                                      @if($control->pipeTres != null)
+                                        {{ $control->pipeTres->numero_economico }}
+                                      @else
+                                        No hay tercera pipa.
+                                      @endif 
+                                    </td>
+                                    {{-- <td>
                                       @if($control->freights[0]->pipes2 != '[]')
                                         {{ $control->freights[0]->pipes2[0]->numero_economico }}
                                       @else
                                         No hay segunda pipa.
                                       @endif  
-                                    </td>
+                                    </td> --}}
                                     <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                                       <td class="td-actions">
@@ -464,14 +495,23 @@
                                       @endif
                                     </td>
                                     <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
-                                    <td>{{ $control->freights[0]->pipes[0]->numero_economico }}</td>
+                                    <td>{{ $control->pipeUno->numero_economico }}</td>
+
                                     <td>
-                                      @if($control->freights[0]->pipes2 != '[]')
-                                        {{ $control->freights[0]->pipes2[0]->numero_economico }}
+                                      @if($control->pipeDos != null)
+                                        {{ $control->pipeDos->numero_economico }}
                                       @else
                                         No hay segunda pipa.
-                                      @endif            
+                                      @endif 
                                     </td>
+                                    <td>
+                                      @if($control->pipeTres != null)
+                                        {{ $control->pipeTres->numero_economico }}
+                                      @else
+                                        No hay tercera pipa.
+                                      @endif 
+                                    </td>
+
                                     <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                                       <td class="td-actions">
@@ -523,14 +563,11 @@
                                       @endif
                                     </td>
                                     <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
-                                    <td>{{ $control->freights[0]->pipes[0]->numero_economico }}</td>
-                                    <td>
-                                      @if($control->freights[0]->pipes2 != '[]')
-                                        {{ $control->freights[0]->pipes2[0]->numero_economico }}
-                                      @else
-                                        No hay segunda pipa.
-                                      @endif      
-                                    </td>
+                                    <td>{{ $control->pipeUno->numero_economico }}</td>
+
+                                    <td>columna 2</td>
+                                    <td>columna 3</td>
+
                                     <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                                       <td class="td-actions">

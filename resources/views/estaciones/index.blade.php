@@ -1,7 +1,7 @@
 @extends('layouts.app', ['activePage' => 'Estaciones', 'titlePage' => __('Gestión de Estaciones')])
 
 @section('content')
-  
+
   <div class="content">
     <div class="container-fluid">
       <div class="row">
@@ -19,6 +19,14 @@
                     @method('post')
                     <div class="form-group form-file-upload form-file-multiple">
                       <input type="file" multiple="" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" class="inputFileHidden" name="select_file" id="input-pdf">
+
+                      <div class="input-group">
+                        <label>
+                            Fecha
+                            <input type="date" class="form-control form-control" style="color: #fff;"  name="fecha_precio_sugerido" required>
+                        </label>
+                      </div>
+
                       <div class="input-group">
                         <input type="text" class="form-control inputFileVisible text-light" placeholder="Selecciona un archivo Excel" id="archivo_excel">
                         <span class="input-group-btn">
@@ -34,7 +42,7 @@
                   </form>
                   </div>
                 </div>
-                
+
               </div>
               <div class="card-body">
                 @if (session('status'))
@@ -49,7 +57,7 @@
                     </div>
                   </div>
                 @endif
-                
+
                 <div class="row">
                   <div class="col-12 text-right">
                     @if(auth()->user()->roles[0]->id == 1)
@@ -145,7 +153,7 @@
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
-                      
+
                       <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Agregar Precios</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -191,7 +199,7 @@
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn btn-primary" id="guardar_price">Guardar</button>
                       </div>
-                     
+
                     </div>
                   </div>
                 </div>
@@ -202,12 +210,12 @@
         </div>
       </div>
     </div>
-  
+
 @endsection
 
 @push('js')
   <script>
-   
+
    $( "#archivo_excel" ).change(function() {
       if($( "#archivo_excel" ).val() != ""){
         $("#archivo_excel_boton").prop('disabled', false);
@@ -234,7 +242,7 @@
       suma_adictivo('input-supreme','input-supreme_1','utilidad_p');
       suma_adictivo('input-diesel','input-diesel_1','utilidad_d');
     });
-    
+
 
     $('#guardar_price').click(function(){
       $.ajax({
@@ -251,8 +259,8 @@
           'supreme_u': $("#input-supreme_1").val(),
           'diesel_u': $("#input-diesel_1").val(),
         },
-        headers:{ 
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 
+        headers:{
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         success: function(response){
           $('#exampleModal').modal('toggle');
@@ -266,7 +274,7 @@
       iniciar_date('datatables');
       iniciar_selector_de_archivos();
       /*$('#datatables').DataTable({
-        
+
         responsive: true,
         dom: 'Bfrtip',
         buttons: [
@@ -338,7 +346,7 @@
             }
         ]
        });
-      
+
     });*/
   </script>
 @endpush

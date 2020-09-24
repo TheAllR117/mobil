@@ -12,6 +12,7 @@ use App\Terminal;
 use App\Statu_order;
 use App\Freight;
 use App\Control;
+use App\Price;
 use DB;
 
 use App\Tractor;
@@ -86,7 +87,66 @@ class OrderController extends Controller
         $request->user()->authorizeRoles(['Administrador', 'Logistica', 'Admin-Estacion']);
         //$estaciones = $estacion::where('id', $request->id)->get()->last();
         $estaciones = Estacion::findOrFail($request->id);
-        $selecion = array('estacion' => $estaciones, 'price' => $estaciones->prices);
+
+        /* Obtendremos los precios actualizados hasta la fecha */
+
+        $id_estacion = $request->id;
+
+        $fechas_precios = Price::select('extra', 'supreme', 'diesel', 'extra_u', 'supreme_u', 'diesel_u',
+                DB::raw('DATEDIFF(created_at, CURDATE()) as dias'),
+                DB::raw('DATE_FORMAT(created_at, "%d-%m-%Y") as fecha')
+            )
+            ->where('id_estacion',$id_estacion)
+            ->get();
+
+        $valores_ultima_actualizacion = null;
+
+        if( count($fechas_precios) > 0 ){
+
+            $dias = $fechas_precios[0]->dias;
+
+
+            foreach($fechas_precios as $fecha_precio)
+            {
+                if($fecha_precio->dias <= 0)
+                {
+                    if($fecha_precio->dias >= $dias)
+                    {
+                        $valores_ultima_actualizacion = $fecha_precio;
+                        $dias = $fecha_precio->dias;
+                    }
+                }
+            }
+        }
+
+        /* FIN precios actualizados hasta la fecha */
+
+        /* Verificamos que no haya adeudo */
+
+        $ordenes = Order::select( 'fecha_expiracion' ,DB::raw('DATEDIFF( STR_TO_DATE(fecha_expiracion, "%d-%m-%Y") , CURDATE()) as dias') )
+            ->where('estacion_id', $id_estacion)
+            ->where('metodo_pago','credito')
+            ->where('pagado','FALSE')
+            ->get();
+
+        $hay_adeudo = 0;
+        foreach($ordenes as $orden)
+        {
+            if($orden->dias < 0)
+            {
+                $hay_adeudo = 1;
+            }
+        }
+
+        /* FIN verificar adeudo */
+
+
+        $selecion = array(
+            'estacion' => $estaciones,
+            'price' => $estaciones->prices,
+            'valores_ultima_actualizacion' => $valores_ultima_actualizacion,
+            'hay_adeudo' => $hay_adeudo
+        );
         //$selecion = $request->id;
         return json_encode($selecion);
     }
@@ -101,23 +161,38 @@ class OrderController extends Controller
     {
         $request->user()->authorizeRoles(['Administrador', 'Logistica', 'Admin-Estacion']);
 
-        $model->create($request->except('credito_usado', 'disponible', 'credito', 'saldo'));
+        // $model->create($request->except('credito_usado', 'disponible', 'credito', 'saldo'));
 
         $estacion_up = $estacion::findorfail($request->estacion_id);
 
+        $order = new Order();
+        $order->estacion_id = $request->estacion_id;
+        $order->status_id = $request->status_id;
+        $order->producto = $request->producto;
+        $order->cantidad_lts = $request->cantidad_lts;
+        $order->costo_aprox = $request->costo_aprox;
+        $order->dia_entrega = $request->dia_entrega;
+
+        $order->fecha_expiracion = date("d-m-Y",strtotime($request->dia_entrega."+ ".$estacion_up->dias_credito." days"));
+        $order->total_abonado = 0;
 
 
         if ($request->saldo != $request->saldo1 && $request->saldo > 0) {
             $resta = $request->disponible - $request->credito_usado;
             //dd($request->all());
             //dd($resta);
+            $order->metodo_pago = "saldo";
             $estacion_up->update($request->merge(['saldo' => $request->saldo1, 'credito_usado' => $resta])->all());
         } else {
+            $order->metodo_pago = "credito";
             //dd($request->costo_aprox);
             //$request->credito_usado
             $credito = $estacion_up->credito_usado + $request->costo_aprox;
             $estacion_up->update($request->merge(['credito_usado' => $credito])->all());
         }
+
+        $order->save();
+
         return redirect()->route('pedidos.index')->withStatus(__('Pedido generado correctamente.'));
     }
 

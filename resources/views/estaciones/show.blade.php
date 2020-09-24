@@ -11,9 +11,9 @@
               {{ __($estacion->razon_social) }}
             </h4>
             <p class="card-category">
-              <b><strong>RFC: </strong></b>{{ $estacion->rfc }}  
-              <b class="ml-3"><strong> CRE: </strong></b>{{ $estacion->cre }} 
-              <b class="ml-3"><strong>SH: </strong></b>{{ $estacion->sh }} 
+              <b><strong>RFC: </strong></b>{{ $estacion->rfc }}
+              <b class="ml-3"><strong> CRE: </strong></b>{{ $estacion->cre }}
+              <b class="ml-3"><strong>SH: </strong></b>{{ $estacion->sh }}
               <b class="ml-3"><strong>Crédito: </strong></b>${{ number_format($estacion->credito,2) }}
               <b class="ml-3"><strong>Crédito utilizado: </strong></b>${{ number_format($estacion->credito_usado,2) }}
               <b class="ml-3"><strong>Saldo: </strong></b>${{ number_format($estacion->saldo,2) }}
@@ -38,9 +38,9 @@
                           <th class="mr-5 ml-5">Extra</th>
                           <th>Supreme</th>
                           <th>Diesel</th>
-                          <th>Extra U.</th>
-                          <th>Supreme U.</th>
-                          <th>Diesel U.</th>
+                          {{-- <th>Extra U.</th> --}}
+                          {{-- <th>Supreme U.</th> --}}
+                          {{-- <th>Diesel U.</th> --}}
                           <th>Fecha</th>
                         </thead>
                         <tbody>
@@ -49,9 +49,9 @@
                             <td>{{ $price->extra }}</td>
                             <td>{{ $price->supreme }}</td>
                             <td>{{ $price->diesel }}</td>
-                            <td>{{ $price->extra_u }}</td>
-                            <td>{{ $price->supreme_u }}</td>
-                            <td>{{ $price->diesel_u }}</td>
+                            {{-- <td>{{ $price->extra_u }}</td> --}}
+                            {{-- <td>{{ $price->supreme_u }}</td> --}}
+                            {{-- <td>{{ $price->diesel_u }}</td> --}}
                             <td>{{ $price->created_at->format('d/m/Y') }}</td>
                           </tr>
                           @endforeach

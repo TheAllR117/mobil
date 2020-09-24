@@ -62,7 +62,7 @@
                     <div class="card-header card-header-rose text-white" data-header-animation="true">
                         <!--div class="ct-chart" id="websiteViewsChart"></div-->
                         @include('Graphics.graphics',['color'=>'bg-success','terminal'=>$terminales[2][0],'gasolina'=>'Regular','fechas'=>$terminales[2][1],'vector_precio_valero'=>$terminales[2][2]])
-                        
+
                     </div>
                     <div class="card-body">
                         <div class="card-actions">
@@ -89,7 +89,7 @@
                 <div class="card card-chart">
                     <div class="card-header card-header-danger" data-header-animation="true">
                         <!--div class="ct-chart" id="websiteViewsChart"></div-->
-                       
+
                            @include('Graphics.graphics',['color'=>'bg-danger','terminal'=>$terminales[2][0],'gasolina'=>'Supreme','fechas'=>$terminales[2][1],'vector_precio_valero'=>$terminales[2][4]])
                     </div>
                     <div class="card-body">
@@ -143,7 +143,55 @@
             </div>
         </div>
 
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header card-header-primary">
+                        <h4 class="card-title ">{{ __('Estaciones con adeudos') }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="estaciones-adeudos">
+                                <thead class=" text-primary">
+                                    <th>{{ __('Estación') }}</th>
+                                    <th>{{ __('Nombre Sucursal') }}</th>
+                                    <th>{{ __('Cantidad lts') }}</th>
+                                    <th>{{ __('Producto') }}</th>
+                                    <th>{{ __('Costo aproximado') }}</th>
+                                    <th>{{ __('Total abonado') }}</th>
+                                    <th>{{ __('Total restante') }}</th>
+                                    <th>{{ __('Fecha de expiracion') }}</th>
+                                </thead>
+                                <tbody>
+                                    @foreach ( $estaciones_deudoras as $estacion_deudora )
+                                        <tr>
+                                            <td>{{ $estacion_deudora->razon_social }}</td>
+                                            <td>{{ $estacion_deudora->nombre_sucursal }}</td>
+                                            <td>{{ $estacion_deudora->cantidad_lts }} Lts</td>
+                                            <td>{{ $estacion_deudora->producto }}</td>
+                                            <td>$ {{ $estacion_deudora->costo_aprox }}</td>
+                                            <td>$ {{ $estacion_deudora->total_abonado }}</td>
+                                            <td>$ {{ floatval($estacion_deudora->costo_aprox) - floatval($estacion_deudora->total_abonado) }}</td>
+                                            <td>{{ $estacion_deudora->expiracion_date }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         </div>
     </div>
 </div>
 @endsection
+
+@push('js')
+    <script>
+        $(document).ready(function() {
+            iniciar_date('estaciones-adeudos');
+        });
+    </script>
+@endpush

@@ -165,6 +165,22 @@ class OrderController extends Controller
 
         $estacion_up = $estacion::findorfail($request->estacion_id);
 
+        $order_last = Order::all();
+        if( count($order_last) > 0 )
+        {
+            $po_array = explode('mo', $order_last->last()->po);
+
+            if( count($po_array) > 1 )
+            {
+                $po_last = "mo".( floatval($po_array[1]) + 1 );
+            }else{
+                $po_last = "mo50000";
+            }
+
+        }else{
+            $po_last = "mo50000";
+        }
+
         $order = new Order();
         $order->estacion_id = $request->estacion_id;
         $order->status_id = $request->status_id;
@@ -172,6 +188,7 @@ class OrderController extends Controller
         $order->cantidad_lts = $request->cantidad_lts;
         $order->costo_aprox = $request->costo_aprox;
         $order->dia_entrega = $request->dia_entrega;
+        $order->po = $po_last;
 
         $order->fecha_expiracion = date("d-m-Y",strtotime($request->dia_entrega."+ ".$estacion_up->dias_credito." days"));
         $order->total_abonado = 0;

@@ -27,6 +27,12 @@ class CreateOrdersTable extends Migration
             $table->string('po')->nullable();
             $table->string('pdf')->nullable();
             $table->string('xml')->nullable();
+
+            $table->string('fecha_expiracion');
+            $table->enum('pagado', ['TRUE','FALSE'])->default('FALSE');
+            $table->string('metodo_pago');
+            $table->double('total_abonado', 12, 3)->nullable();
+
             $table->timestamps();
 
 

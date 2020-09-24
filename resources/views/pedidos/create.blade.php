@@ -23,6 +23,9 @@
                                         {{ __('Volver a la lista') }}
                                     </a>
                                 </div>
+                                <div class="col-md-6" id="col-actualizacion" style="display: none;">
+                                    <p>Precios actualizados <span id="span-fecha-ultima-actualizacion"></span></p>
+                                </div>
                             </div>
                             <div class="row mt-3">
                             	<div class="col-lg-3 col-md-6 col-sm-3">
@@ -95,7 +98,7 @@
                                   	@endif
                                 	</input>
                               	</div>
-                            	
+
                             </div>
 
                             <div class="row mt-4">
@@ -132,7 +135,7 @@
                                 	</input>
                               	</div>
                             </div>
-                            <div class="row mt-4">
+                            {{-- <div class="row mt-4">
                               <div class="form-group{{ $errors->has('po') ? ' has-danger' : '' }} col-sm-3">
                                   <label for="po">{{ __('PO') }}</label>
                                   <input aria-describedby="poHelp" aria-required="true" class="form-control{{ $errors->has('po') ? ' is-invalid' : '' }}" id="input-po" name="po" type="text" value="{{ old('po')}}">
@@ -143,9 +146,9 @@
                                     @endif
                                   </input>
                                 </div>
-                            </div>
-                            
-                            <div class="card-footer ml-auto mr-auto">
+                            </div> --}}
+
+                            <div class="card-footer ml-auto mr-auto" id="btn-guardar-div">
                                 <button class="btn btn-primary ocultar" type="submit" id="guardar">
                                     {{ __('Guardar') }}
                                 </button>
@@ -162,15 +165,16 @@
 @push('js')
 <script>
 	$('#input-estacion_id').change(function(){
-      	$.ajax({
+
+        $.ajax({
         	url: 'seleccionado',
         	type: 'POST',
         	dataType: 'json',
         	data: {
           		'id' : $('#input-estacion_id').val(),
         	},
-        	headers:{ 
-          		'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 
+        	headers:{
+          		'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         	},
         	success: function(response){
         		var datos =  response;
@@ -178,15 +182,37 @@
         		$('#input-saldo1').val(datos.estacion.saldo);
         		$('#input-credito').val(datos.estacion.credito);
         		$('#input-disponible').val(dividir( multiplicar(datos.estacion.credito) - multiplicar(datos.estacion.credito_usado) ));
-        		$('#precio_producto_extra').val(datos.price[datos.price.length - 1].extra_u);
-        		$('#precio_producto_supreme').val(datos.price[datos.price.length - 1].supreme_u);
-        		$('#precio_producto_diesel').val(datos.price[datos.price.length - 1].diesel_u);
-            $('#input-credito_usado').val(0);
-            $('#input-costo_aprox').val(0);
+        		// $('#precio_producto_extra').val(datos.price[datos.price.length - 1].extra_u);
+        		// $('#precio_producto_supreme').val(datos.price[datos.price.length - 1].supreme_u);
+        		// $('#precio_producto_diesel').val(datos.price[datos.price.length - 1].diesel_u);
+                $('#input-credito_usado').val(0);
+                $('#input-costo_aprox').val(0);
           	//console.log( datos.price[datos.price.length - 1].extra_u );
             //console.log(parseFloat(datos.estacion.credito) - parseFloat(datos.estacion.credito_usado));
+                if(datos.valores_ultima_actualizacion != null)
+                {
+                    document.getElementById('col-actualizacion').style.display = "block";
+                    $('#span-fecha-ultima-actualizacion').text(datos.valores_ultima_actualizacion.fecha);
+
+                    $('#precio_producto_extra').val(datos.valores_ultima_actualizacion.extra_u);
+                    $('#precio_producto_supreme').val(datos.valores_ultima_actualizacion.supreme_u);
+                    $('#precio_producto_diesel').val(datos.valores_ultima_actualizacion.diesel_u);
+
+                }else{
+                    $('#precio_producto_extra').val(datos.price[datos.price.length - 1].extra_u);
+                    $('#precio_producto_supreme').val(datos.price[datos.price.length - 1].supreme_u);
+                    $('#precio_producto_diesel').val(datos.price[datos.price.length - 1].diesel_u);
+                }
+
+                if(datos.hay_adeudo === 1)
+                {
+                    document.getElementById('btn-guardar-div').style.display = "none";
+                    alert('La estación tiene un adeudo que no ha pagado y ya expiró el plazo de pago.');
+                }else{
+                    document.getElementById('btn-guardar-div').style.display = "block";
+                }
         	}
-      	});
+      	})
     });
 
     function costo_aprox(){
@@ -260,7 +286,7 @@
 
         }
 
-        
+
 
       }else{
         //no hay saldo
@@ -280,11 +306,11 @@
             $("#guardar").addClass("ocultar");
 
           }
-          
+
         }
 
       }
-    	
+
     });
 
   @if(auth()->user()->roles[0]->name == 'Administrador' || auth()->user()->roles[0]->name == 'Logistica')
@@ -292,6 +318,6 @@
   @else
     init_calendar('input-dia_entrega', manana(), '07-07-2025');
   @endif
-	
+
 </script>
 @endpush

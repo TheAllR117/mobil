@@ -32,9 +32,10 @@ class ControlController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request, Order $order, Estacion $estacion)
+    public function create(Request $request, Order $order, Estacion $estacion, $id=0)
     {
         $request->user()->authorizeRoles(['Administrador', 'Logistica']);
+
         $terminal = Terminal::all();
         $pipe = Pipe::all();
         $tractor = Tractor::all();

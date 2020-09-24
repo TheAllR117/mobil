@@ -159,11 +159,10 @@
                                   @method('delete')
 
                                   @foreach($freights as $freight )
-                                    @if($order->estacion_id == $freight->id_estacion && $freight->pipes[0]->id_status == 1)
-                                    <a class="btn btn-social btn-just-icon btn-twitter btn-link enviar" title="Enviar" data-original-title="" rel="tooltip" onclick="autorizar('{{ $order->estacion_id }}','{{ $order->estacions[0]->nombre_sucursal }}','{{ $order->id }}');">
+                                    @if($order->estacion_id == $freight->id_estacion )
+                                    <a class="btn btn-social btn-just-icon btn-twitter btn-link enviar" title="Enviar" data-original-title="" rel="tooltip" id="boton_enviar" onclick="autorizar('{{ $order->estacion_id }}','{{ $order->estacions[0]->nombre_sucursal }}','{{ $order->id }}');">
                                       <i class="material-icons">local_shipping</i>
-                                      <div class="ripple-container">
-                                      </div>
+                                      <div class="ripple-container"></div>
                                     </a>
                                     @break
                                     @endif
@@ -383,11 +382,10 @@
                                             </button>
                                           </form>
                                         @else
-                                          <form action="{{ route('control.create') }}" method="post">
+                                          <form action="{{ route('control.create', $control->id) }}" method="post">
                                             @csrf
                                             @method('post')
-                                            <input type="hidden" name="control" value="{{$control->id}}">
-                                            <input type="hidden" name="freight" value="{{ $control->freights[0]->namefreights[0]->id  }}">
+                                            
                                             <button type="submit" class="btn btn-success btn-link">
                                               <i class="material-icons">edit</i>
                                               <div class="ripple-container"></div>
@@ -458,11 +456,10 @@
                                             </button>
                                           </form>
                                         @else
-                                          <form action="{{ route('control.create') }}" method="post">
+                                          <form action="{{ route('control.create', $control->id) }}" method="post">
                                             @csrf
                                             @method('post')
-                                            <input type="hidden" name="control" value="{{$control->id}}">
-                                            <input type="hidden" name="freight" value="{{ $control->freights[0]->namefreights[0]->id  }}">
+                                            
                                             <button type="submit" class="btn btn-success btn-link">
                                               <i class="material-icons">edit</i>
                                               <div class="ripple-container"></div>
@@ -526,11 +523,9 @@
                                             </button>
                                           </form>
                                         @else
-                                          <form action="{{ route('control.create') }}" method="post">
+                                        <form action="{{ route('control.create', $control->id) }}" method="post">
                                             @csrf
                                             @method('post')
-                                            <input type="hidden" name="control" value="{{$control->id}}">
-                                            <input type="hidden" name="freight" value="{{ $control->freights[0]->namefreights[0]->id  }}">
                                             <button type="submit" class="btn btn-success btn-link">
                                               <i class="material-icons">edit</i>
                                               <div class="ripple-container"></div>
@@ -582,11 +577,9 @@
                                             </button>
                                           </form>    
                                         @else
-                                          <form action="{{ route('control.create') }}" method="post">
+                                          <form action="{{ route('control.create', $control->id) }}" method="post">
                                             @csrf
                                             @method('post')
-                                            <input type="hidden" name="control" value="{{$control->id}}">
-                                            <input type="hidden" name="freight" value="{{ $control->freights[0]->namefreights[0]->id  }}">
                                             <button type="submit" class="btn btn-success btn-link">
                                               <i class="material-icons">edit</i>
                                               <div class="ripple-container"></div>
@@ -709,10 +702,10 @@
                               <label for="estacion_name">{{ __('Estación') }}</label>
                               <input type="text" class="form-control" id="input-estacion_name" aria-describedby="estacion_nameHelp"  value="" required="true" aria-required="true" name="estacion_name">
                             </div>
-                            <div class="form-group{{ $errors->has('id_estacion') ? ' has-danger' : '' }} mt-2 col-12 text-center">
+                            <div class="form-group{{ $errors->has('id_estacion') ? ' has-danger' : '' }} mt-2 pr-1 pl-0 col-sm-4 text-center">
                               <label class="label-control" for="id_estacion">Terminal</label><br>
-                              <select class="selectpicker" data-style="btn btn-primary btn-round" title="Single Select" id="input-id_terminal" name="id_terminal">
-                                <option disabled selected>-- Seleccionar --</option>
+                              <select class="selectpicker" data-style="btn btn-primary btn-round" title="Single Select" id="input-terminal_id" data-width="100%" name="terminal_id">
+                                <option disabled selected>Elije</option>
                                 @foreach($terminals as $terminal)
                                 <option value="{{ $terminal->id }}">{{ $terminal->razon_social }}</option>
                                 @endforeach
@@ -723,7 +716,31 @@
                                 </span>
                               @endif
                             </div>
-
+                            <div class="form-group{{ $errors->has('id_estacion') ? ' has-danger' : '' }} mt-2 pr-0 pl-0 col-sm-4 text-center">
+                              <label class="label-control" for="id_estacion">Chofer</label><br>
+                              <select class="selectpicker" data-style="btn btn-primary btn-round" title="Single Select" id="input-id_chofer" data-width="100%" name="id_chofer">
+                                <option disabled selected>Elije</option>
+                                @foreach($choferes as $chofer)
+                                <option value="{{ $chofer->id }}">{{ $chofer->name }}</option>
+                                @endforeach
+                              </select><br>
+                              @if ($errors->has('id_estacion'))
+                                <span class="error text-danger" for="input-id_estacion" id="id_estacion-error">
+                                  {{ $errors->first('id_estacion') }}
+                                </span>
+                              @endif
+                            </div>
+                            <div class="form-group{{ $errors->has('id_estacion') ? ' has-danger' : '' }} mt-2 pr-0 pl-1 col-sm-4 text-center">
+                              <label class="label-control" for="id_estacion">Pipa</label><br>
+                              <select class="selectpicker" data-style="btn btn-primary btn-round" title="Single Select" id="input-id_pipe" data-width="100%" name="id_pipe">
+                                <option disabled selected>Elije</option>
+                              </select><br>
+                              @if ($errors->has('id_estacion'))
+                                <span class="error text-danger" for="input-id_estacion" id="id_estacion-error">
+                                  {{ $errors->first('id_estacion') }}
+                                </span>
+                              @endif
+                            </div>
                           </div>
 
                         </div>

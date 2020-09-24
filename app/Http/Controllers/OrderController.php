@@ -38,7 +38,7 @@ class OrderController extends Controller
         }
 
         if ($request->user()->roles[0]->name == "Administrador" || $request->user()->roles[0]->name == "Logistica") {
-            return view('pedidos.index', ['orders' => $model::all(), 'fecha' => date("d/m/Y"), 'fecha_sig' => 'a ' . date("d/m/Y", strtotime($fecha)), 'freights' => $freight::all(), 'controls' => $control::all(), 'terminals' => $terminal::all()]);
+            return view('pedidos.index', ['orders' => $model::all(), 'fecha' => date("d/m/Y"), 'fecha_sig' => 'a ' . date("d/m/Y", strtotime($fecha)), 'freights' => $freight::all(), 'controls' => $control::all(), 'terminals' => $terminal::all(), 'choferes' => Driver::all(), 'estaciones' => $estacion::all()]);
         } else {
 
             $estaciones = array();
@@ -47,7 +47,7 @@ class OrderController extends Controller
                 array_push($estaciones, $request->user()->estacions[$i]->id);
             }
 
-            return view('pedidos.index', ['orders' => $model::all(), 'fecha' => date("d/m/Y", strtotime($fecha)), 'fecha_sig' => '', 'controls' => $control::all(), 'terminals' => $terminal::all(), 'freights' => $freight::all(),]);
+            return view('pedidos.index', ['orders' => $model::all(), 'fecha' => date("d/m/Y", strtotime($fecha)), 'fecha_sig' => '', 'controls' => $control::all(), 'terminals' => $terminal::all(), 'freights' => $freight::all()]);
         }
     }
 
@@ -125,28 +125,27 @@ class OrderController extends Controller
     {
         $request->user()->authorizeRoles(['Administrador', 'Logistica']);
         $fletera = $freight::where('id_estacion', $request->id)->get();
-        //dd($fletera);
+
         for ($i = 0; $i < count($fletera); $i++) {
 
-            if ($fletera[$i]->Tractors[0]->id_status == 1 && $fletera[$i]->pipes[0]->id_status == 1 && $fletera[$i]->drivers[0]->id_status == 1) {
-                //dd($fletera[$i]->drivers[0]->name);
-                DB::table('controls')->insert(
-                    ['id_freights' => $fletera[$i]->id, 'terminal_id' => $request->id_terminal, 'created_at' => date("Y-m-d"), 'updated_at' => date("Y-m-d")]
-                );
-                $control_now = $control::where('id_freights', $fletera[$i]->id)->get()->last();
-                $order_now = $order::where('estacion_id', $request->id)->get()->last()->update(['control_id' => $control_now->id, 'status_id' => 3]);
+            // if ($fletera[$i]->Tractors[0]->id_status == 2) {
+                /*$registro = DB::table('controls')->insert(
+                    ['id_freights' => $fletera[$i]->id, 'terminal_id' => $request->id_terminal, 'id_chofer'=>$request->id_chofer, 'pipe_id_1'=>$request->id_pipe, 'pipe_id_2'=>null, 'pipe_id_2'=>null, 'created_at' => date("Y-m-d"), 'updated_at' => date("Y-m-d")]
+                );*/
+                $request->merge(['id_freights'=>$fletera[$i]->id, 'pipe_id_1' => $request->id_pipe , 'pipe_id_2' => null, 'pipe_id_3' => null ])->all();
+                $lastControl = $control->create($request->except('_token', '_method', 'order_id', 'id', 'estacion_name', 'id_pipe', 'tractor_id'));
+                
 
-                $driver::where('id', $fletera[$i]->drivers[0]->id)->update(['id_status' => 2]);
-                $tractor::where('id', $fletera[$i]->Tractors[0]->id)->update(['id_status' => 2]);
-                $pipe::where('id', $fletera[$i]->pipes[0]->id)->update(['id_status' => 2]);
+                $order_now = $order::where('estacion_id', $request->id)->get()->last()->update(['control_id' => $lastControl->id, 'status_id' => 3]);
+
+                // $driver::where('id', $fletera[$i]->drivers[0]->id)->update(['id_status' => 2]);
+                // $tractor::where('id', $fletera[$i]->Tractors[0]->id)->update(['id_status' => 2]);
+                // $pipe::where('id', $fletera[$i]->pipes[0]->id)->update(['id_status' => 2]);
                 return redirect()->route('pedidos.index')->withStatus(__('Pedido en camino.'));
-                break;
-            } else {
+            /*} else {
                 return redirect()->route('pedidos.index')->withStatus(__('No hay Equipo disponible para el envio.'));
-            }
-            //var_dump( $fletera[$i]->Tractors[0]->id_status);
+            }*/
         }
-        //dd($fletera[0]->Tractors[0]->id_status);
     }
     public function updateEstatus(Request $request, Order $order)
     {
@@ -328,5 +327,14 @@ class OrderController extends Controller
         $driver::where('id', $freights->id_chofer)->update(['id_status' => 1]);
 
         return redirect()->route('pedidos.index')->withStatus(__('Flete liberado correctamente'));
+    }
+
+    public function getpipes(Request $request, Estacion $estacion)
+    {
+        $request->user()->authorizeRoles(['Administrador', 'Logistica']);
+        $estacion = Estacion::find($request->id);
+        return response()->json([
+            'pipas' => $estacion->freights[0]->tractors[0]->pipes
+        ]);
     }
 }

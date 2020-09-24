@@ -142,7 +142,7 @@
                                                 @foreach($orders as $key => $order)
                                                     @foreach($estaciones as $estacion ) 
                                                         @if($order->status_id == 2 && $order->estacion_id == $estacion->id)
-                                                            @if(count($estacion->freights) < 1)
+                                                            
                                                             <li class="facet alert alert-danger mr-0 ml-0" style="margin-left: -2.6rem !important;">
                                                                 <div class="row">
                                                                     <div class="col-md-2">
@@ -165,7 +165,7 @@
                                                                 </div>
                                                                 
                                                             </li>
-                                                            @endif
+                                                            
                                                         @endif
                                                     @endforeach
                                                 @endforeach

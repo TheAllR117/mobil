@@ -361,13 +361,6 @@
                                         No hay tercera pipa.
                                       @endif 
                                     </td>
-                                    {{-- <td>
-                                      @if($control->freights[0]->pipes2 != '[]')
-                                        {{ $control->freights[0]->pipes2[0]->numero_economico }}
-                                      @else
-                                        No hay segunda pipa.
-                                      @endif 
-                                    </td> --}}
                                     <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                                       <td class="td-actions">
@@ -385,7 +378,6 @@
                                           <form action="{{ route('control.create', $control->id) }}" method="post">
                                             @csrf
                                             @method('post')
-                                            
                                             <button type="submit" class="btn btn-success btn-link">
                                               <i class="material-icons">edit</i>
                                               <div class="ripple-container"></div>
@@ -410,7 +402,6 @@
                                 @if(($control->orders[0]->status_id == 4 && $control->orders[1]->status_id == 4) or ($control->orders[0]->status_id == 3 || $control->orders[1]->status_id == 3))
                                   <tr>
                                     <td>{{ $control->id }}</td>
-                                    <!--td>{{-- $order->controls[0]->freights[0]->namefreights[0]->name --}}</td-->
                                     <td>
                                       @if($control->freights[0]->namefreights == '[]')
                                         {{ $control->freights[0]->estacions[0]->nombre_sucursal }}
@@ -435,13 +426,6 @@
                                         No hay tercera pipa.
                                       @endif 
                                     </td>
-                                    {{-- <td>
-                                      @if($control->freights[0]->pipes2 != '[]')
-                                        {{ $control->freights[0]->pipes2[0]->numero_economico }}
-                                      @else
-                                        No hay segunda pipa.
-                                      @endif  
-                                    </td> --}}
                                     <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                                       <td class="td-actions">
@@ -459,7 +443,6 @@
                                           <form action="{{ route('control.create', $control->id) }}" method="post">
                                             @csrf
                                             @method('post')
-                                            
                                             <button type="submit" class="btn btn-success btn-link">
                                               <i class="material-icons">edit</i>
                                               <div class="ripple-container"></div>
@@ -560,8 +543,20 @@
                                     <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
                                     <td>{{ $control->pipeUno->numero_economico }}</td>
 
-                                    <td>columna 2</td>
-                                    <td>columna 3</td>
+                                    <td>
+                                      @if($control->pipeDos != null)
+                                        {{ $control->pipeDos->numero_economico }}
+                                      @else
+                                        No hay segunda pipa.
+                                      @endif 
+                                    </td>
+                                    <td>
+                                      @if($control->pipeTres != null)
+                                        {{ $control->pipeTres->numero_economico }}
+                                      @else
+                                        No hay tercera pipa.
+                                      @endif 
+                                    </td>
 
                                     <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)

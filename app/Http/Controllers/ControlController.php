@@ -32,36 +32,39 @@ class ControlController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request, Order $order, Estacion $estacion, $id=0)
+    public function create(Request $request, Order $order, Estacion $estacion, $id = 0)
     {
         $request->user()->authorizeRoles(['Administrador', 'Logistica']);
-
         $terminal = Terminal::all();
         $pipe = Pipe::all();
         $tractor = Tractor::all();
         $driver = Driver::all();
         $namefreight = NameFreight::all();
+
         $idFreight = -1;
         $idTractor = -1;
         $idPipeOne = -1;
         $idPipeTwo = -1;
+        $idPipeThree = -1;
         $idDrive = -1;
         $idTerminal = -1;
         $orderControler = [];
         $idOrderControler = -1;
         try {
-            $control = Control::find($request->control);
+            $control = Control::find($id);
             $idFreight = $control->freights[0]->id_freights;
             $idTractor = $control->freights[0]->id_tractor;
-            $idPipeOne = $control->freights[0]->id_pipa_1;
-            $idPipeTwo = $control->freights[0]->id_pipa_2;
-            $idDrive = $control->freights[0]->id_chofer;
-            $orderControler = $order::where('control_id', $request->control)->get();
-            $idOrderControler = $request->control;
+
+            $idPipeOne = $control->pipe_id_1;
+            $idPipeTwo = $control->pipe_id_2;
+            $idPipeThree = $control->pipe_id_3;
+
+            $idDrive = $control->id_chofer;
+            $orderControler = $order::where('control_id', $id)->get();
+            $idOrderControler = $id;
             $idTerminal = $control->terminal_id;
         } catch (Exception $e) {
         }
-
         if ($idOrderControler != -1 && $control->dia_entrega != null) {
             $fecha = date("Y-m-d", strtotime($control->dia_entrega));
         } else {
@@ -87,21 +90,22 @@ class ControlController extends Controller
             'idTractor' => $idTractor,
             'idPipaUno' => $idPipeOne,
             'idPipaDos' => $idPipeTwo,
+            'idPipaTres' => $idPipeThree,
             'idConductor' => $idDrive,
             'orderControler' => $orderControler,
             'idOrderControler' => $idOrderControler,
-            'idTerminal' => $idTerminal
+            'idTerminal' => $idTerminal,
+            'control' => $control
         ];
 
         return view('control.create', $data);
     }
 
 
-    public function seleccionar_tractor(Freight $freight, Request $request)
+    public function seleccionar_tractor(Freight $freight, Request $request, $id = 0)
     {
         $request->user()->authorizeRoles(['Administrador', 'Logistica']);
         $tractores_total = array();
-
         $tractores = $freight::where('id_freights', $request->id_freights)->get();
 
         for ($i = 0; $i < count($tractores); $i++) {
@@ -115,6 +119,9 @@ class ControlController extends Controller
     public function seleccionar_pipa(Freight $freight, Request $request)
     {
         $request->user()->authorizeRoles(['Administrador', 'Logistica']);
+        /* return response()->json([
+            'request' => $request->id_tractor
+        ]); */
         try {
             $tractor = Tractor::find($request->id_tractor);
             return response()->json([
@@ -146,12 +153,7 @@ class ControlController extends Controller
         $request->user()->authorizeRoles(['Administrador', 'Logistica']);
 
         $tractor::where('id', $request->tractor_id)->update(['id_status' => 2]);
-
         $pipas_selec = explode(',', $request->pipa_id);
-
-        /* for ($i = 0; $i < count($pipas_selec); $i++) {
-            $pipe::where('id', $pipas_selec[$i])->update(['id_status' => 2]);
-        } */
         $pipes = array();
         for ($i = 0; $i < 3; $i++) {
             try {
@@ -161,16 +163,11 @@ class ControlController extends Controller
                 $pipes[$i] = null;
             }
         }
-
         $driver::where('id', $request->chofer_id)->update(['id_status' => 2]);
-        
         $request->merge(['pipe_id_1' => $pipes[0], 'pipe_id_2' => $pipes[1], 'pipe_id_3' => $pipes[2]])->all();
-        $lastControl=$control->create($request->except('_token', '_method', 'pipa_id', 'tractor_id', 'conductor_id', '0', '1', '2', '4'));
-        
+        $lastControl = $control->create($request->except('_token', '_method', 'pipa_id', 'tractor_id', 'conductor_id', '0', '1', '2', '4'));
         $pedidos = $request->except('_token', '_method', 'pipa_id', 'tractor_id', 'terminal_id', 'chofer_id', 'fletera', 'id_freights');
-        //dd($pedidos);
         sort($pedidos);
-
         for ($i = 0; $i < count($pedidos); $i++) {
             $order::where('id', $pedidos[$i])->update(['control_id' => $lastControl->id, 'status_id' => 3]);
         }
@@ -220,6 +217,7 @@ class ControlController extends Controller
         $driver::where('id', $request->conductor_id)->update(['id_status' => 2]);
 
         $id_control = $control::find($request->idOrderControler);
+
         $id_control->update($request->except('_token', '_method', 'pipa_id', 'tractor_id', '0', '1', '2', '4'));
 
         $pedidos = $request->except('_token', '_method', 'pipa_id', 'tractor_id', 'terminal_id', 'chofer_id', 'fletera', 'id_freights', 'controlers', 'idOrderControler', 'dia_entrega');

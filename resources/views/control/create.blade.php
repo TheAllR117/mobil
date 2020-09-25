@@ -26,19 +26,11 @@
                                 <div class="col-sm-2">
                                     <label class="label-control">Fletera</label><br>
                                     <select class="selectpicker" data-live-search="true" id="input-fletera" data-width="100%" data-style="btn-danger">
-                                        @if ($idFreight != -1)
-                                            @foreach ($namefreights as $namefreight)
-                                                @if ($namefreight->id == $idFreight)
-                                                    <option  data-tokens="{{$namefreight->name}}" value="{{$namefreight->id}}">{{$namefreight->name}} </option>    
-                                                    @break
-                                                @endif
-                                            @endforeach
-                                        @else
-                                            <option data-tokens="" value=""> Selecciona una opcion </option>
-                                        @endif
-
-                                        @foreach($namefreights as $namefreight)
-                                            @if ($namefreight->id != $idFreight)
+                                        <option data-tokens="" value=""> Selecciona una opcion </option>
+                                        @foreach ($namefreights as $namefreight)
+                                            @if ($namefreight->id == $idFreight)
+                                                <option data-tokens="{{$namefreight->name}}" value="{{$namefreight->id}}" selected>{{$namefreight->name}}</option>    
+                                            @else
                                                 <option data-tokens="{{$namefreight->name}}" value="{{$namefreight->id}}">{{$namefreight->name}}</option>
                                             @endif
                                         @endforeach
@@ -47,24 +39,13 @@
                                 <div class="col-sm-2">
                                     <label class="label-control">Tractor</label><br>
                                     <select class="selectpicker"  id="input-tractor_id" data-style="btn-danger" data-width="100%">
-                                        @if ($idTractor != -1)
-                                            @foreach ($tractores as $tractor)
-                                                @if ($tractor->id == $idTractor)
-                                                    <option value="{{$tractor->id}}">{{$tractor->tractor}} - {{$tractor->placas}}</option>    
-                                                    @break
-                                                @endif
-                                            @endforeach
-                                        @else
-                                            <option value="" selected>Selecciona una opción</option>
-                                        @endif
+                                        <option value="">Selecciona una opción</option>
                                     </select>
                                 </div> 
                                 <div class="col-sm-2">
                                     <label class="label-control">Pipa</label><br>
                                     <select class="selectpicker" data-style="btn-danger" data-width="100%" id="input-pipa_id"  multiple>
-                                        @if ($idPipaUno == -1 && $idPipaDos == -1)
-                                            <option value="">Selecciona una opción</option>
-                                        @endif
+                                        <option value="">Selecciona una opción</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-2">
@@ -296,17 +277,14 @@
     }
     // LLamando la lista de fleteras
     if({{$idFreight}} != -1){
-        inputFletera()
+        inputFletera($("#input-fletera").val())
     }
     $("#input-fletera").change(function() {
-        inputFletera()
+        inputFletera($("#input-fletera").val())
     });
     // LLamando la lista de tractores
-    if({{$idTractor}} != -1){
-        inputTractor()
-    }
     $("#input-tractor_id").change(function() {
-        inputTractor()
+        inputTractor($("#input-tractor_id").val())
     });
 
     $("#dia_entrega").blur(function() {
@@ -329,15 +307,14 @@
         });
     });
    
-   function inputFletera(){
-
+   function inputFletera(id){
         $.ajax({
-            url: 'seleccionar_tractor',
+            url: '../../control/seleccionar_tractor',
             type: 'POST',
             dataType: 'json',
             data: {
                 '_token': $('input[name=_token]').val(),
-                'id_freights' : $("#input-fletera").val(),
+                'id_freights' : id,
             },
             headers:{ 
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 
@@ -348,10 +325,12 @@
                 console.log(response);
                 for(i=0; i<response.tractores.length; i++){
                     for(j=0;j<response.tractores[i].length;j++){
-                        if(response.tractores[i][j].id != {{$idTractor}}){
+                        if(response.tractores[i][j].id == {{$idTractor}}){
+                            $('#input-tractor_id').append('<option value="'+response.tractores[i][j].id+'" selected>'+response.tractores[i][j].tractor+' - '+response.tractores[i][j].placas+'</option>');
+                            inputTractor({{$idTractor}})
+                        }else{
                             $('#input-tractor_id').append('<option value="'+response.tractores[i][j].id+'">'+response.tractores[i][j].tractor+' - '+response.tractores[i][j].placas+'</option>');
                         }
-
                     }  
                 }
                 $('#input-tractor_id').selectpicker('render');
@@ -366,7 +345,7 @@
               
             },
             error: function(error){
-                console.log('no');
+                console.log('error de consulta');
                 $('#input-tractor_id').children('option:not(:first)').remove();
                 $('#input-tractor_id').selectpicker('render');
                 $('#input-tractor_id').selectpicker('refresh');
@@ -380,14 +359,14 @@
         });
    }
 
-   function inputTractor(){
+   function inputTractor(id){
         $.ajax({
-            url: 'seleccionar_pipa',
+            url: '../../control/seleccionar_pipa',
             type: 'POST',
             dataType: 'json',
             data: {
               '_token': $('input[name=_token]').val(),
-              'id_tractor' : $("#input-tractor_id").val(),
+              'id_tractor' : id,
             },
             headers:{ 
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 

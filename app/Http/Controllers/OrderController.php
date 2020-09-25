@@ -168,17 +168,17 @@ class OrderController extends Controller
         $order_last = Order::all();
         if( count($order_last) > 0 )
         {
-            $po_array = explode('mo', $order_last->last()->po);
+            $po_array = explode('MO', $order_last->last()->po);
 
             if( count($po_array) > 1 )
             {
-                $po_last = "mo".( floatval($po_array[1]) + 1 );
+                $po_last = "MO".( floatval($po_array[1]) + 1 );
             }else{
-                $po_last = "mo50000";
+                $po_last = "MO50000";
             }
 
         }else{
-            $po_last = "mo50000";
+            $po_last = "MO50000";
         }
 
         $order = new Order();

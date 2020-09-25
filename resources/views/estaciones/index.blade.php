@@ -14,32 +14,38 @@
                     <p class="card-category"> {{ __('Aquí puedes administrar todas las estaciones.') }}</p>
                   </div>
                   <div class="col mt-3">
-                  <form action="{{ route('estaciones.import_excel') }}" autocomplete="off" class="form-horizontal" enctype="multipart/form-data" method="post">
-                    @csrf
-                    @method('post')
-                    <div class="form-group form-file-upload form-file-multiple">
-                      <input type="file" multiple="" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" class="inputFileHidden" name="select_file" id="input-pdf">
-
-                      <div class="input-group">
-                        <label>
-                            Fecha
-                            <input type="date" class="form-control form-control" style="color: #fff;"  name="fecha_precio_sugerido" required>
-                        </label>
+                    <form action="{{ route('estaciones.import_excel') }}" autocomplete="off" class="form-horizontal" enctype="multipart/form-data" method="post">
+                      @csrf
+                      @method('post')
+                      <div class="row">
+                        <div class="col-sm-4">
+                          <div class="input-group">
+                            <label>
+                                
+                                <input type="date" class="form-control form-control mt-2" style="color: #fff;"  name="fecha_precio_sugerido" required>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="co-sm-8">
+                          <div class="form-group form-file-upload form-file-multiple">
+                            <input type="file" multiple="" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" class="inputFileHidden" name="select_file" id="input-pdf">
+                            <div class="input-group">
+                              <input type="text" class="form-control inputFileVisible text-light" placeholder="Selecciona un archivo Excel" id="archivo_excel">
+                              <span class="input-group-btn">
+                                  <button type="button" class="btn btn-fab btn-round ">
+                                      <i class="material-icons">attach_file</i>
+                                  </button>
+                              </span>
+                              <button type="submit" id="archivo_excel_boton" class="btn btn-sm btn-danger" disabled>
+                                Cargar
+                              </button>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-
-                      <div class="input-group">
-                        <input type="text" class="form-control inputFileVisible text-light" placeholder="Selecciona un archivo Excel" id="archivo_excel">
-                        <span class="input-group-btn">
-                            <button type="button" class="btn btn-fab btn-round ">
-                                <i class="material-icons">attach_file</i>
-                            </button>
-                        </span>
-                        <button type="submit" id="archivo_excel_boton" class="btn btn-sm btn-danger" disabled>
-                          Cargar
-                        </button>
-                      </div>
-                    </div>
-                  </form>
+                      
+                      
+                    </form>
                   </div>
                 </div>
 

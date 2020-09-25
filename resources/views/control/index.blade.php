@@ -77,8 +77,8 @@
                           <td>{{ $order->controls[0]->freights[0]->id }}</td>
                           <td>{{ $order->controls[0]->freights[0]->Tractors[0]->tractor }}</td>
                           <td>{{ $order->controls[0]->freights[0]->Tractors[0]->placas }}</td>
-                          <td>{{ $order->controls[0]->freights[0]->drivers[0]->name }}</td>
-                          <td>{{ $order->control_id }}</td>
+                          <td>{{ $order->controls[0]->driver->name }}</td>
+                          <td>{{ $order->controls[0]->orders[0]->so_number }}</td>
                           <td>{{ $order->producto }}</td>
                           <td>{{ $order->cantidad_lts }}</td>
                           <td>{{ $order->estacions[0]->nombre_sucursal }}</td>

@@ -13,7 +13,8 @@
         "laravel-frontend-presets/material-dashboard": "^1.0",
         "laravel/framework": "6.0.*",
         "laravel/tinker": "^1.0",
-        "maatwebsite/excel": "^3.1"
+        "maatwebsite/excel": "^3.1",
+        "smalot/pdfparser": "^0.16.2"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
@@ -21,7 +22,9 @@
         "fzaninotto/faker": "^1.4",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",
-        "phpunit/phpunit": "^7.5"
+        "phpunit/phpunit": "^7.5",
+        "friendsofphp/php-cs-fixer": "^2.16.3",
+        "symfony/phpunit-bridge": "^4.2.3"
     },
     "config": {
         "optimize-autoloader": true,

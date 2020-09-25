@@ -88,7 +88,19 @@ class HomeController extends Controller
 
         // dd($estaciones_deudoras);
 
-        return view('dashboard', compact('fechas', 'terminales','estacion_total', 'saldo_total', 'pipas_total','abonos_pendientes', 'estaciones_deudoras'));
+        /* Obtener los precios actualizados de las estaciones */
+        $precios_actuales_estaciones = DB::select('SELECT estacions.id as estacion_id, prices.id as precio_id, estacions.razon_social,
+                            estacions.nombre_sucursal, DATE_FORMAT(prices.created_at, "%d-%m-%Y") as fecha,
+                            extra, extra_u, supreme, supreme_u, diesel, diesel_u
+                            FROM prices
+                            INNER JOIN estacions
+                            ON estacions.id = prices.id_estacion
+                            WHERE prices.id IN ( SELECT MAX(prices.id) FROM prices WHERE DATEDIFF( prices.created_at , CURDATE()) < 1 GROUP BY prices.id_estacion )
+                            AND DATEDIFF( prices.created_at , CURDATE()) < 1
+                            ORDER BY prices.created_at DESC
+                    ');
+
+        return view('dashboard', compact('fechas', 'terminales','estacion_total', 'saldo_total', 'pipas_total','abonos_pendientes', 'estaciones_deudoras','precios_actuales_estaciones'));
     }
 
 }

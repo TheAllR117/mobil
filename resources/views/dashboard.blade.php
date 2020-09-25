@@ -183,6 +183,42 @@
             </div>
         </div>
 
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header card-header-primary">
+                        <h4 class="card-title ">{{ __('Precios actuales de las estaciones') }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="estaciones-precios-actuales">
+                                <thead class=" text-primary">
+                                    <th>{{ __('Fecha') }}</th>
+                                    <th>{{ __('Estación') }}</th>
+                                    <th>{{ __('Nombre Sucursal') }}</th>
+                                    <th>{{ __('Extra') }}</th>
+                                    <th>{{ __('Supreme') }}</th>
+                                    <th>{{ __('Diesel') }}</th>
+                                </thead>
+                                <tbody>
+                                    @foreach ( $precios_actuales_estaciones as $precio_actual_estacion )
+                                        <tr>
+                                            <td>{{ $precio_actual_estacion->fecha }}</td>
+                                            <td>{{ $precio_actual_estacion->razon_social }}</td>
+                                            <td>{{ $precio_actual_estacion->nombre_sucursal }}</td>
+                                            <td>{{ $precio_actual_estacion->extra }}</td>
+                                            <td>{{ $precio_actual_estacion->supreme }}</td>
+                                            <td>{{ $precio_actual_estacion->diesel }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         </div>
     </div>
 </div>
@@ -192,6 +228,7 @@
     <script>
         $(document).ready(function() {
             iniciar_date('estaciones-adeudos');
+            iniciar_date('estaciones-precios-actuales');
         });
     </script>
 @endpush

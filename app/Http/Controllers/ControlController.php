@@ -24,7 +24,7 @@ class ControlController extends Controller
     public function index(Request $request, Order $order)
     {
         $request->user()->authorizeRoles(['Administrador', 'Logistica']);
-        return view('control.index', ['orders' => $order::where('status_id', 5)->get()]);
+        return view('control.index', ['orders' => $order::where('status_id', 3)->get()]);
     }
 
     /**

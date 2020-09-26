@@ -16,6 +16,7 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('control_id')->nullable();
+            $table->unsignedBigInteger('pipe_id')->nullable();
             $table->unsignedBigInteger('estacion_id');
             //$table->unsignedBigInteger('factura_id')->nullable();
             $table->unsignedBigInteger('status_id');
@@ -40,8 +41,8 @@ class CreateOrdersTable extends Migration
                 ->onUpdate('cascade');
             $table->foreign('estacion_id')->references('id')->on('estacions')->onDelete('cascade')
                 ->onUpdate('cascade');
-            /* $table->foreign('factura_id')->references('id')->on('invoices')->onDelete('cascade')
-                ->onUpdate('cascade');*/
+            $table->foreign('pipe_id')->references('id')->on('pipes')->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->foreign('status_id')->references('id')->on('statu_orders')->onDelete('cascade')
                 ->onUpdate('cascade');
         });

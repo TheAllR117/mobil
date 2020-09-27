@@ -133,6 +133,21 @@ class ControlController extends Controller
             ]);
         }
     }
+
+    public function pipa_escogida(Request $request){
+        $request->user()->authorizeRoles(['Administrador', 'Logistica']);
+        
+        $resulta_busqueda = [];
+
+        for($i=0; $i<count($request->pipas_ids); $i++){
+            array_push($resulta_busqueda, Pipe::find($request->pipas_ids[$i]));
+        }
+
+        return response()->json([
+            'pipas' => $resulta_busqueda
+        ]);
+    }
+
     public function fletes_contador(Request $request)
     {
         $dia_entrega = $request->dia_entrega;
@@ -164,7 +179,7 @@ class ControlController extends Controller
             }
         }
         $driver::where('id', $request->chofer_id)->update(['id_status' => 2]);
-        $request->merge(['pipe_id_1' => $pipes[0], 'pipe_id_2' => $pipes[1], 'pipe_id_3' => $pipes[2]])->all();
+        // $request->merge(['pipe_id_1' => $pipes[0], 'pipe_id_2' => $pipes[1], 'pipe_id_3' => $pipes[2]])->all();
         $lastControl = $control->create($request->except('_token', '_method', 'pipa_id', 'tractor_id', 'conductor_id', '0', '1', '2', '4'));
         $pedidos = $request->except('_token', '_method', 'pipa_id', 'tractor_id', 'terminal_id', 'chofer_id', 'fletera', 'id_freights');
         sort($pedidos);

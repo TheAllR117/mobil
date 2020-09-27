@@ -9,7 +9,7 @@
                     <div class="card ">
                         <div class="card-header card-header-primary">
                             <h4 class="card-title">
-                                {{ __('Armar Envio') }} {{date("d/m/Y",strtotime($fecha))}}
+                                {{ __('Armar Envio') }} {{--date("d/m/Y",strtotime($fecha))--}}
                             </h4>
                             <p class="card-category">
                             </p>
@@ -22,11 +22,11 @@
                                 </a>
                               </div>
                             </div>
-                            <div class="row mb-5">
+                            <div class="row mb-5 justify-content-center">
                                 <div class="col-sm-2">
                                     <label class="label-control">Fletera</label><br>
                                     <select class="selectpicker" data-live-search="true" id="input-fletera" data-width="100%" data-style="btn-danger">
-                                        <option data-tokens="" value=""> Selecciona una opcion </option>
+                                        <option data-tokens="" value="">Selecciona una opcion </option>
                                         @foreach ($namefreights as $namefreight)
                                             @if ($namefreight->id == $idFreight)
                                                 <option data-tokens="{{$namefreight->name}}" value="{{$namefreight->id}}" selected>{{$namefreight->name}}</option>    
@@ -38,14 +38,14 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <label class="label-control">Tractor</label><br>
-                                    <select class="selectpicker"  id="input-tractor_id" data-style="btn-danger" data-width="100%">
+                                    <select class="selectpicker" id="input-tractor_id" data-style="btn-danger" data-width="100%">
                                         <option value="">Selecciona una opción</option>
                                     </select>
                                 </div> 
                                 <div class="col-sm-2">
                                     <label class="label-control">Pipa</label><br>
-                                    <select class="selectpicker" data-style="btn-danger" data-width="100%" id="input-pipa_id"  multiple>
-                                        <option value="">Selecciona una opción</option>
+                                    <select class="selectpicker" data-style="btn-danger" data-width="100%" id="input-pipa_id"  multiple name="pipa_id" title="Selecciona una opción">
+                                        
                                     </select>
                                 </div>
                                 <div class="col-sm-2">
@@ -102,20 +102,20 @@
                                         </div>
                                         <div class="card-body">
                                             <div class="row">
-                                                <div class="col-md-2">
+                                                <div class="col-sm-3 pr-0 ml-2">
                                                     SO Number
                                                 </div>
-                                                <div class="col-md-3">
+                                                <div class="col-sm-2 pl-0">
                                                     Estación
                                                 </div>
-                                                <div class="col-md-2">
+                                                <div class="col-sm-2 mr-0 ml-4">
                                                     Producto
                                                 </div>
-                                                <div class="col-md-2">
+                                                <div class="col-sm-2">
                                                     LTS
                                                 </div>
-                                                <div class="col-md-3">
-                                                    Fecha de Pedido
+                                                <div class="col-md-2">
+                                                    Fecha
                                                 </div>
                                                             
                                             </div>
@@ -124,22 +124,22 @@
                                                     @foreach($estaciones as $estacion ) 
                                                         @if($order->status_id == 2 && $order->estacion_id == $estacion->id)
                                                             
-                                                            <li class="facet alert alert-danger mr-0 ml-0" style="margin-left: -2.6rem !important;">
+                                                            <li class="facet alert alert-danger mr-0 ml-0" style="margin-left: -2.6rem !important;" value="{{$order->cantidad_lts}}">
                                                                 <div class="row">
-                                                                    <div class="col-md-2">
+                                                                    <div class="col-sm-3 pr-1 ">
                                                                         {{ $order->so_number }}
                                                                         <input type="hidden" name="{{$key}}" value="{{ $order->id }}">
                                                                     </div>
-                                                                    <div class="col-md-3">
+                                                                    <div class="col-sm-3 pr-0 pl-0">
                                                                          {{ $estacion->nombre_sucursal }}
                                                                     </div>
-                                                                    <div class="col-md-2">
+                                                                    <div class="col-sm-2 pr-0 pl-0">
                                                                         {{ $order->producto }}
                                                                     </div>
-                                                                    <div class="col-md-2">
+                                                                    <div class="col-sm-2 pr-0 pl-0">
                                                                         {{ number_format($order->cantidad_lts, 0) }}L
                                                                     </div>
-                                                                    <div class="col-md-3">
+                                                                    <div class="col-sm-2 pr-0 pl-0">
                                                                         {{ $order->dia_entrega }}
                                                                     </div>
                                                                 
@@ -172,7 +172,7 @@
                                                         Pedidos a enviar
                                                     </h4>
                                                 </div>
-                                                    <input class="form-control" type="date" name="dia_entrega" id="dia_entrega" value={{$fecha}}>
+                                                    <input class="form-control" type="date" name="dia_entrega" id="dia_entrega" >
 
                                                     <div class="d-inline-block" id="fecha_flete">
                                                         
@@ -181,20 +181,20 @@
                                             </div>
                                             <div class="card-body">
                                                 <div class="row">
-                                                    <div class="col-md-2">
+                                                    <div class="col-sm-3 pr-0 ml-2">
                                                         SO Number
                                                     </div>
-                                                    <div class="col-md-3">
+                                                    <div class="col-sm-2 pl-0">
                                                         Estación
                                                     </div>
-                                                    <div class="col-md-2">
+                                                    <div class="col-sm-2 ml-4">
                                                         Producto
                                                     </div>
-                                                    <div class="col-md-2">
+                                                    <div class="col-sm-2">
                                                         LTS
                                                     </div>
-                                                    <div class="col-md-3">
-                                                        Fecha de Pedido
+                                                    <div class="col-md-2">
+                                                        Fecha
                                                     </div>
                                                                 
                                                 </div>
@@ -205,7 +205,7 @@
                                                 <input type="hidden" name="id_chofer" id="id_chofer" value="">
                                                 <input type="hidden" name="idOrderControler" id="idOrderControler" value="{{$idOrderControler}}">
 
-                                                <ul class="facet-list ml-0" id="userFacets" style=" height: auto; min-height: 41px;">
+                                                <ul class="facet-list ml-0" id="userFacets" style=" height: auto; min-height: 41px;" ondrop="cambio()">
                                                     @if (count($orderControler)>0)
                                                         @foreach($orderControler as $key => $order)
                                                             @foreach($estaciones as $estacion ) 
@@ -351,12 +351,13 @@
                 $('#input-tractor_id').selectpicker('refresh');
 
                 //refresh select pipas
-                $('#input-pipa_id').children('option:not(:first)').remove();
+                $('#input-pipa_id').children().remove();
                 $('#input-pipa_id').selectpicker('render');
                 $('#input-pipa_id').selectpicker('refresh');
                 
             }
         });
+
    }
 
    function inputTractor(id){
@@ -373,7 +374,7 @@
             },
             success: function(response){
                 console.log(response);
-              $('#input-pipa_id').children('option:not(:first)').remove();
+                $('#input-pipa_id').children().remove();
             //   $('#input-conductor_id').children('option:not(:first)').remove();
               
               /* for(i=0; i<response.pipas.length; i++){

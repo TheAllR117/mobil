@@ -76,7 +76,7 @@
                                 <form action="{{ route('pedidos.destroy', $order->id) }}" method="post">
                                   @csrf
                                   @method('delete')
-                                  
+
                                   <a class="btn btn-social btn-just-icon btn-twitter btn-link factura" title="" data-original-title="" rel="tooltip" onclick="order_id('{{ $order->id }}','{{ $order->estacion_id }}');">
                                     <i class="material-icons">attach_file</i>
                                     <div class="ripple-container">
@@ -129,7 +129,19 @@
                                     </span>
                                 </div>
                               </div>
-                         
+                              <div class="form-group form-file-upload form-file-multiple">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" placeholder="Ingresa el precio final del pedido ($)" name="costo_real">
+                                </div>
+                              </div>
+
+                              <div class="form-group form-file-upload form-file-multiple">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" placeholder="Ingresa el total de litros" name="litros_final">
+                                </div>
+                              </div>
+
+
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -138,7 +150,7 @@
                           </form>
                         </div>
                       </div>
-                    </div>    
+                    </div>
 
 	              </div>
 	          	</div>

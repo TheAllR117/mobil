@@ -32,6 +32,8 @@ class CreateOrdersTable extends Migration
             $table->enum('pagado', ['TRUE','FALSE'])->default('FALSE');
             $table->string('metodo_pago');
             $table->double('total_abonado', 12, 3)->nullable();
+            $table->double('costo_real', 12, 3)->nullable();
+            $table->integer('cantidad_lts_final')->nullable();;
 
             $table->timestamps();
 

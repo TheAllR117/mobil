@@ -30,13 +30,13 @@ class InvoiceController extends Controller
         /*$fecha = "+1 days";
         if(date("l") == 'Friday' || date("l") == 'Saturday'){
             $fecha = "+3 days";
-        }*/      
+        }*/
         //dd(date("l"));
 
         if($request->user()->roles[0]->name == "Administrador" || $request->user()->roles[0]->name == "Logistica") {
 
             //return view('facturas.index', ['orders' => $order::where('dia_entrega',date("Y-m-d"))->where('status_id',5)->orderBy('dia_entrega','asc')->get()]);
-            return view('facturas.index', ['orders' => $order::where('status_id',5)->orderBy('dia_entrega','asc')->get()]);
+            return view('facturas.index', ['orders' => $order::where('status_id',4)->orderBy('dia_entrega','asc')->get()]);
 
         }else{
 
@@ -64,17 +64,72 @@ class InvoiceController extends Controller
     public function store(Request $request, Order $order)
     {
         $request->user()->authorizeRoles(['Administrador','Logistica','Abonos & Pagos']);
-        
+
         $file_pdf = $request->file('pdf');
         $file_xml = $request->file('xml');
-        
+
         $nombre_pdf = $request->order_id.'-'.date("dmY-His").'.'.$file_pdf->getClientOriginalExtension();
         $nombre_xml = $request->order_id.'-'.date("dmY-His").'.'.$file_xml->getClientOriginalExtension();
 
         Storage::disk('facturas_pdf')->put('/'.$request->estacion_id.'/'.$nombre_pdf, \File::get($file_pdf));
         Storage::disk('facturas_xml')->put('/'.$request->estacion_id.'/'.$nombre_xml, \File::get($file_xml));
 
-        $order::where('id', $request->order_id)->update(['pdf' => $nombre_pdf, 'xml' => $nombre_xml]);
+        $litros_final = $request->post('litros_final');
+        $costo_real = $request->post('costo_real');
+
+        $orden_costo_pago = $order::select('costo_aprox', 'estacion_id')->where('id', $request->order_id)->get()[0];
+
+        $costo_aprox = $orden_costo_pago->costo_aprox;
+        $estacion_id = $orden_costo_pago->estacion_id;
+
+        $costo_real = floatval($costo_real);
+        $costo_aprox = floatval($costo_aprox);
+
+        $diferencia = $costo_real - $costo_aprox;
+
+        if($diferencia != 0)
+        {
+            $status_saldo_credito = Estacion::select('saldo','credito_usado')->where('id', $estacion_id)->get()[0];
+            /* Aqui le agregamos al saldo lo que sobra */
+            if($diferencia < 0)
+            {
+                $diferencia = abs($diferencia);
+                $nuevo_credito_usado = floatval($status_saldo_credito->credito_usado);
+
+                $nuevo_credito_usado = $nuevo_credito_usado - $diferencia;
+                if($nuevo_credito_usado > 0)
+                {
+                    $diferencia = 0;
+                }else{
+                    $diferencia = abs($nuevo_credito_usado);
+                    $nuevo_credito_usado = 0;
+                }
+
+                if($diferencia != 0)
+                {
+                    $nuevo_saldo = floatval($status_saldo_credito->saldo) + $diferencia;
+                    Estacion::where('id', $estacion_id)->update(['saldo' => $nuevo_saldo]);
+                }
+
+                Estacion::where('id', $estacion_id)->update(['credito_usado' => $nuevo_credito_usado ]);
+
+            }else{
+                /* La estacion quedo a deber */
+
+                /* No cuenta con saldo suficiente y se le agrega al credito usado */
+                if(floatval($status_saldo_credito->saldo) < $diferencia)
+                {
+                    $nuevo_credito_usado = floatval($status_saldo_credito->credito_usado) + $diferencia;
+                    Estacion::where('id', $estacion_id)->update(['credito_usado' => $nuevo_credito_usado]);
+                }else{
+                    $nuevo_saldo = floatval($status_saldo_credito->saldo) - $diferencia;
+                    Estacion::where('id', $estacion_id)->update(['saldo' => $nuevo_saldo]);
+                }
+            }
+
+        }
+
+        $order::where('id', $request->order_id)->update(['pdf' => $nombre_pdf, 'xml' => $nombre_xml, 'costo_real' => $costo_real, 'cantidad_lts_final' => $litros_final]);
 
         return redirect()->route('facturas.index')->withStatus(__('PDF y XML agregados correctamente.'));
         //dd($request->all());

@@ -32,6 +32,6 @@ class Order extends Model
 
     protected $fillable = [
         'id','control_id', 'estacion_id', 'terminal_id', 'status_id', 'camino', 'producto', 'so_number', 'cantidad_lts','costo_aprox','dia_entrega','po',
-        'fecha_expiracion', 'pagado', 'metodo_pago', 'total_abonado'
+        'fecha_expiracion', 'pagado', 'metodo_pago', 'total_abonado', 'costo_real', 'cantidad_lts_final'
     ];
 }

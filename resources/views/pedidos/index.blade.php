@@ -7,8 +7,41 @@
         <div class="col-md-12">
             <div class="card">
               <div class="card-header card-header-primary">
-                <h4 class="card-title ">{{ __('Pedidos para el día: ') }} {{$fecha}} {{$fecha_sig}}</h4>
-                <p class="card-category"> {{ __('Aquí puedes administrar todos los pedidos.') }}</p>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <h4 class="card-title ">{{ __('Pedidos para el día: ') }} {{$fecha}} {{$fecha_sig}}</h4>
+                    <p class="card-category"> {{ __('Aquí puedes administrar todos los pedidos.') }}</p>
+                  </div>
+                  <div class="col-sm-6">
+                    <form action="{{ route('pedidos.import_pdf') }}" autocomplete="off" class="form-horizontal" enctype="multipart/form-data" method="post">
+                      @csrf
+                      @method('post')
+                          <div class="row">
+                            <div class="col-sm-3">
+                              <div class="form-group">
+                                  <input type="text" class="form-control datetimepicker text-light" id="input-dia_entrega" name="dia_entrega" value="10/05/2018"/>
+                              </div>
+                            </div>
+                            <div class="col-sm-9">
+                              <div class="form-group form-file-upload form-file-multiple">
+                                <input type="file" multiple="" accept="application/pdf" class="inputFileHidden" name="select_file" id="input-pdf">
+                                <div class="input-group">
+                                  <input type="text" class="form-control inputFileVisible text-light" placeholder="Selecciona un archivo PDF" id="archivo_pdf">
+                                  <span class="input-group-btn">
+                                      <button type="button" class="btn btn-fab btn-round ">
+                                          <i class="material-icons">attach_file</i>
+                                      </button>
+                                  </span>
+                                  <button type="submit" id="archivo_pdf_boton" class="btn btn-sm btn-danger" disabled>
+                                    Cargar
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                    </form>
+                  </div>
+                </div>
               </div>
               <div class="card-body">
 
@@ -869,12 +902,22 @@
         });
     });
 
+    $( "#archivo_pdf" ).change(function() {
+      if($( "#archivo_pdf" ).val() != ""){
+        $("#archivo_pdf_boton").prop('disabled', false);
+      } else {
+        $("#archivo_pdf_boton").prop('disabled', true);
+      }
+    });
+
    $(document).ready(function() {
-    iniciar_date('datatables');
-    iniciar_date('datatables1');
-    iniciar_date('datatables2');
-    iniciar_date('datatables3');
-    iniciar_date('datatables4');
+      init_calendar('input-dia_entrega', now(), '07-07-2025');
+      iniciar_selector_de_archivos();
+      iniciar_date('datatables');
+      iniciar_date('datatables1');
+      iniciar_date('datatables2');
+      iniciar_date('datatables3');
+      iniciar_date('datatables4');
     });
   </script>
 @endpush

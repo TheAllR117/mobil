@@ -3,8 +3,8 @@
 @section('content')
   <div class="content">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
+        <div class="row justify-content-center">
+            <div class="col-md-9">
                 <form action="{{ route('pedidos.store') }}" autocomplete="off" class="form-horizontal" method="post">
                   @csrf
                   @method('post')
@@ -17,6 +17,7 @@
                             </p>
                         </div>
                         <div class="card-body">
+
                             <div class="row">
                                 <div class="col-md-12 text-right">
                                     <a class="btn btn-sm btn-primary" href="{{ route('pedidos.index') }}">
@@ -27,8 +28,9 @@
                                     <p>Precios actualizados <span id="span-fecha-ultima-actualizacion"></span></p>
                                 </div>
                             </div>
-                            <div class="row mt-3">
-                            	<div class="col-lg-3 col-md-6 col-sm-3">
+
+                            <div class="row mt-4">
+                            	<div class="col-lg-4 col-md-4 col-sm-4">
                             		<label class="label-control">Estación</label>
                                 	<select class="selectpicker" data-style="btn btn-primary btn-round" title="Single Select" id="input-estacion_id" name="estacion_id">
                                   		<option disabled selected>-- Seleccionar --</option>
@@ -40,7 +42,7 @@
 
                               	<input type="hidden" name="status_id" value="1">
 
-                              	<div class="col-lg-3 col-md-6 col-sm-3">
+                              	<div class="col-lg-4 col-md-4 col-sm-4 justify-content-center">
                               		<label class="label-control">Tipo de contenedor</label>
                                 	<select class="selectpicker sele" data-style="btn btn-primary btn-round" title="Single Select" id="input-cantidad_lts" name="cantidad_lts">
                                   		<option disabled selected>-- Seleccionar --</option>
@@ -51,7 +53,7 @@
                                 	</select>
                               	</div>
 
-                              	<div class="col-lg-3 col-md-6 col-sm-3">
+                              	<div class="col-lg-4 col-md-4 col-sm-4">
                               		<label class="label-control">Producto</label>
                                 	<select class="selectpicker sele" data-style="btn btn-primary btn-round" title="Single Select" id="input-producto" name="producto">
                                   		<option disabled selected>-- Seleccionar --</option>
@@ -65,12 +67,12 @@
 
                             <div class="row mt-4">
 
-                            	<div class="form-group col-sm-3">
+                            	<div class="form-group col-sm-4">
                                 	<label class="label-control">Fecha de entrega</label>
                                 	<input class="form-control datetimepicker" id="input-dia_entrega" name="dia_entrega" type="text" value="" placeholder="Fecha">
                             	</div>
 
-                            	<div class="form-group{{ $errors->has('saldo') ? ' has-danger' : '' }} col-sm-3">
+                            	<div class="form-group{{ $errors->has('saldo') ? ' has-danger' : '' }} col-sm-4">
                             		<input type="hidden" id="input-saldo" name="saldo" value="">
 
                                 	<label for="saldo1">{{ __('Saldo actual') }}</label>
@@ -83,7 +85,7 @@
                                 	</input>
                               	</div>
 
-                              	<div class="form-group{{ $errors->has('credito') ? ' has-danger' : '' }} col-sm-3">
+                              	<div class="form-group{{ $errors->has('credito') ? ' has-danger' : '' }} col-sm-4">
 
                               		<input type="hidden" id="precio_producto_extra">
                               		<input type="hidden" id="precio_producto_supreme">
@@ -102,7 +104,7 @@
                             </div>
 
                             <div class="row mt-4">
-                            	<div class="form-group{{ $errors->has('disponible') ? ' has-danger' : '' }} col-sm-3">
+                            	<div class="form-group{{ $errors->has('disponible') ? ' has-danger' : '' }} col-sm-4">
                                 	<label for="disponible">{{ __('Credito disponible') }}</label>
                                 	<input aria-describedby="numero_economicoHelp" aria-required="true" class="form-control{{ $errors->has('disponible') ? ' is-invalid' : '' }}"  id="input-disponible" name="disponible" type="number" min="0.00" step="0.01" value="{{ old('disponible',0)}}" readonly>
                                   	@if ($errors->has('disponible'))
@@ -113,7 +115,7 @@
                                 	</input>
                               	</div>
 
-                              	<div class="form-group{{ $errors->has('numero_economico') ? ' has-danger' : '' }} col-sm-3">
+                              	<div class="form-group{{ $errors->has('numero_economico') ? ' has-danger' : '' }} col-sm-4">
                                 	<label for="credito_usado">{{ __('Credito restante') }}</label>
                                 	<input aria-describedby="credito_usadoHelp"  aria-required="true" class="form-control{{ $errors->has('numero_economico') ? ' is-invalid' : '' }}" id="input-credito_usado" name="credito_usado" type="number" min="0.00" step="0.01" value="{{ old('credito_usado',0)}}" readonly>
                                   	@if ($errors->has('credito_usado'))
@@ -124,7 +126,7 @@
                                 	</input>
                               	</div>
 
-                              	<div class="form-group{{ $errors->has('costo_aprox') ? ' has-danger' : '' }} col-sm-3">
+                              	<div class="form-group{{ $errors->has('costo_aprox') ? ' has-danger' : '' }} col-sm-4">
                                 	<label for="costo_aprox">{{ __('Costo aproximado') }}</label>
                                 	<input aria-describedby="costo_aproxHelp" aria-required="true" class="form-control{{ $errors->has('costo_aprox') ? ' is-invalid' : '' }}" id="input-costo_aprox" name="costo_aprox" type="number" min="0.00" step="0.01" value="{{ old('costo_aprox', 0)}}" readonly>
                                   	@if ($errors->has('costo_aprox'))

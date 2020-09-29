@@ -20,7 +20,9 @@ class CreatePipesTable extends Migration
             $table->string('numero_economico');
             $table->string('capacidad');
             $table->string('compartimentos');
-            $table->string('capacidad_compartimiento');
+            $table->string('capacidad_1')->nullable();
+            $table->string('capacidad_2')->nullable();
+            //$table->string('capacidad_compartimiento');
             $table->string('contenedor_disponible')->nullable();
             $table->unsignedBigInteger('tractor_id');
             $table->timestamps();

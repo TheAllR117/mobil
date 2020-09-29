@@ -157,6 +157,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('pedidos/individual','OrderController@individual')->name('pedidos.individual');
 	Route::post('pedidos/emergencia','OrderController@emergencia')->name('pedidos.emergencia');
 	Route::post('pedidos/updateEstatus','OrderController@updateEstatus');
+	Route::post('pedidos/import_pdf','OrderController@import_pdf')->name('pedidos.import_pdf');
 });
  
 // rutas de control

@@ -85,7 +85,7 @@ class PipeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(PipeRequest $request, Pipe $pipe, $id)
-    {
+    {   
         $request->user()->authorizeRoles(['Administrador', 'Logistica']);
         $pipe_up = $pipe::findorfail($id);
 

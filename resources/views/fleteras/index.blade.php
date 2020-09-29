@@ -23,21 +23,21 @@
                     </div>
                   </div>
                 @endif
-                <div class="row">
-                	<div class="col-4 text-right">
+                <div class="row justify-content-center">
+                	<div class="col-2">
                 		<a href="{{ route('registro_fleteras.index') }}" class="btn btn-sm btn-primary">{{ __('gestionar fleteras') }}
                 		</a>
 	                </div>
-                	<div class="col-2 text-right">
-                		<a href="{{ route('pipas.index') }}" class="btn btn-sm btn-primary">{{ __('gestionar pipas') }}</a>
+	                <div class="col-2">
+                    <a href="{{ route('tractores.index') }}" class="btn btn-sm btn-primary">{{ __('gestionar tractores') }}</a>
 	                </div>
-	                <div class="col-2 text-right">
-                		<a href="{{ route('tractores.index') }}" class="btn btn-sm btn-primary">{{ __('gestionar tractores') }}</a>
-	                </div>
-	                <div class="col-2 text-right">
+                  <div class="col-2">
+                    <a href="{{ route('pipas.index') }}" class="btn btn-sm btn-primary">{{ __('gestionar pipas') }}</a>
+                  </div>
+	                <div class="col-2">
                 		<a href="{{ route('conductores.index') }}" class="btn btn-sm btn-primary">{{ __('gestionar conductores') }}</a>
 	                </div>
-	                <div class="col-2 text-right">
+	                <div class="col-2">
 	                  <a href="{{ route('fleteras.create') }}" class="btn btn-sm btn-primary">
                       {{ __('Relacionar Fletera') }}
                     </a>

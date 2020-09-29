@@ -45,25 +45,18 @@
                                 <div class="col-sm-2">
                                     <label class="label-control">Pipa</label><br>
                                     <select class="selectpicker" data-style="btn-danger" data-width="100%" id="input-pipa_id"  multiple name="pipa_id" title="Selecciona una opción">
-                                        
+                                        <option value="">Selecciona una opción</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-2">
                                     <label class="label-control">Conductor</label><br>
                                     <select class="selectpicker" data-live-search="true" data-style="btn-danger" data-width="100%" id="input-conductor_id">
-                                        @if ($idConductor != -1)
-                                            @foreach ($drivers as $driver)
-                                                @if ($driver->id == $idConductor)
-                                                    <option value="{{$driver->id}}"> {{$driver->name}} </option>
-                                                    @break
-                                                @endif
-                                            @endforeach
-                                        @else
-                                            <option data-tokens="" value="">Selecciona una opción</option>
-                                        @endif
+                                        <option data-tokens="" value="">Selecciona una opcion </option>
                                         @foreach ($drivers as $driver)
-                                            @if ($driver->id != $idConductor)
-                                                <option value="{{$driver->id}}"> {{$driver->name}} </option>
+                                            @if ($driver->id == $idConductor)
+                                                <option data-tokens="{{$driver->name}}" value="{{$driver->id}}" selected>{{$driver->name}}</option>    
+                                            @else
+                                                <option data-tokens="{{$driver->name}}" value="{{$driver->id}}">{{$driver->name}}</option>
                                             @endif
                                         @endforeach
                                     </select>
@@ -71,19 +64,12 @@
                                 <div class="col-sm-2">
                                     <label class="label-control">Terminal</label><br>
                                     <select class="selectpicker" data-live-search="true" data-style="btn-danger" data-width="100%" id="input-terminal_id">
-                                        @if ($idTerminal != -1)
-                                            @foreach ($terminals as $terminal)
-                                                @if ($terminal->id == $idTerminal)
-                                                    <option value="{{ $terminal->id }}" data-tokens="{{ $terminal->razon_social }}">{{ $terminal->razon_social }}</option>    
-                                                    @break
-                                                @endif
-                                            @endforeach
-                                        @else
-                                            <option data-tokens="" value="">Selecciona una opción</option>
-                                        @endif
-                                        @foreach($terminals as $terminal)
-                                            @if ($terminal->id != $idTerminal)
-                                                <option value="{{ $terminal->id }}" data-tokens="{{ $terminal->razon_social }}">{{ $terminal->razon_social }}</option>
+                                        <option data-tokens="" value="">Selecciona una opcion </option>
+                                        @foreach ($terminals as $terminal)
+                                            @if ($terminal->id == $idTerminal)
+                                                <option data-tokens="{{$terminal->razon_social}}" value="{{$terminal->id}}" selected>{{$terminal->razon_social}}</option>    
+                                            @else
+                                                <option data-tokens="{{$terminal->razon_social}}" value="{{$terminal->id}}">{{$terminal->razon_social}}</option>
                                             @endif
                                         @endforeach
                                     </select>
@@ -375,51 +361,12 @@
             success: function(response){
                 console.log(response);
                 $('#input-pipa_id').children().remove();
-            //   $('#input-conductor_id').children('option:not(:first)').remove();
-              
-              /* for(i=0; i<response.pipas.length; i++){
-                for(j=0;j<response.pipas[i].length;j++){
-                    //console.log(response[i][j]);
-                    if(response.pipas[i][j].id == {{$idPipaUno}}){
-                        $('#input-pipa_id').append('<option value="'+response.pipas[i][j].id+'" selected>'+response.pipas[i][j].numero_economico+' - '+response.pipas[i][j].capacidad+'LTS</option>');
-                    }
-                    if(response.pipas[i][j].id == {{$idPipaDos}}){
-                        $('#input-pipa_id').append('<option value="'+response.pipas[i][j].id+'" selected>'+response.pipas[i][j].numero_economico+' - '+response.pipas[i][j].capacidad+'LTS</option>');
-                    }
-                    if (response.pipas[i][j].id != {{$idPipaUno}} && response.pipas[i][j].id != {{$idPipaDos}}) {
-                        $('#input-pipa_id').append('<option value="'+response.pipas[i][j].id+'">'+response.pipas[i][j].numero_economico+' - '+response.pipas[i][j].capacidad+'LTS</option>');
-                    }
-                }  
-              } */
-              
-              for(i=0; i<response.pipas.length; i++){
-                $('#input-pipa_id').append('<option value="'+response.pipas[i].id+'">'+response.pipas[i].numero_economico+' - '+response.pipas[i].capacidad+'LTS</option>');
-                    
-                    //console.log(response[i][j]);
-                    /* if(response.pipas[i][j].id == {{$idPipaUno}}){
-                        $('#input-pipa_id').append('<option value="'+response.pipas[i][j].id+'" selected>'+response.pipas[i][j].numero_economico+' - '+response.pipas[i][j].capacidad+'LTS</option>');
-                    }
-                    if(response.pipas[i][j].id == {{$idPipaDos}}){
-                        $('#input-pipa_id').append('<option value="'+response.pipas[i][j].id+'" selected>'+response.pipas[i][j].numero_economico+' - '+response.pipas[i][j].capacidad+'LTS</option>');
-                    }
-                    if (response.pipas[i][j].id != {{$idPipaUno}} && response.pipas[i][j].id != {{$idPipaDos}}) {
-                        $('#input-pipa_id').append('<option value="'+response.pipas[i][j].id+'">'+response.pipas[i][j].numero_economico+' - '+response.pipas[i][j].capacidad+'LTS</option>');
-                    } */
-                    
-                
-              }
-              /* for(i=0; i<response.conductores.length; i++){
-                for(j=0;j<response.conductores[i].length;j++){
-                    //console.log(response[i][j]);
-                    if (response.conductores[i][j].id != {{$idConductor}}){
-                        $('#input-conductor_id').append('<option value="'+response.conductores[i][j].id+'">'+response.conductores[i][j].name+'</option>');
-                    }
-                }  
-              } */
-              $('#input-pipa_id').selectpicker('render');
-              $('#input-pipa_id').selectpicker('refresh');
-            //   $('#input-conductor_id').selectpicker('render');
-            //   $('#input-conductor_id').selectpicker('refresh');
+                for(i=0; i<response.pipas.length; i++){
+                    console.log({{$idPipaUno}})
+                    $('#input-pipa_id').append('<option value="'+response.pipas[i].id+'">'+response.pipas[i].numero_economico+' - '+response.pipas[i].capacidad+'LTS</option>');
+                }
+                $('#input-pipa_id').selectpicker('render');
+                $('#input-pipa_id').selectpicker('refresh');
             }
         });
     }

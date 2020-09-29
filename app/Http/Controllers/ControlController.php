@@ -50,21 +50,24 @@ class ControlController extends Controller
         $idTerminal = -1;
         $orderControler = [];
         $idOrderControler = -1;
+        $pipes = array();
         try {
             $control = Control::find($id);
             $idFreight = $control->freights[0]->id_freights;
-            $idTractor = $control->freights[0]->id_tractor;
-
-            $idPipeOne = $control->pipe_id_1;
-            $idPipeTwo = $control->pipe_id_2;
-            $idPipeThree = $control->pipe_id_3;
-
-            $idDrive = $control->id_chofer;
-            $orderControler = $order::where('control_id', $id)->get();
-            $idOrderControler = $id;
             $idTerminal = $control->terminal_id;
+            $idDrive = $control->id_chofer;
+            $idTractor = $control->freights[0]->id_tractor;
+            $orderControler = $order::where('control_id', $id)->get();
+            $pipes = $this->getPipes($orderControler);
+            $idPipeOne = $pipes[0];
+            $idPipeTwo = $pipes[1];
+            if (count($pipes) > 2) {
+                $idPipeThree = $pipes[2];
+            }
+            $idOrderControler = $id;
         } catch (Exception $e) {
         }
+        // return $idFreight;
         if ($idOrderControler != -1 && $control->dia_entrega != null) {
             $fecha = date("Y-m-d", strtotime($control->dia_entrega));
         } else {
@@ -119,9 +122,6 @@ class ControlController extends Controller
     public function seleccionar_pipa(Freight $freight, Request $request)
     {
         $request->user()->authorizeRoles(['Administrador', 'Logistica']);
-        /* return response()->json([
-            'request' => $request->id_tractor
-        ]); */
         try {
             $tractor = Tractor::find($request->id_tractor);
             return response()->json([
@@ -134,12 +134,13 @@ class ControlController extends Controller
         }
     }
 
-    public function pipa_escogida(Request $request){
+    public function pipa_escogida(Request $request)
+    {
         $request->user()->authorizeRoles(['Administrador', 'Logistica']);
-        
+
         $resulta_busqueda = [];
 
-        for($i=0; $i<count($request->pipas_ids); $i++){
+        for ($i = 0; $i < count($request->pipas_ids); $i++) {
             array_push($resulta_busqueda, Pipe::find($request->pipas_ids[$i]));
         }
 
@@ -166,25 +167,53 @@ class ControlController extends Controller
     public function store(Request $request, Control $control, Order $order, Pipe $pipe, Tractor $tractor, Driver $driver)
     {
         $request->user()->authorizeRoles(['Administrador', 'Logistica']);
-
+        return $request->all();
         $tractor::where('id', $request->tractor_id)->update(['id_status' => 2]);
-        $pipas_selec = explode(',', $request->pipa_id);
-        $pipes = array();
-        for ($i = 0; $i < 3; $i++) {
-            try {
-                $pipe::where('id', $pipas_selec[$i])->update(['id_status' => 2]);
-                $pipes[$i] = $pipas_selec[$i];
-            } catch (Exception $e) {
-                $pipes[$i] = null;
-            }
-        }
         $driver::where('id', $request->chofer_id)->update(['id_status' => 2]);
-        // $request->merge(['pipe_id_1' => $pipes[0], 'pipe_id_2' => $pipes[1], 'pipe_id_3' => $pipes[2]])->all();
-        $lastControl = $control->create($request->except('_token', '_method', 'pipa_id', 'tractor_id', 'conductor_id', '0', '1', '2', '4'));
-        $pedidos = $request->except('_token', '_method', 'pipa_id', 'tractor_id', 'terminal_id', 'chofer_id', 'fletera', 'id_freights');
-        sort($pedidos);
-        for ($i = 0; $i < count($pedidos); $i++) {
-            $order::where('id', $pedidos[$i])->update(['control_id' => $lastControl->id, 'status_id' => 3]);
+        $lastControl = $control->create($request->except('_token', '_method', 'pipa_id', 'tractor_id', 'conductor_id', '0', '1', '2', '4', '5', '6', 'idOrderControler'));
+        $pipas_selec = explode(',', $request->pipa_id);
+        $pedidos = $request->except('_token', '_method', 'pipa_id', 'tractor_id', 'terminal_id', 'chofer_id', 'fletera', 'id_freights', 'dia_entrega', 'idOrderControler', 'id_chofer');
+        if (count($pipas_selec) == count($pedidos)) {
+            for ($i = 0; $i < count($pedidos); $i++) {
+                $order::where('id', $pedidos[$i])->update(['control_id' => $lastControl->id, 'status_id' => 3, 'pipe_id' => $pipas_selec[$i]]);
+            }
+        } elseif ((count($pipas_selec) * 2) == count($pedidos)) {
+            for ($i = 0; $i < count($pipas_selec); $i++) {
+                $order::where('id', $pedidos[$i * 2])->update(['control_id' => $lastControl->id, 'status_id' => 3, 'pipe_id' => $pipas_selec[$i]]);
+                $order::where('id', $pedidos[$i * 2 + 1])->update(['control_id' => $lastControl->id, 'status_id' => 3, 'pipe_id' => $pipas_selec[$i]]);
+            }
+        } else {
+            switch (count($pipas_selec)) {
+                case 2:
+                    for ($i = 0; $i < 3; $i++) {
+                        if ($i == 2) {
+                            $order::where('id', $pedidos[$i])->update(['control_id' => $lastControl->id, 'status_id' => 3, 'pipe_id' => $pipas_selec[1]]);
+                        } else {
+                            $order::where('id', $pedidos[$i])->update(['control_id' => $lastControl->id, 'status_id' => 3, 'pipe_id' => $pipas_selec[0]]);
+                        }
+                    }
+                    break;
+                case 3:
+                    switch (count($pedidos)) {
+                        case 4:
+                            for ($i = 0; $i < 4; $i++) {
+                                if ($i == 3) {
+                                    $order::where('id', $pedidos[$i])->update(['control_id' => $lastControl->id, 'status_id' => 3, 'pipe_id' => $pipas_selec[2]]);
+                                } else {
+                                    $order::where('id', $pedidos[$i])->update(['control_id' => $lastControl->id, 'status_id' => 3, 'pipe_id' => $pipas_selec[$i]]);
+                                }
+                            }
+                            break;
+                        case 5:
+                            for ($i = 0; $i < 2; $i++) {
+                                $order::where('id', $pedidos[$i * 2])->update(['control_id' => $lastControl->id, 'status_id' => 3, 'pipe_id' => $pipas_selec[$i]]);
+                                $order::where('id', $pedidos[$i * 2 + 1])->update(['control_id' => $lastControl->id, 'status_id' => 3, 'pipe_id' => $pipas_selec[$i]]);
+                            }
+                            $order::where('id', $pedidos[4])->update(['control_id' => $lastControl->id, 'status_id' => 3, 'pipe_id' => $pipas_selec[2]]);
+                            break;
+                    }
+                    break;
+            }
         }
         return redirect()->route('pedidos.index')->withStatus(__('Armado de pedido exitoso.'));
     }
@@ -264,23 +293,17 @@ class ControlController extends Controller
         //
     }
     // Funcion para calcular la pocision dentro de un arreglo
-    private function position($array, $model, $idName)
+    private function getPipes($array)
     {
-        for ($i = 0; $i < count($array); $i++) {
-            if ($array[$i]->id == $model->freights[0]->$idName) {
-                return $i;
-            }
+        $pipes = array();
+        foreach ($array as $pipe) {
+            array_push($pipes, $pipe->pipe_id);
         }
-        return -1;
-    }
-    // Funcion para calcular la pocision dentro de un arreglo
-    private function positionPipesDrivers($array, $model, $idName)
-    {
-        for ($i = 0; $i < count($array); $i++) {
-            if ($array[$i][0]->id == $model->freights[0]->$idName) {
-                return $i;
-            }
+        $pipes = array_unique($pipes);
+        $p = array();
+        foreach ($pipes as $pipe) {
+            array_push($p, $pipe);
         }
-        return -1;
+        return $p;
     }
 }

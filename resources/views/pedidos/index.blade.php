@@ -378,22 +378,11 @@
                                       @endif
                                     </td>
                                     <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
-                                    <td>{{ $control->pipeUno->numero_economico }}</td>
 
-                                    <td>
-                                      @if($control->pipeDos != null)
-                                        {{ $control->pipeDos->numero_economico }}
-                                      @else
-                                        No hay segunda pipa.
-                                      @endif 
-                                    </td>
-                                    <td>
-                                      @if($control->pipeTres != null)
-                                        {{ $control->pipeTres->numero_economico }}
-                                      @else
-                                        No hay tercera pipa.
-                                      @endif 
-                                    </td>
+                                    <td>{{ $control->orders[0]->pipes->numero_economico}}</td>
+                                    <td>{{ __('No hay segunda pipa') }}</td>
+                                    <td>{{ __('No hay tercera pipa') }}</td>
+
                                     <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                                       <td class="td-actions">
@@ -443,22 +432,15 @@
                                       @endif
                                     </td>
                                     <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
-                                    <td>{{ $control->pipeUno->numero_economico }}</td>
 
-                                    <td>
-                                      @if($control->pipeDos != null)
-                                        {{ $control->pipeDos->numero_economico }}
-                                      @else
-                                        No hay segunda pipa.
-                                      @endif 
-                                    </td>
-                                    <td>
-                                      @if($control->pipeTres != null)
-                                        {{ $control->pipeTres->numero_economico }}
-                                      @else
-                                        No hay tercera pipa.
-                                      @endif 
-                                    </td>
+                                    <td>{{ $control->orders[0]->pipes->numero_economico}}</td>
+                                    @if ($control->orders[1]->pipe_id != null and $control->orders[1]->pipe_id != $control->orders[0]->pipe_id )
+                                      <td>{{ $control->orders[1]->pipes->numero_economico}}</td>    
+                                    @else
+                                      <td>{{ __('No hay segunda pipa') }}</td>    
+                                    @endif
+                                    <td>{{ __('No hay tercera pipa') }}</td>
+
                                     <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                                       <td class="td-actions">
@@ -508,22 +490,10 @@
                                       @endif
                                     </td>
                                     <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
-                                    <td>{{ $control->pipeUno->numero_economico }}</td>
-
-                                    <td>
-                                      @if($control->pipeDos != null)
-                                        {{ $control->pipeDos->numero_economico }}
-                                      @else
-                                        No hay segunda pipa.
-                                      @endif 
-                                    </td>
-                                    <td>
-                                      @if($control->pipeTres != null)
-                                        {{ $control->pipeTres->numero_economico }}
-                                      @else
-                                        No hay tercera pipa.
-                                      @endif 
-                                    </td>
+                                    
+                                    <td>{{ $control->orders[0]->pipes->numero_economico}}</td>
+                                    <td>{{ $control->orders[2]->pipes->numero_economico}}</td>
+                                    <td>{{ __('No hay tercera pipa') }}</td>
 
                                     <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
@@ -574,22 +544,10 @@
                                       @endif
                                     </td>
                                     <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
-                                    <td>{{ $control->pipeUno->numero_economico }}</td>
 
-                                    <td>
-                                      @if($control->pipeDos != null)
-                                        {{ $control->pipeDos->numero_economico }}
-                                      @else
-                                        No hay segunda pipa.
-                                      @endif 
-                                    </td>
-                                    <td>
-                                      @if($control->pipeTres != null)
-                                        {{ $control->pipeTres->numero_economico }}
-                                      @else
-                                        No hay tercera pipa.
-                                      @endif 
-                                    </td>
+                                    <td>{{ $control->orders[0]->pipes->numero_economico}}</td>
+                                    <td>{{ $control->orders[3]->pipes->numero_economico}}</td>
+                                    <td>{{ __('No hay tercera pipa') }}</td>
 
                                     <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)

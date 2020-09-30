@@ -191,7 +191,7 @@
                                                 <input type="hidden" name="id_chofer" id="id_chofer" value="">
                                                 <input type="hidden" name="idOrderControler" id="idOrderControler" value="{{$idOrderControler}}">
 
-                                                <ul class="facet-list ml-0" id="userFacets" style=" height: auto; min-height: 41px;" ondrop="cambio()">
+                                                <ul class="facet-list ml-0" id="userFacets" name="ordenes[]" style=" height: auto; min-height: 41px;" ondrop="cambio()">
                                                     @if (count($orderControler)>0)
                                                         @foreach($orderControler as $key => $order)
                                                             @foreach($estaciones as $estacion ) 
@@ -251,7 +251,6 @@
         $("#tractor_id").val($("#input-tractor_id").val());
         $("#terminal_id").val($("#input-terminal_id").val());
         $("#id_chofer").val($("#input-conductor_id").val());
-        //$("#fletera").val($("#input-fletera").val());
         visible($("#input-pipa_id").val(),$("#input-tractor_id").val(),$("#input-terminal_id").val(),$("#input-conductor_id").val(), $("#fletera").val());
       
     });
@@ -362,8 +361,16 @@
                 console.log(response);
                 $('#input-pipa_id').children().remove();
                 for(i=0; i<response.pipas.length; i++){
-                    console.log({{$idPipaUno}})
-                    $('#input-pipa_id').append('<option value="'+response.pipas[i].id+'">'+response.pipas[i].numero_economico+' - '+response.pipas[i].capacidad+'LTS</option>');
+                    if(response.pipas[i].id == {{$idPipaUno}}){
+                        $('#input-pipa_id').append('<option value="'+response.pipas[i].id+'" selected>'+response.pipas[i].numero_economico+' - '+response.pipas[i].capacidad+'LTS</option>');
+                    }else if(response.pipas[i].id == {{$idPipaDos}}){
+                        $('#input-pipa_id').append('<option value="'+response.pipas[i].id+'" selected>'+response.pipas[i].numero_economico+' - '+response.pipas[i].capacidad+'LTS</option>');
+                    }else if(response.pipas[i].id == {{$idPipaTres}}){
+                        $('#input-pipa_id').append('<option value="'+response.pipas[i].id+'" selected>'+response.pipas[i].numero_economico+' - '+response.pipas[i].capacidad+'LTS</option>');
+                    }
+                    else{
+                        $('#input-pipa_id').append('<option value="'+response.pipas[i].id+'">'+response.pipas[i].numero_economico+' - '+response.pipas[i].capacidad+'LTS</option>');
+                    }                
                 }
                 $('#input-pipa_id').selectpicker('render');
                 $('#input-pipa_id').selectpicker('refresh');

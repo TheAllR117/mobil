@@ -213,7 +213,7 @@
       var item = e.target;
         //move from all to user
         $(item).fadeOut('fast', function() {
-          $(item).appendTo($('#userFacets')).fadeIn('slow');
+          $(item).appendTo($('#allFacets')).fadeIn('slow');
         });
      
     });

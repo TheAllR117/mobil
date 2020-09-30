@@ -377,7 +377,7 @@
                                         {{ $control->freights[0]->namefreights[0]->name  }}
                                       @endif
                                     </td>
-                                    <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
+                                    <td>{{ $control->tractors->placas }}</td>
 
                                     <td>{{ $control->orders[0]->pipes->numero_economico}}</td>
                                     <td>{{ __('No hay segunda pipa') }}</td>
@@ -431,7 +431,7 @@
                                         {{ $control->freights[0]->namefreights[0]->name  }}
                                       @endif
                                     </td>
-                                    <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
+                                    <td>{{ $control->tractors->placas }}</td>
 
                                     <td>{{ $control->orders[0]->pipes->numero_economico}}</td>
                                     @if ($control->orders[1]->pipe_id != null and $control->orders[1]->pipe_id != $control->orders[0]->pipe_id )
@@ -489,7 +489,7 @@
                                         {{ $control->freights[0]->namefreights[0]->name  }}
                                       @endif
                                     </td>
-                                    <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
+                                    <td>{{ $control->tractors->placas }}</td>
                                     
                                     <td>{{ $control->orders[0]->pipes->numero_economico}}</td>
                                     <td>{{ $control->orders[2]->pipes->numero_economico}}</td>
@@ -543,7 +543,7 @@
                                         {{ $control->freights[0]->namefreights[0]->name  }}
                                       @endif
                                     </td>
-                                    <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
+                                    <td>{{ $control->tractors->placas }}</td>
 
                                     <td>{{ $control->orders[0]->pipes->numero_economico}}</td>
                                     <td>{{ $control->orders[3]->pipes->numero_economico}}</td>

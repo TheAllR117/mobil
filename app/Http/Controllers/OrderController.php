@@ -59,11 +59,27 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request, State $state, Estacion $estacion, Terminal $terminal, Statu_order $statu_order, Pipe $pipas)
+    public function create(Request $request, State $state, Estacion $estacion, Terminal $terminal, Statu_order $statu_order, Pipe $pipas, Freight $freight)
     {
         $request->user()->authorizeRoles(['Administrador', 'Logistica', 'Admin-Estacion']);
 
-        dd($pipas->all());
+        $fleteras = $freight::where('id_estacion', null)->get();
+
+        for($i=0; $i<count($fleteras); $i++){
+            for($j=0; $j<count($fleteras[$i]->tractors); $j++){
+                for($k=0; $k<count($fleteras[$i]->tractors[$j]->pipes); $k++){
+                    echo $fleteras[$i]->tractors[$j]->pipes[$k]->select('capacidad_1')->groupBy('capacidad_1')->get();
+                    
+                }
+            }
+        }
+
+        dd();
+
+        //return $fleteras[0]->tractors[0]->pipes[0]->select('capacidad_2')->groupBy('capacidad_2')->get();
+        // return $fleteras[0]->tractors[0]->pipes[0]->select('capacidad')->groupBy('capacidad')->get();
+
+        //return $pipas::select('capacidad')->groupBy('capacidad')->get();
 
         if ($request->user()->roles[0]->name == "Administrador" || $request->user()->roles[0]->name == "Logistica") {
 

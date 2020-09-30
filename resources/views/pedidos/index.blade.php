@@ -7,8 +7,41 @@
         <div class="col-md-12">
             <div class="card">
               <div class="card-header card-header-primary">
-                <h4 class="card-title ">{{ __('Pedidos para el día: ') }} {{$fecha}} {{$fecha_sig}}</h4>
-                <p class="card-category"> {{ __('Aquí puedes administrar todos los pedidos.') }}</p>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <h4 class="card-title ">{{ __('Pedidos para el día: ') }} {{$fecha}} {{$fecha_sig}}</h4>
+                    <p class="card-category"> {{ __('Aquí puedes administrar todos los pedidos.') }}</p>
+                  </div>
+                  <div class="col-sm-6">
+                    <form action="{{ route('pedidos.import_pdf') }}" autocomplete="off" class="form-horizontal" enctype="multipart/form-data" method="post">
+                      @csrf
+                      @method('post')
+                          <div class="row">
+                            <div class="col-sm-3">
+                              <div class="form-group">
+                                  <input type="text" class="form-control datetimepicker text-light" id="input-dia_entrega" name="dia_entrega" value="10/05/2018"/>
+                              </div>
+                            </div>
+                            <div class="col-sm-9">
+                              <div class="form-group form-file-upload form-file-multiple">
+                                <input type="file" multiple="" accept="application/pdf" class="inputFileHidden" name="select_file" id="input-pdf">
+                                <div class="input-group">
+                                  <input type="text" class="form-control inputFileVisible text-light" placeholder="Selecciona un archivo PDF" id="archivo_pdf">
+                                  <span class="input-group-btn">
+                                      <button type="button" class="btn btn-fab btn-round ">
+                                          <i class="material-icons">attach_file</i>
+                                      </button>
+                                  </span>
+                                  <button type="submit" id="archivo_pdf_boton" class="btn btn-sm btn-danger" disabled>
+                                    Cargar
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                    </form>
+                  </div>
+                </div>
               </div>
               <div class="card-body">
 
@@ -159,11 +192,10 @@
                                   @method('delete')
 
                                   @foreach($freights as $freight )
-                                    @if($order->estacion_id == $freight->id_estacion && $freight->pipes[0]->id_status == 1)
-                                    <a class="btn btn-social btn-just-icon btn-twitter btn-link enviar" title="Enviar" data-original-title="" rel="tooltip" onclick="autorizar('{{ $order->estacion_id }}','{{ $order->estacions[0]->nombre_sucursal }}','{{ $order->id }}');">
+                                    @if($order->estacion_id == $freight->id_estacion )
+                                    <a class="btn btn-social btn-just-icon btn-twitter btn-link enviar" title="Enviar" data-original-title="" rel="tooltip" id="boton_enviar" onclick="autorizar('{{ $order->estacion_id }}','{{ $order->estacions[0]->nombre_sucursal }}','{{ $order->id }}');">
                                       <i class="material-icons">local_shipping</i>
-                                      <div class="ripple-container">
-                                      </div>
+                                      <div class="ripple-container"></div>
                                     </a>
                                     @break
                                     @endif
@@ -325,6 +357,7 @@
                           <th>{{ __('Tractor') }}</th>
                           <th>{{ __('Pipa 1') }}</th>
                           <th>{{ __('Pipa 2') }}</th>
+                          <th>{{ __('Pipa 3') }}</th>
                           <th>{{ __('Conductor') }}</th>
                           @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                             <th class="text-center th-actions">{{ __('Acciones') }}</th>
@@ -344,16 +377,13 @@
                                         {{ $control->freights[0]->namefreights[0]->name  }}
                                       @endif
                                     </td>
-                                    <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
-                                    <td>{{ $control->freights[0]->pipes[0]->numero_economico }}</td>
-                                    <td>
-                                      @if($control->freights[0]->pipes2 != '[]')
-                                        {{ $control->freights[0]->pipes2[0]->numero_economico }}
-                                      @else
-                                        No hay segunda pipa.
-                                      @endif 
-                                    </td>
-                                    <td>{{ $control->freights[0]->drivers[0]->name }}</td>
+                                    <td>{{ $control->tractors->placas }}</td>
+
+                                    <td>{{ $control->orders[0]->pipes->numero_economico}}</td>
+                                    <td>{{ __('No hay segunda pipa') }}</td>
+                                    <td>{{ __('No hay tercera pipa') }}</td>
+
+                                    <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                                       <td class="td-actions">
                                         @if ($control->orders[0]->status_id == 4)
@@ -367,11 +397,9 @@
                                             </button>
                                           </form>
                                         @else
-                                          <form action="{{ route('control.create') }}" method="post">
+                                          <form action="{{ route('control.create', $control->id) }}" method="post">
                                             @csrf
                                             @method('post')
-                                            <input type="hidden" name="control" value="{{$control->id}}">
-                                            <input type="hidden" name="freight" value="{{ $control->freights[0]->namefreights[0]->id  }}">
                                             <button type="submit" class="btn btn-success btn-link">
                                               <i class="material-icons">edit</i>
                                               <div class="ripple-container"></div>
@@ -396,7 +424,6 @@
                                 @if(($control->orders[0]->status_id == 4 && $control->orders[1]->status_id == 4) or ($control->orders[0]->status_id == 3 || $control->orders[1]->status_id == 3))
                                   <tr>
                                     <td>{{ $control->id }}</td>
-                                    <!--td>{{-- $order->controls[0]->freights[0]->namefreights[0]->name --}}</td-->
                                     <td>
                                       @if($control->freights[0]->namefreights == '[]')
                                         {{ $control->freights[0]->estacions[0]->nombre_sucursal }}
@@ -404,16 +431,17 @@
                                         {{ $control->freights[0]->namefreights[0]->name  }}
                                       @endif
                                     </td>
-                                    <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
-                                    <td>{{ $control->freights[0]->pipes[0]->numero_economico }}</td>
-                                    <td>
-                                      @if($control->freights[0]->pipes2 != '[]')
-                                        {{ $control->freights[0]->pipes2[0]->numero_economico }}
-                                      @else
-                                        No hay segunda pipa.
-                                      @endif  
-                                    </td>
-                                    <td>{{ $control->freights[0]->drivers[0]->name }}</td>
+                                    <td>{{ $control->tractors->placas }}</td>
+
+                                    <td>{{ $control->orders[0]->pipes->numero_economico}}</td>
+                                    @if ($control->orders[1]->pipe_id != null and $control->orders[1]->pipe_id != $control->orders[0]->pipe_id )
+                                      <td>{{ $control->orders[1]->pipes->numero_economico}}</td>    
+                                    @else
+                                      <td>{{ __('No hay segunda pipa') }}</td>    
+                                    @endif
+                                    <td>{{ __('No hay tercera pipa') }}</td>
+
+                                    <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                                       <td class="td-actions">
                                         @if ($control->orders[0]->status_id == 4 && $control->orders[1]->status_id == 4)
@@ -427,11 +455,9 @@
                                             </button>
                                           </form>
                                         @else
-                                          <form action="{{ route('control.create') }}" method="post">
+                                          <form action="{{ route('control.create', $control->id) }}" method="post">
                                             @csrf
                                             @method('post')
-                                            <input type="hidden" name="control" value="{{$control->id}}">
-                                            <input type="hidden" name="freight" value="{{ $control->freights[0]->namefreights[0]->id  }}">
                                             <button type="submit" class="btn btn-success btn-link">
                                               <i class="material-icons">edit</i>
                                               <div class="ripple-container"></div>
@@ -463,16 +489,13 @@
                                         {{ $control->freights[0]->namefreights[0]->name  }}
                                       @endif
                                     </td>
-                                    <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
-                                    <td>{{ $control->freights[0]->pipes[0]->numero_economico }}</td>
-                                    <td>
-                                      @if($control->freights[0]->pipes2 != '[]')
-                                        {{ $control->freights[0]->pipes2[0]->numero_economico }}
-                                      @else
-                                        No hay segunda pipa.
-                                      @endif            
-                                    </td>
-                                    <td>{{ $control->freights[0]->drivers[0]->name }}</td>
+                                    <td>{{ $control->tractors->placas }}</td>
+                                    
+                                    <td>{{ $control->orders[0]->pipes->numero_economico}}</td>
+                                    <td>{{ $control->orders[2]->pipes->numero_economico}}</td>
+                                    <td>{{ __('No hay tercera pipa') }}</td>
+
+                                    <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                                       <td class="td-actions">
                                         @if ($control->orders[0]->status_id == 4 && $control->orders[1]->status_id == 4 && $control->orders[2]->status_id == 4)
@@ -486,11 +509,9 @@
                                             </button>
                                           </form>
                                         @else
-                                          <form action="{{ route('control.create') }}" method="post">
+                                        <form action="{{ route('control.create', $control->id) }}" method="post">
                                             @csrf
                                             @method('post')
-                                            <input type="hidden" name="control" value="{{$control->id}}">
-                                            <input type="hidden" name="freight" value="{{ $control->freights[0]->namefreights[0]->id  }}">
                                             <button type="submit" class="btn btn-success btn-link">
                                               <i class="material-icons">edit</i>
                                               <div class="ripple-container"></div>
@@ -522,16 +543,13 @@
                                         {{ $control->freights[0]->namefreights[0]->name  }}
                                       @endif
                                     </td>
-                                    <td>{{ $control->freights[0]->Tractors[0]->placas }}</td>
-                                    <td>{{ $control->freights[0]->pipes[0]->numero_economico }}</td>
-                                    <td>
-                                      @if($control->freights[0]->pipes2 != '[]')
-                                        {{ $control->freights[0]->pipes2[0]->numero_economico }}
-                                      @else
-                                        No hay segunda pipa.
-                                      @endif      
-                                    </td>
-                                    <td>{{ $control->freights[0]->drivers[0]->name }}</td>
+                                    <td>{{ $control->tractors->placas }}</td>
+
+                                    <td>{{ $control->orders[0]->pipes->numero_economico}}</td>
+                                    <td>{{ $control->orders[3]->pipes->numero_economico}}</td>
+                                    <td>{{ __('No hay tercera pipa') }}</td>
+
+                                    <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                                       <td class="td-actions">
                                         @if ($control->orders[0]->status_id == 4 && $control->orders[1]->status_id == 4 && $control->orders[2]->status_id == 4 && $control->orders[3]->status_id == 4)
@@ -545,11 +563,9 @@
                                             </button>
                                           </form>    
                                         @else
-                                          <form action="{{ route('control.create') }}" method="post">
+                                          <form action="{{ route('control.create', $control->id) }}" method="post">
                                             @csrf
                                             @method('post')
-                                            <input type="hidden" name="control" value="{{$control->id}}">
-                                            <input type="hidden" name="freight" value="{{ $control->freights[0]->namefreights[0]->id  }}">
                                             <button type="submit" class="btn btn-success btn-link">
                                               <i class="material-icons">edit</i>
                                               <div class="ripple-container"></div>
@@ -672,10 +688,10 @@
                               <label for="estacion_name">{{ __('Estación') }}</label>
                               <input type="text" class="form-control" id="input-estacion_name" aria-describedby="estacion_nameHelp"  value="" required="true" aria-required="true" name="estacion_name">
                             </div>
-                            <div class="form-group{{ $errors->has('id_estacion') ? ' has-danger' : '' }} mt-2 col-12 text-center">
+                            <div class="form-group{{ $errors->has('id_estacion') ? ' has-danger' : '' }} mt-2 pr-1 pl-0 col-sm-4 text-center">
                               <label class="label-control" for="id_estacion">Terminal</label><br>
-                              <select class="selectpicker" data-style="btn btn-primary btn-round" title="Single Select" id="input-id_terminal" name="id_terminal">
-                                <option disabled selected>-- Seleccionar --</option>
+                              <select class="selectpicker" data-style="btn btn-primary btn-round" title="Single Select" id="input-terminal_id" data-width="100%" name="terminal_id">
+                                <option disabled selected>Elije</option>
                                 @foreach($terminals as $terminal)
                                 <option value="{{ $terminal->id }}">{{ $terminal->razon_social }}</option>
                                 @endforeach
@@ -686,7 +702,31 @@
                                 </span>
                               @endif
                             </div>
-
+                            <div class="form-group{{ $errors->has('id_estacion') ? ' has-danger' : '' }} mt-2 pr-0 pl-0 col-sm-4 text-center">
+                              <label class="label-control" for="id_estacion">Chofer</label><br>
+                              <select class="selectpicker" data-style="btn btn-primary btn-round" title="Single Select" id="input-id_chofer" data-width="100%" name="id_chofer">
+                                <option disabled selected>Elije</option>
+                                @foreach($choferes as $chofer)
+                                <option value="{{ $chofer->id }}">{{ $chofer->name }}</option>
+                                @endforeach
+                              </select><br>
+                              @if ($errors->has('id_estacion'))
+                                <span class="error text-danger" for="input-id_estacion" id="id_estacion-error">
+                                  {{ $errors->first('id_estacion') }}
+                                </span>
+                              @endif
+                            </div>
+                            <div class="form-group{{ $errors->has('id_estacion') ? ' has-danger' : '' }} mt-2 pr-0 pl-1 col-sm-4 text-center">
+                              <label class="label-control" for="id_estacion">Pipa</label><br>
+                              <select class="selectpicker" data-style="btn btn-primary btn-round" title="Single Select" id="input-id_pipe" data-width="100%" name="id_pipe">
+                                <option disabled selected>Elije</option>
+                              </select><br>
+                              @if ($errors->has('id_estacion'))
+                                <span class="error text-danger" for="input-id_estacion" id="id_estacion-error">
+                                  {{ $errors->first('id_estacion') }}
+                                </span>
+                              @endif
+                            </div>
                           </div>
 
                         </div>
@@ -820,12 +860,22 @@
         });
     });
 
+    $( "#archivo_pdf" ).change(function() {
+      if($( "#archivo_pdf" ).val() != ""){
+        $("#archivo_pdf_boton").prop('disabled', false);
+      } else {
+        $("#archivo_pdf_boton").prop('disabled', true);
+      }
+    });
+
    $(document).ready(function() {
-    iniciar_date('datatables');
-    iniciar_date('datatables1');
-    iniciar_date('datatables2');
-    iniciar_date('datatables3');
-    iniciar_date('datatables4');
+      init_calendar('input-dia_entrega', now(), '07-07-2025');
+      iniciar_selector_de_archivos();
+      iniciar_date('datatables');
+      iniciar_date('datatables1');
+      iniciar_date('datatables2');
+      iniciar_date('datatables3');
+      iniciar_date('datatables4');
     });
   </script>
 @endpush

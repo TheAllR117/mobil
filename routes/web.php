@@ -153,18 +153,21 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::delete('pedidos/destroy_order/{id}','OrderController@destroy_order')->name('pedidos.destroy_order');
 	Route::post('pedidos/liberar_flete','OrderController@liberar_flete')->name('pedidos.liberar_flete');
 	Route::post('pedidos/sonomber', 'OrderController@sonomber');
+	Route::get('pedidos/getpipes/{id}', 'OrderController@getpipes');
 	Route::post('pedidos/individual','OrderController@individual')->name('pedidos.individual');
 	Route::post('pedidos/emergencia','OrderController@emergencia')->name('pedidos.emergencia');
 	Route::post('pedidos/updateEstatus','OrderController@updateEstatus');
+	Route::post('pedidos/import_pdf','OrderController@import_pdf')->name('pedidos.import_pdf');
 });
  
 // rutas de control
 Route::group(['middleware' => 'auth'], function () {
 	Route::resource('control','ControlController');
-	Route::post('control/create','ControlController@create');
+	Route::post('control/create/{id?}','ControlController@create')->name('control.create');
 	Route::post('control/store','ControlController@store');
 	Route::post('control/seleccionar_tractor','ControlController@seleccionar_tractor');
 	Route::post('control/seleccionar_pipa','ControlController@seleccionar_pipa');
+	Route::post('control/pipa_escogida','ControlController@pipa_escogida')->name('control.pipa_escogida');
 	Route::post('control/fletes_contador','ControlController@fletes_contador');
 	Route::post('control/update','ControlController@update')->name('control.update');
 });

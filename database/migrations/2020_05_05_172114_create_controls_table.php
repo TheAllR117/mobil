@@ -16,13 +16,19 @@ class CreateControlsTable extends Migration
         Schema::create('controls', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('id_freights');
-            //$table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('terminal_id');
+            $table->unsignedBigInteger('id_chofer');
+            $table->unsignedBigInteger('tractor_id');
+            $table->date('dia_entrega')->nullable();
             $table->timestamps();
 
             $table->foreign('id_freights')->references('id')->on('freights')->onDelete('cascade')->onUpdate('cascade');
-            //$table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade')->onUpdate('cascade');
+        
             $table->foreign('terminal_id')->references('id')->on('terminals')->onDelete('cascade')->onUpdate('cascade');
+
+            $table->foreign('tractor_id')->references('id')->on('tractors')->onDelete('cascade')->onUpdate('cascade');
+
+            $table->foreign('id_chofer')->references('id')->on('drivers')->onDelete('cascade')->onUpdate('cascade');
             
         });
     }

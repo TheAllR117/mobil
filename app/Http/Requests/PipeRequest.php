@@ -41,14 +41,18 @@ class PipeRequest extends FormRequest
             'compartimentos' => [
                 'required'
             ],
-            'capacidad_compartimiento' => [
-                'required', 'min:1'
+            'capacidad_1' => [
+                'required'
+            ],
+            'capacidad_2' => [
+                'required'
             ],
             'contenedor_disponible' => [
                 'nullable'
             ],
-    
+            'tractor_id' => [
+                'required'
+            ],
         ];
-        
     }
 }

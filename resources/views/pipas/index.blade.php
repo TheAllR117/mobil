@@ -7,7 +7,11 @@
         <div class="col-md-12">
             <div class="card">
               <div class="card-header card-header-primary">
-                <h4 class="card-title ">{{ __('Pipas') }}</h4>
+                <h4 class="card-title ">
+                  <a href="{{ route('fleteras.index') }}"  title="Regresar a la lista">
+                    <i class="material-icons font-weight-normal">arrow_back_ios</i>
+                  </a>
+                  {{ __('Pipas') }}</h4>
                 <p class="card-category"> {{ __('Aquí puedes administrar todas las pipas.') }}</p>
               </div>
               <div class="card-body">
@@ -26,9 +30,7 @@
                 <div class="row">
                   
                   <div class="col-10 text-left">
-                    <a href="{{ route('fleteras.index') }}" class="btn btn-social btn-just-icon btn-primary" title="Regresar a la lista">
-                        <i class="material-icons">arrow_back_ios</i>
-                    </a>
+                   
                   </div>
                   <div class="col-2 text-right">
                     <a href="{{ route('pipas.create') }}" class="btn btn-sm btn-primary">{{ __('Agregar Pipa') }}</a>
@@ -50,7 +52,13 @@
                         {{ __('Compartimientos') }}
                       </th>
                       <th>
-                        {{ __('Capacidad Compartimiento') }}
+                        {{ __('Compartimiento 1') }}
+                      </th>
+                      <th>
+                        {{ __('Compartimiento 2') }}
+                      </th>
+                      <th>
+                        {{ __('Tractor') }}
                       </th>
                       <th>
                         {{ __('Fecha de Alta') }}
@@ -71,11 +79,17 @@
                           <td>
                             {{ number_format($pipa->capacidad,0) }}L
                           </td>
-                          <td>
+                          <td class="text-center">
                             {{ $pipa->compartimentos }}
                           </td>
                           <td>
-                            {{ number_format($pipa->capacidad_compartimiento,0) }}L
+                            {{ number_format($pipa->capacidad_1,0) }}L
+                          </td>
+                          <td>
+                            {{ number_format($pipa->capacidad_2,0) }}L
+                          </td>
+                          <td>
+                            {{ $pipa->tractors->tractor }}L
                           </td>
                           <td>
                             {{ $pipa->created_at->format('d/m/Y') }}

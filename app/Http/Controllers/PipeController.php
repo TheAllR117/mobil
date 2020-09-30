@@ -7,6 +7,7 @@ use App\Http\Requests\PipeRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Pipe;
 use App\State;
+use App\Tractor;
 use App\User;
 
 class PipeController extends Controller
@@ -18,7 +19,7 @@ class PipeController extends Controller
      */
     public function index(Request $request, Pipe $model)
     {
-        $request->user()->authorizeRoles(['Administrador','Logistica']);
+        $request->user()->authorizeRoles(['Administrador', 'Logistica']);
         return view('pipas.index', ['pipas' => $model::all()]);
     }
 
@@ -29,9 +30,10 @@ class PipeController extends Controller
      */
     public function create(Request $request, State $state)
     {
-        $request->user()->authorizeRoles(['Administrador','Logistica']);
+        $request->user()->authorizeRoles(['Administrador', 'Logistica']);
         $states = $state::all();
-        return view('pipas.create', compact('states'));
+        $tractors = Tractor::all();
+        return view('pipas.create', compact('states', 'tractors'));
     }
 
     /**
@@ -42,8 +44,10 @@ class PipeController extends Controller
      */
     public function store(PipeRequest $request, Pipe $model)
     {
-        $request->user()->authorizeRoles(['Administrador','Logistica']);
+        $request->user()->authorizeRoles(['Administrador', 'Logistica']);
+        // return $request->all();
         $model->create($request->all());
+
         return redirect()->route('pipas.index')->withStatus(__('Pipa creada exitosamente.'));
     }
 
@@ -66,10 +70,11 @@ class PipeController extends Controller
      */
     public function edit(Request $request, Pipe $pipe, $id, State $state)
     {
-        $request->user()->authorizeRoles(['Administrador','Logistica']);
+        $request->user()->authorizeRoles(['Administrador', 'Logistica']);
         $pipe_edit = $pipe::findorfail($id);
         $states = $state::all();
-        return view('pipas.edit', compact('pipe_edit','states'));
+        $tractors = Tractor::all();
+        return view('pipas.edit', compact('pipe_edit', 'states', 'tractors'));
     }
 
     /**
@@ -79,9 +84,9 @@ class PipeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(PipeRequest $request,Pipe $pipe, $id)
-    {
-        $request->user()->authorizeRoles(['Administrador','Logistica']);
+    public function update(PipeRequest $request, Pipe $pipe, $id)
+    {   
+        $request->user()->authorizeRoles(['Administrador', 'Logistica']);
         $pipe_up = $pipe::findorfail($id);
 
         $pipe_up->update($request->all());
@@ -97,9 +102,9 @@ class PipeController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $request->user()->authorizeRoles(['Administrador','Logistica']);
+        $request->user()->authorizeRoles(['Administrador', 'Logistica']);
 
-        $pipa=Pipe::findorfail($id);
+        $pipa = Pipe::findorfail($id);
         $pipa->delete();
 
         return redirect()->route('pipas.index')->withStatus(__('Pipa eliminada exitosamente.'));

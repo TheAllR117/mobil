@@ -77,31 +77,6 @@
 		                 @endif
 	                </div>
 
-	                <div class="form-group{{ $errors->has('id_pipa') ? ' has-danger' : '' }} mt-5 col-md-4">
-
-	            		<label for="id_pipa" class="">
-	            			{{ __('Pipa') }}
-	            		</label>
-
-	            		<select class="selectpicker show-tick show-menu-arrow bfh-languages" data-live-search="true" data-style="btn-danger" id="input-id_pipa" data-language="es_MX" data-available="es_MX" name="id_pipa[]" multiple data-max-options="2">
-	            			<option data-tokens="Selecciona una estación" value="">Selecciona una pipa</option>
-	            			@foreach($pipes as $pipa)
-                                @if($fletera->id_pipa_1 == $pipa->id || $fletera->id_pipa_2 == $pipa->id)
-                                    <option data-tokens="{{ $pipa->numero_economico }}" value="{{ $pipa->id }}" selected>{{ $pipa->numero_economico }}</option>
-                                @else
-                                <option data-tokens="{{ $pipa->numero_economico }}" value="{{ $pipa->id }}">{{ $pipa->numero_economico }}</option>
-                                @endif
-	            			    
-	            			@endforeach
-						</select><br>
-						 @if ($errors->has('id_pipa'))
-		                    <span class="error text-danger" for="input-id_pipa" id="id_pipa-error">
-		                      {{ $errors->first('id_pipa') }}
-		                    </span>
-		                 @endif
-
-	                </div>
-
 	            </div>
 
 	            <div class="row">
@@ -126,31 +101,8 @@
 		                      {{ $errors->first('id_tractor') }}
 		                    </span>
 		                 @endif
-	                </div>
-
-	                <div class="form-group{{ $errors->has('id_chofer') ? ' has-danger' : '' }} mt-5 col-md-4">
-
-	            		<label for="id_chofer" class="">
-	            			{{ __('Conductor') }}
-	            		</label>
-
-	            		<select class="selectpicker show-tick show-menu-arrow bfh-languages" data-live-search="true" data-style="btn-danger" id="input-id_chofer" data-language="es_MX" data-available="es_MX"  name="id_chofer">
-	            			<option data-tokens="Selecciona una estación" value="">Selecciona un conductor</option>
-	            			@foreach($drivers as $driver)
-                                
-                                    @if($fletera->id_chofer == $driver->id )
-                                        <option value="{{ $driver->id }}" data-tokens="{{ $driver->name }}" selected>{{ $driver->name }}</option>
-                                    @else
-                                        <option value="{{ $driver->id }}" data-tokens="{{ $driver->name }}">{{ $driver->name }}</option>
-                                    @endif
-	            			@endforeach
-						</select><br>
-						 @if ($errors->has('id_chofer'))
-		                    <span class="error text-danger" for="input-id_chofer" id="id_chofer-error">
-		                      {{ $errors->first('id_chofer') }}
-		                    </span>
-		                 @endif
-	                </div>
+					</div>
+					
 	            </div>
 
 	            <div class="card-footer ml-auto mr-auto">

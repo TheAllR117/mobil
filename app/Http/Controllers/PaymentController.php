@@ -31,7 +31,7 @@ class PaymentController extends Controller
         }else{
             // en caso de no tener el rol administrador, logistica o abonos & pagos se mostrara la informacion de los abonos de las estaciones que le corresponden al usuario
             $estaciones = array();
-            
+
             for($i=0; $i<count($request->user()->estacions); $i++){
                 array_push($estaciones, $request->user()->estacions[$i]->id);
             }
@@ -49,7 +49,7 @@ class PaymentController extends Controller
     public function create(Request $request, Estacion $estacion)
     {
         $request->user()->authorizeRoles(['Administrador','Abonos & Pagos','Admin-Estacion']);
-        
+
         // validamos los roles para determinar si el usuario en cuestion puede hacer abonos a cualquier estacion o solo la que le corresponde
         if($request->user()->roles[0]->name == "Administrador" || $request->user()->roles[0]->name == "Logistica") {
             // seleccionamos id, razon_social y nombre de la sucursal para llenar el select
@@ -58,13 +58,13 @@ class PaymentController extends Controller
         }else{
             // en caso de que contar con el rol admin estacion solo le apareceran sus estaciones asignadas
             $estaciones = array();
-            
+
             for($i=0; $i<count($request->user()->estacions); $i++){
                 array_push($estaciones, $request->user()->estacions[$i]->id);
             }
 
             $estaciones = $estacion::select('id','razon_social','nombre_sucursal')->whereIn('id',$estaciones)->get();
-           
+
         }
         return view('abonos.create', ['estaciones' => $estaciones ]);
     }
@@ -78,29 +78,29 @@ class PaymentController extends Controller
     public function store(PaymentRequest $request,Payment $payment)
     {
         $request->user()->authorizeRoles(['Administrador','Abonos & Pagos','Admin-Estacion']);
-        
+
         // obtenmos la imagen selecciona por el usuario
         $file_fac = $request->file('url');
-        
+
         // creamos el nombre del archivo
         $nombre_fac = $request->id_estacion.'-'.date("dmY-His").'.'.$file_fac->getClientOriginalExtension();
-        
+
         // almacenamos la iamgen en el servidor
         Storage::disk('estaciones')->put('/'.$request->id_estacion.'/'.$nombre_fac, \File::get($file_fac));
-        
+
         // almacenamos el abonos en la base de daos
         DB::table('payments')->insert(
             ['id_estacion' => $request->id_estacion, 'cantidad' => $request->cantidad, 'url' => $nombre_fac, 'id_status' => $request->id_status, 'created_at' => date("Y-m-d H:i:s"),'updated_at' => date("Y-m-d H:i:s")]
         );
-        
+
         return redirect()->route('abonos.index')->withStatus(__('Abono creado exitosamente.'));
     }
 
-    // esta funcion se encarga de determinar si el abono se va tratar como saldo o credito para la estacion 
+    // esta funcion se encarga de determinar si el abono se va tratar como saldo o credito para la estacion
     public function sal_o_cre(Request $request,Payment $payment, Estacion $estacion)
     {
         $request->user()->authorizeRoles(['Administrador','Abonos & Pagos']);
-        
+
         $saldo_can = $request->cantidad;
         $estacions = $estacion::findOrFail($request->id_estacion);
         $payments = $payment::findOrFail($request->id);
@@ -108,7 +108,41 @@ class PaymentController extends Controller
         $credito = $estacions->credito;
         $credito_usado = $estacions->credito_usado;
         $disponible = $credito - $credito_usado;
-        $disponible_f = $credito - $saldo_can; 
+        $disponible_f = $credito - $saldo_can;
+
+        /*
+            Buscamos todas las ordenes que fueron pagadas con "credito"
+            y verificamos cuales termina de pagar
+        */
+        $saldo_descontar = $request->cantidad;
+        $ordenes = Order::where('estacion_id', $request->id_estacion)
+            ->where('metodo_pago','credito')
+            ->where('pagado','FALSE')
+            ->get();
+
+        foreach($ordenes as $orden)
+        {
+            if($saldo_descontar <= 0)
+            {
+                break;
+            }else{
+                $total_abono = floatval($orden->total_abonado) + $saldo_descontar;
+
+                /* Se cubre el pago total de una orden  */
+                if( $total_abono >= floatval($orden->costo_aprox) )
+                {
+                    $saldo_descontar =  $total_abono - floatval($orden->costo_aprox);
+                    Order::where('id', $orden->id)
+                        ->update(['pagado' => 'TRUE', 'total_abonado' => floatval($orden->costo_aprox) ]);
+                }else{
+
+                    Order::where('id', $orden->id)
+                        ->update(['total_abonado' => $total_abono]);
+                    $saldo_descontar = 0;
+                }
+            }
+        }
+
 
         if(floatval($estacions->saldo) >= 0 && floatval($estacions->credito_usado) == 0){
 
@@ -118,7 +152,7 @@ class PaymentController extends Controller
             return json_encode('El abono, se agrego al saldo.');
 
         } elseif (floatval($estacions->credito_usado) > 0) {
-            
+
             $total = $disponible_f - $disponible;
 
             if($total >= 0){
@@ -138,7 +172,7 @@ class PaymentController extends Controller
             return json_encode($estacions->saldo);
 
         }
-        
+
     }
 
     /**
@@ -190,7 +224,7 @@ class PaymentController extends Controller
 
         $payments = $payment::find($id);
         // borramos la imagen del servidor
-        Storage::disk('estaciones')->delete($payments->id_estacion.'/'.$payments->url); 
+        Storage::disk('estaciones')->delete($payments->id_estacion.'/'.$payments->url);
         $payments->delete();
         return redirect()->route('abonos.index')->withStatus(__('Abono eliminado exitosamente.'));
 

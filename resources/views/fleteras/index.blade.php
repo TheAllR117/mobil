@@ -23,21 +23,21 @@
                     </div>
                   </div>
                 @endif
-                <div class="row">
-                	<div class="col-4 text-right">
+                <div class="row justify-content-center">
+                	<div class="col-2">
                 		<a href="{{ route('registro_fleteras.index') }}" class="btn btn-sm btn-primary">{{ __('gestionar fleteras') }}
                 		</a>
 	                </div>
-                	<div class="col-2 text-right">
-                		<a href="{{ route('pipas.index') }}" class="btn btn-sm btn-primary">{{ __('gestionar pipas') }}</a>
+	                <div class="col-2">
+                    <a href="{{ route('tractores.index') }}" class="btn btn-sm btn-primary">{{ __('gestionar tractores') }}</a>
 	                </div>
-	                <div class="col-2 text-right">
-                		<a href="{{ route('tractores.index') }}" class="btn btn-sm btn-primary">{{ __('gestionar tractores') }}</a>
-	                </div>
-	                <div class="col-2 text-right">
+                  <div class="col-2">
+                    <a href="{{ route('pipas.index') }}" class="btn btn-sm btn-primary">{{ __('gestionar pipas') }}</a>
+                  </div>
+	                <div class="col-2">
                 		<a href="{{ route('conductores.index') }}" class="btn btn-sm btn-primary">{{ __('gestionar conductores') }}</a>
 	                </div>
-	                <div class="col-2 text-right">
+	                <div class="col-2">
 	                  <a href="{{ route('fleteras.create') }}" class="btn btn-sm btn-primary">
                       {{ __('Relacionar Fletera') }}
                     </a>
@@ -59,7 +59,7 @@
                         {{ __('Pipa 2') }}
                       </th>
                       <th>
-                        {{ __('Conductor') }}
+                        {{ __('Pipa 3') }}
                       </th>
                       <th>
                         {{ __('Fecha de Alta') }}
@@ -78,19 +78,19 @@
                           <td>
                             {{ $freight->tractors[0]->tractor }}
                           </td>
-                          <td>
-                            {{ $freight->pipes[0]->numero_economico }}
-                          </td>
-                          <td>
-                            @if($freight->id_pipa_2 != "")
-                            {{ $freight->pipes2[0]->numero_economico }}
-                            @else
-                            No hay segunda pipa
-                            @endif
-                          </td>
-                          <td>
-                            {{ $freight->drivers[0]->name }}
-                          </td>
+                          @foreach ($freight->tractors as $tractor)
+                            @for ($i = 0; $i < 3; $i++)
+                                @if (isset($tractor->pipes[$i]))
+                                <td>
+                                  {{$tractor->pipes[$i]->numero_economico}}
+                                </td>    
+                                @else
+                                <td>
+                                  No hay pipa
+                                </td>            
+                                @endif
+                            @endfor
+                          @endforeach
                           <td>
                             {{ $freight->created_at->format('d/m/Y') }}
                           </td>
@@ -145,7 +145,7 @@
                         {{ __('Pipa 2') }}
                       </th>
                       <th>
-                        {{ __('Conductor') }}
+                        {{ __('Pipa 3') }}
                       </th>
                       <th>
                         {{ __('Fecha de Alta') }}
@@ -164,19 +164,19 @@
                           <td>
                             {{ $freight->tractors[0]->tractor }}
                           </td>
-                          <td>
-                            {{ $freight->pipes[0]->numero_economico }}
-                          </td>
-                          <td>
-                            @if($freight->id_pipa_2 != "")
-                            {{ $freight->pipes2[0]->numero_economico }}
-                            @else
-                            No hay segunda pipa
-                            @endif
-                          </td>
-                          <td>
-                            {{ $freight->drivers[0]->name }}
-                          </td>
+                          @foreach ($freight->tractors as $tractor)
+                            @for ($i = 0; $i < 3; $i++)
+                                @if (isset($tractor->pipes[$i]))
+                                <td>
+                                  {{$tractor->pipes[$i]->numero_economico}}
+                                </td>    
+                                @else
+                                <td>
+                                  No hay pipa
+                                </td>            
+                                @endif
+                            @endfor
+                          @endforeach
                           <td>
                             {{ $freight->created_at->format('d/m/Y') }}
                           </td>

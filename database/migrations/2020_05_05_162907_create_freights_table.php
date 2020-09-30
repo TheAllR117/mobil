@@ -17,10 +17,7 @@ class CreateFreightsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('id_freights')->nullable();
             $table->unsignedBigInteger('id_estacion')->nullable();
-            $table->unsignedBigInteger('id_tractor');
-            $table->unsignedBigInteger('id_pipa_1');
-            $table->unsignedBigInteger('id_pipa_2')->nullable();;            
-            $table->unsignedBigInteger('id_chofer');
+            $table->unsignedBigInteger('id_tractor');         
             $table->timestamps();
 
             $table->foreign('id_freights')->references('id')->on('name_freights')->onDelete('cascade')
@@ -29,17 +26,9 @@ class CreateFreightsTable extends Migration
             $table->foreign('id_estacion')->references('id')->on('estacions')->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->foreign('id_pipa_1')->references('id')->on('pipes')->onDelete('cascade')
-                ->onUpdate('cascade');
-
-            $table->foreign('id_pipa_2')->references('id')->on('pipes')->onDelete('cascade')
-                ->onUpdate('cascade');
-
             $table->foreign('id_tractor')->references('id')->on('tractors')->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->foreign('id_chofer')->references('id')->on('drivers')->onDelete('cascade')
-                ->onUpdate('cascade');
         });
     }
 

@@ -3,8 +3,8 @@
 @section('content')
   <div class="content">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
+        <div class="row justify-content-center">
+            <div class="col-md-9">
                 <form action="{{ route('pedidos.store') }}" autocomplete="off" class="form-horizontal" method="post">
                   @csrf
                   @method('post')
@@ -17,15 +17,20 @@
                             </p>
                         </div>
                         <div class="card-body">
+
                             <div class="row">
                                 <div class="col-md-12 text-right">
                                     <a class="btn btn-sm btn-primary" href="{{ route('pedidos.index') }}">
                                         {{ __('Volver a la lista') }}
                                     </a>
                                 </div>
+                                <div class="col-md-6" id="col-actualizacion" style="display: none;">
+                                    <p>Precios actualizados <span id="span-fecha-ultima-actualizacion"></span></p>
+                                </div>
                             </div>
-                            <div class="row mt-3">
-                            	<div class="col-lg-3 col-md-6 col-sm-3">
+
+                            <div class="row mt-4">
+                            	<div class="col-lg-4 col-md-4 col-sm-4">
                             		<label class="label-control">Estación</label>
                                 	<select class="selectpicker" data-style="btn btn-primary btn-round" title="Single Select" id="input-estacion_id" name="estacion_id">
                                   		<option disabled selected>-- Seleccionar --</option>
@@ -37,18 +42,18 @@
 
                               	<input type="hidden" name="status_id" value="1">
 
-                              	<div class="col-lg-3 col-md-6 col-sm-3">
+                              	<div class="col-lg-4 col-md-4 col-sm-4 justify-content-center">
                               		<label class="label-control">Tipo de contenedor</label>
                                 	<select class="selectpicker sele" data-style="btn btn-primary btn-round" title="Single Select" id="input-cantidad_lts" name="cantidad_lts">
-                                  		<option disabled selected>-- Seleccionar --</option>
-                                  		<option value="15500">15,500L</option>
-                                  		<option value="21000">21,000L</option>
-                                  		<option value="31000">31,000L (Full)</option>
-                                  		<option value="42000">42,000L (Full)</option>
+                                      <option disabled selected>-- Seleccionar --</option>
+                                      @for($i=0; $i<count($tem); $i++)
+                                        <option value="{{$tem[$i]}}">{{number_format($tem[$i],0)}}Lts</option>
+                                      @endfor
+                                  		
                                 	</select>
                               	</div>
 
-                              	<div class="col-lg-3 col-md-6 col-sm-3">
+                              	<div class="col-lg-4 col-md-4 col-sm-4">
                               		<label class="label-control">Producto</label>
                                 	<select class="selectpicker sele" data-style="btn btn-primary btn-round" title="Single Select" id="input-producto" name="producto">
                                   		<option disabled selected>-- Seleccionar --</option>
@@ -62,12 +67,12 @@
 
                             <div class="row mt-4">
 
-                            	<div class="form-group col-sm-3">
+                            	<div class="form-group col-sm-4">
                                 	<label class="label-control">Fecha de entrega</label>
                                 	<input class="form-control datetimepicker" id="input-dia_entrega" name="dia_entrega" type="text" value="" placeholder="Fecha">
                             	</div>
 
-                            	<div class="form-group{{ $errors->has('saldo') ? ' has-danger' : '' }} col-sm-3">
+                            	<div class="form-group{{ $errors->has('saldo') ? ' has-danger' : '' }} col-sm-4">
                             		<input type="hidden" id="input-saldo" name="saldo" value="">
 
                                 	<label for="saldo1">{{ __('Saldo actual') }}</label>
@@ -80,7 +85,7 @@
                                 	</input>
                               	</div>
 
-                              	<div class="form-group{{ $errors->has('credito') ? ' has-danger' : '' }} col-sm-3">
+                              	<div class="form-group{{ $errors->has('credito') ? ' has-danger' : '' }} col-sm-4">
 
                               		<input type="hidden" id="precio_producto_extra">
                               		<input type="hidden" id="precio_producto_supreme">
@@ -95,11 +100,11 @@
                                   	@endif
                                 	</input>
                               	</div>
-                            	
+
                             </div>
 
                             <div class="row mt-4">
-                            	<div class="form-group{{ $errors->has('disponible') ? ' has-danger' : '' }} col-sm-3">
+                            	<div class="form-group{{ $errors->has('disponible') ? ' has-danger' : '' }} col-sm-4">
                                 	<label for="disponible">{{ __('Credito disponible') }}</label>
                                 	<input aria-describedby="numero_economicoHelp" aria-required="true" class="form-control{{ $errors->has('disponible') ? ' is-invalid' : '' }}"  id="input-disponible" name="disponible" type="number" min="0.00" step="0.01" value="{{ old('disponible',0)}}" readonly>
                                   	@if ($errors->has('disponible'))
@@ -110,7 +115,7 @@
                                 	</input>
                               	</div>
 
-                              	<div class="form-group{{ $errors->has('numero_economico') ? ' has-danger' : '' }} col-sm-3">
+                              	<div class="form-group{{ $errors->has('numero_economico') ? ' has-danger' : '' }} col-sm-4">
                                 	<label for="credito_usado">{{ __('Credito restante') }}</label>
                                 	<input aria-describedby="credito_usadoHelp"  aria-required="true" class="form-control{{ $errors->has('numero_economico') ? ' is-invalid' : '' }}" id="input-credito_usado" name="credito_usado" type="number" min="0.00" step="0.01" value="{{ old('credito_usado',0)}}" readonly>
                                   	@if ($errors->has('credito_usado'))
@@ -121,7 +126,7 @@
                                 	</input>
                               	</div>
 
-                              	<div class="form-group{{ $errors->has('costo_aprox') ? ' has-danger' : '' }} col-sm-3">
+                              	<div class="form-group{{ $errors->has('costo_aprox') ? ' has-danger' : '' }} col-sm-4">
                                 	<label for="costo_aprox">{{ __('Costo aproximado') }}</label>
                                 	<input aria-describedby="costo_aproxHelp" aria-required="true" class="form-control{{ $errors->has('costo_aprox') ? ' is-invalid' : '' }}" id="input-costo_aprox" name="costo_aprox" type="number" min="0.00" step="0.01" value="{{ old('costo_aprox', 0)}}" readonly>
                                   	@if ($errors->has('costo_aprox'))
@@ -132,7 +137,7 @@
                                 	</input>
                               	</div>
                             </div>
-                            <div class="row mt-4">
+                            {{-- <div class="row mt-4">
                               <div class="form-group{{ $errors->has('po') ? ' has-danger' : '' }} col-sm-3">
                                   <label for="po">{{ __('PO') }}</label>
                                   <input aria-describedby="poHelp" aria-required="true" class="form-control{{ $errors->has('po') ? ' is-invalid' : '' }}" id="input-po" name="po" type="text" value="{{ old('po')}}">
@@ -143,9 +148,9 @@
                                     @endif
                                   </input>
                                 </div>
-                            </div>
-                            
-                            <div class="card-footer ml-auto mr-auto">
+                            </div> --}}
+
+                            <div class="card-footer ml-auto mr-auto" id="btn-guardar-div">
                                 <button class="btn btn-primary ocultar" type="submit" id="guardar">
                                     {{ __('Guardar') }}
                                 </button>
@@ -162,15 +167,16 @@
 @push('js')
 <script>
 	$('#input-estacion_id').change(function(){
-      	$.ajax({
+
+        $.ajax({
         	url: 'seleccionado',
         	type: 'POST',
         	dataType: 'json',
         	data: {
           		'id' : $('#input-estacion_id').val(),
         	},
-        	headers:{ 
-          		'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 
+        	headers:{
+          		'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         	},
         	success: function(response){
         		var datos =  response;
@@ -178,15 +184,37 @@
         		$('#input-saldo1').val(datos.estacion.saldo);
         		$('#input-credito').val(datos.estacion.credito);
         		$('#input-disponible').val(dividir( multiplicar(datos.estacion.credito) - multiplicar(datos.estacion.credito_usado) ));
-        		$('#precio_producto_extra').val(datos.price[datos.price.length - 1].extra_u);
-        		$('#precio_producto_supreme').val(datos.price[datos.price.length - 1].supreme_u);
-        		$('#precio_producto_diesel').val(datos.price[datos.price.length - 1].diesel_u);
-            $('#input-credito_usado').val(0);
-            $('#input-costo_aprox').val(0);
+        		// $('#precio_producto_extra').val(datos.price[datos.price.length - 1].extra_u);
+        		// $('#precio_producto_supreme').val(datos.price[datos.price.length - 1].supreme_u);
+        		// $('#precio_producto_diesel').val(datos.price[datos.price.length - 1].diesel_u);
+                $('#input-credito_usado').val(0);
+                $('#input-costo_aprox').val(0);
           	//console.log( datos.price[datos.price.length - 1].extra_u );
             //console.log(parseFloat(datos.estacion.credito) - parseFloat(datos.estacion.credito_usado));
+                if(datos.valores_ultima_actualizacion != null)
+                {
+                    document.getElementById('col-actualizacion').style.display = "block";
+                    $('#span-fecha-ultima-actualizacion').text(datos.valores_ultima_actualizacion.fecha);
+
+                    $('#precio_producto_extra').val(datos.valores_ultima_actualizacion.extra_u);
+                    $('#precio_producto_supreme').val(datos.valores_ultima_actualizacion.supreme_u);
+                    $('#precio_producto_diesel').val(datos.valores_ultima_actualizacion.diesel_u);
+
+                }else{
+                    $('#precio_producto_extra').val(datos.price[datos.price.length - 1].extra_u);
+                    $('#precio_producto_supreme').val(datos.price[datos.price.length - 1].supreme_u);
+                    $('#precio_producto_diesel').val(datos.price[datos.price.length - 1].diesel_u);
+                }
+
+                if(datos.hay_adeudo === 1)
+                {
+                    document.getElementById('btn-guardar-div').style.display = "none";
+                    alert('La estación tiene un adeudo que no ha pagado y ya expiró el plazo de pago.');
+                }else{
+                    document.getElementById('btn-guardar-div').style.display = "block";
+                }
         	}
-      	});
+      	})
     });
 
     function costo_aprox(){
@@ -260,7 +288,7 @@
 
         }
 
-        
+
 
       }else{
         //no hay saldo
@@ -280,11 +308,11 @@
             $("#guardar").addClass("ocultar");
 
           }
-          
+
         }
 
       }
-    	
+
     });
 
   @if(auth()->user()->roles[0]->name == 'Administrador' || auth()->user()->roles[0]->name == 'Logistica')
@@ -292,6 +320,6 @@
   @else
     init_calendar('input-dia_entrega', manana(), '07-07-2025');
   @endif
-	
+
 </script>
 @endpush

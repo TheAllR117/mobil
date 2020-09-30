@@ -65,21 +65,35 @@ class OrderController extends Controller
 
         $fleteras = $freight::where('id_estacion', null)->get();
 
+        $pipas_capacidad = [];
+
         for($i=0; $i<count($fleteras); $i++){
             for($j=0; $j<count($fleteras[$i]->tractors); $j++){
-                for($k=0; $k<count($fleteras[$i]->tractors[$j]->pipes); $k++){
-                    echo $fleteras[$i]->tractors[$j]->pipes[$k]->select('capacidad_1')->groupBy('capacidad_1')->get();
-                    
+                    array_push($pipas_capacidad, $fleteras[$i]->tractors[$j]->pipes()->select('capacidad_1')->groupBy('capacidad_1')->get());
+                    array_push($pipas_capacidad, $fleteras[$i]->tractors[$j]->pipes()->select('capacidad_2')->groupBy('capacidad_2')->get());
+                    array_push($pipas_capacidad, $fleteras[$i]->tractors[$j]->pipes()->select('capacidad')->groupBy('capacidad')->get());
+            }
+        }
+
+        $capacidad_1 = [];
+        foreach($pipas_capacidad as $tractor){
+            foreach($tractor as $capacidad){
+                if($capacidad['capacidad_1']){
+                    array_push($capacidad_1, $capacidad['capacidad_1']);
+                }
+                if($capacidad['capacidad_2']){
+                    array_push($capacidad_1, $capacidad['capacidad_2']);
+                }
+                if($capacidad['capacidad']){
+                    array_push($capacidad_1, $capacidad['capacidad']);
                 }
             }
         }
 
-        dd();
-
-        //return $fleteras[0]->tractors[0]->pipes[0]->select('capacidad_2')->groupBy('capacidad_2')->get();
-        // return $fleteras[0]->tractors[0]->pipes[0]->select('capacidad')->groupBy('capacidad')->get();
-
-        //return $pipas::select('capacidad')->groupBy('capacidad')->get();
+        
+        $tem = array_unique($capacidad_1);
+        sort($tem);
+        
 
         if ($request->user()->roles[0]->name == "Administrador" || $request->user()->roles[0]->name == "Logistica") {
 
@@ -98,7 +112,7 @@ class OrderController extends Controller
 
         $terminales = $terminal::all();
         $statu_orders = $statu_order::all();
-        return view('pedidos.create', compact('estaciones', 'terminales', 'statu_orders'));
+        return view('pedidos.create', compact('estaciones', 'terminales', 'statu_orders', 'tem'));
     }
 
 

@@ -45,11 +45,11 @@
                               	<div class="col-lg-4 col-md-4 col-sm-4 justify-content-center">
                               		<label class="label-control">Tipo de contenedor</label>
                                 	<select class="selectpicker sele" data-style="btn btn-primary btn-round" title="Single Select" id="input-cantidad_lts" name="cantidad_lts">
-                                  		<option disabled selected>-- Seleccionar --</option>
-                                  		<option value="15500">15,500L</option>
-                                  		<option value="21000">21,000L</option>
-                                  		<option value="31000">31,000L (Full)</option>
-                                  		<option value="42000">42,000L (Full)</option>
+                                      <option disabled selected>-- Seleccionar --</option>
+                                      @for($i=0; $i<count($tem); $i++)
+                                        <option value="{{$tem[$i]}}">{{number_format($tem[$i],0)}}Lts</option>
+                                      @endfor
+                                  		
                                 	</select>
                               	</div>
 

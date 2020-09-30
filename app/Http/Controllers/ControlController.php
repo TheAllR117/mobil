@@ -249,7 +249,7 @@ class ControlController extends Controller
     public function update(Request $request, Control $control, Order $order, Tractor $tractor, Driver $driver)
     {
         $request->user()->authorizeRoles(['Administrador', 'Logistica']);
-        return $request->all();
+        
         $tractor::where('id', $request->tractor_id)->update(['id_status' => 2]);
         $driver::where('id', $request->chofer_id)->update(['id_status' => 2]);
         $id_control = $control::find($request->idOrderControler);

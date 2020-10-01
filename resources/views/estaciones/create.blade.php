@@ -1,27 +1,25 @@
-@extends('layouts.app', ['activePage' => 'Estaciones', 'titlePage' => __('Gestión de Estaciones')])
+@extends('layouts.app', ['page' => __('Gestión de Estaciones'), 'pageSlug' => __('Estaciones')])
 
 @section('content')
 <div class="content">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-10 mx-auto d-block mt-3">
+        <div class="col-md-8 mx-auto d-block mt-3">
           <form method="post" action="{{ route('estaciones.store') }}" autocomplete="off" class="form-horizontal">
             @csrf
             @method('post')
 
             <div class="card ">
               <div class="card-header card-header-primary">
-                <h4 class="card-title">{{ __('Agregar estación') }}</h4>
+                <h4 class="card-title">
+					<a href="{{ route('estaciones.index') }}" title="Regresar a la lista">
+                        <i class="tim-icons icon-minimal-left text-danger"></i>
+                    </a>
+					{{ __('Agregar estación') }}
+				</h4>
                 <p class="card-category"></p>
               </div>
               <div class="card-body ">
-                <div class="row mb-4">
-                  <div class="col-12 text-left">
-                    <a href="{{ route('estaciones.index') }}" class="btn btn-social btn-just-icon btn-primary" title="Regresar a la lista">
-                        <i class="material-icons">arrow_back_ios</i>
-                    </a>
-                  </div>
-                </div>
                 <div class="row mt-5">
 
                   <div class="form-group{{ $errors->has('razon_social') ? ' has-danger' : '' }} col-sm-4">
@@ -178,13 +176,11 @@
               <div class="row">
 
   				<div class="form-group col-sm-4 text-center">
-  					<label for="credito">{{ __('Estatus') }}</label>
+  					<label for="credito">{{ __('Estatus Activa') }}</label>
   					<div class="togglebutton">
   						<label>
-  							Inactivo
   							<input type="checkbox" name="status" checked="true">
   							<span class="toggle"></span>
-  							Activo
   						</label>
   					</div>
               	</div>
@@ -193,10 +189,8 @@
   					<label for="credito">{{ __('Activar Credito') }}</label>
   					<div class="togglebutton">
   						<label>
-  							No
   							<input type="checkbox" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" name="linea_credito" id="input-linea_credito">
   							<span class="toggle"></span>
-  							Si
   						</label>
   					</div>
               	</div>
@@ -205,10 +199,8 @@
   					<label for="credito">{{ __('Datos Fiscales') }}</label>
   					<div class="togglebutton">
   						<label>
-  							No
   							<input type="checkbox" data-toggle="collapse" href="#datosfiscales" aria-expanded="false" aria-controls="datosfiscales" name="datos_fiscales" id="input-datos_fiscales">
   							<span class="toggle"></span>
-  							Si
   						</label>
   					</div>
               	</div>

@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'Abonos', 'titlePage' => __('Gestión de los abonos')])
+@extends('layouts.app', ['page' => __('Gestión de los abonos'), 'pageSlug' => __('Abonos')])
 
 @section('content')
 <div class="content">
@@ -11,19 +11,15 @@
           <div class="card ">
             <div class="card-header card-header-primary">
               <h4 class="card-title">
-                  {{ __('Realizar Pedido') }}
+                  <a href="{{ route('abonos.index') }}" title="Regresar a la lista">
+                      <i class="tim-icons icon-minimal-left text-danger"></i>
+                  </a>
+                  {{ __('Solicitar Abono') }}
               </h4>
               <p class="card-category">
               </p>
             </div>
             <div class="card-body">
-              <div class="row">
-                <div class="col-12 text-left">
-                  <a href="{{ route('abonos.index') }}" class="btn btn-social btn-just-icon btn-primary" title="Regresar a la lista">
-                      <i class="material-icons">arrow_back_ios</i>
-                  </a>
-                </div>
-              </div>
 
               <div class="container">
                 <div class="row">
@@ -45,7 +41,7 @@
                     </div>
 
                     <div class="form-group{{ $errors->has('cantidad') ? ' has-danger' : '' }} mt-5">
-                      <label for="cantidad" class="mt-2">{{ __('Saldo actual') }}</label>
+                      <label for="cantidad" class="mt-2">{{ __('Cantidad') }}</label>
                       <input aria-describedby="cantidadHelp" aria-required="true" class="form-control{{ $errors->has('cantidad') ? ' is-invalid' : '' }} mt-4"  id="input-cantidad" name="cantidad"  type="number" min="0.00" step="0.01" value="{{ old('cantidad', 0)}}">
                         @if ($errors->has('cantidad'))
                         <span class="error text-danger" for="input-cantidad" id="cantidad-error">

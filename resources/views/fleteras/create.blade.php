@@ -1,10 +1,9 @@
-@extends('layouts.app', ['activePage' => 'Fleteras', 'titlePage' => __('Gestión de Fleteras')])
-
+@extends('layouts.app', ['page' => __('Gestión de Fleteras'), 'pageSlug' => __('Fleteras')])
 @section('content')
 <div class="content">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-8 mx-auto d-block mt-3">
+      <div class="col-md-6 mx-auto d-block mt-3">
 
         <form action="{{ route('fleteras.store') }}" autocomplete="off" class="form-horizontal" enctype="multipart/form-data" method="post">
         	@csrf
@@ -13,22 +12,18 @@
 
           	<div class="card-header card-header-primary">
 			  <h4 class="card-title">
-			      {{ __('Agregar Relación') }}
+			  	<a href="{{ route('fleteras.index') }}" title="Regresar a la lista">
+                    <i class="tim-icons icon-minimal-left text-danger"></i>
+                </a>
+			    {{ __('Agregar Relación') }}
 			  </h4>
 			  <p class="card-category"></p>
 			</div>
 
             <div class="card-body">
-	            <div class="row">
-		            <div class="col-12 text-left">
-		              <a href="{{ route('fleteras.index') }}" class="btn btn-social btn-just-icon btn-primary" title="Regresar a la lista">
-		                  <i class="material-icons">arrow_back_ios</i>
-		              </a>
-		            </div>
-	            </div>
 
 	            <div class="row">
-	            	<div class="form-group{{ $errors->has('id_freights') ? ' has-danger' : '' }} mt-5 col-md-4">
+	            	<div class="form-group{{ $errors->has('id_freights') ? ' has-danger' : '' }} mt-5 col-md-6">
 
 	            		<label for="id_freights" class="">
 	            			{{ __('Nombre de la fletera') }}

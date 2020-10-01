@@ -1,11 +1,11 @@
-@extends('layouts.app', ['activePage' => 'Usuarios', 'titlePage' => __('Gestión de usuarios')])
+@extends('layouts.app', ['page' => __('Gestión de usuarios'), 'pageSlug' => __('Usuarios')])
 
 @section('content')
 
   <div class="content">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-10 mx-auto d-block mt-3">
+        <div class="col-md-8 mx-auto d-block mt-3">
           <form method="post" action="{{ route('user.update', $user) }}" autocomplete="off" class="form-horizontal">
             @csrf
             @method('put')
@@ -13,19 +13,16 @@
             <div class="card ">
 
               <div class="card-header card-header-primary">
-                <h4 class="card-title">{{ __('Editar Usuario') }}</h4>
+                <h4 class="card-title">
+                  <a href="{{ route('user.index') }}" title="Regresar a la lista">
+                    <i class="tim-icons icon-minimal-left text-danger"></i>
+                  </a>
+                  {{ __('Editar Usuario') }}
+                </h4>
                 <p class="card-category"></p>
               </div>
 
               <div class="card-body">
-
-                <div class="row mb-4">
-                  <div class="col-12 text-left">
-                    <a href="{{ route('user.index') }}" class="btn btn-social btn-just-icon btn-primary" title="Regresar a la lista">
-                        <i class="material-icons">arrow_back_ios</i>
-                    </a>
-                  </div>
-                </div>
 
                 <div class="row">
 

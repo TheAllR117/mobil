@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'Fleteras', 'titlePage' => __('Gestión de las pipas')])
+@extends('layouts.app', ['page' => __('Gestión de Fleteras'), 'pageSlug' => __('Fleteras')])
 
 @section('content')
   <div class="content">
@@ -11,19 +11,15 @@
                     <div class="card ">
                         <div class="card-header card-header-primary">
                             <h4 class="card-title">
-                                {{ __('Agregar Tractor') }}
+                              <a href="{{ route('tractores.index') }}" title="Regresar a la lista">
+                                <i class="tim-icons icon-minimal-left text-danger"></i>
+                              </a>
+                              {{ __('Agregar Tractor') }}
                             </h4>
                             <p class="card-category">
                             </p>
                         </div>
                         <div class="card-body">
-                            <div class="row mb-3">
-                              <div class="col-12 text-left">
-                                <a href="{{ route('tractores.index') }}" class="btn btn-social btn-just-icon btn-primary" title="Regresar a la lista">
-                                    <i class="material-icons">arrow_back_ios</i>
-                                </a>
-                              </div>
-                            </div>
                             <div class="row">
 
                               <div class="form-group{{ $errors->has('tractor') ? ' has-danger' : '' }} col-sm-4">
@@ -85,7 +81,7 @@
                               </div>
 
                               <div class="col-sm-4">
-                                <select class="selectpicker" data-style="btn btn-primary btn-round" title="Single Select" id="input-id_status" name="id_status">
+                                <select class="selectpicker mt-4" data-style="btn btn-primary btn-round" title="Single Select" id="input-id_status" name="id_status">
                                   <option disabled selected>Estatus</option>
                                   @foreach($states as $state)
                                     <option value="{{ $state->id }}">{{ $state->estado }}</option>

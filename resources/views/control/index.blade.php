@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'Control pedidos', 'titlePage' => __('Historial')])
+@extends('layouts.app', ['page' => __('Control'), 'pageSlug' => __('Control pedidos')])
 @section('content')
   <div class="content">
     <div class="container-fluid">
@@ -23,7 +23,7 @@
                   </div>
                 @endif
                 <div class="table-responsive">
-                  <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables">
+                  <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables_1">
                     <thead class=" text-primary">
                       <th>
                         {{ __('Fecha de Carga') }}
@@ -74,7 +74,7 @@
                               {{ $order->controls[0]->freights[0]->namefreights[0]->name  }}
                             @endif
                           </td>
-                          <td>{{ $order->controls[0]->freights[0]->id }}</td>
+                          <td>{{ $order->controls[0]->freights[0]->tractors[0]->pipes[0]->numero_economico }}</td>
                           <td>{{ $order->controls[0]->freights[0]->Tractors[0]->tractor }}</td>
                           <td>{{ $order->controls[0]->freights[0]->Tractors[0]->placas }}</td>
                           <td>{{ $order->controls[0]->driver->name }}</td>
@@ -96,11 +96,3 @@
     </div>
   </div>
 @endsection
-@push('js')
-  <script>
-
-   $(document).ready(function() {
-    iniciar_date('datatables');
-    });
-  </script>
-@endpush

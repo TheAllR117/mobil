@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'Pedidos', 'titlePage' => __('Gestión de los pedidos')])
+@extends('layouts.app', ['page' => __('Gestión de los pedidos'), 'pageSlug' => __('Pedidos')])
 
 @section('content')
 <div class="content">
@@ -9,19 +9,15 @@
                     <div class="card ">
                         <div class="card-header card-header-primary">
                             <h4 class="card-title">
+                                <a href="{{ route('pedidos.index') }}" title="Regresar a la lista">
+                                    <i class="tim-icons icon-minimal-left text-danger"></i>
+                                </a>
                                 {{ __('Armar Envio') }} {{--date("d/m/Y",strtotime($fecha))--}}
                             </h4>
                             <p class="card-category">
                             </p>
                         </div>
                         <div class="card-body">
-                            <div class="row mb-3">
-                              <div class="col-12 text-left">
-                                <a href="{{ route('pedidos.index') }}" class="btn btn-social btn-just-icon btn-primary" title="Regresar a la lista">
-                                    <i class="material-icons">arrow_back_ios</i>
-                                </a>
-                              </div>
-                            </div>
                             <div class="row mb-5 justify-content-center">
                                 <div class="col-sm-2">
                                     <label class="label-control">Fletera</label><br>
@@ -110,22 +106,22 @@
                                                     @foreach($estaciones as $estacion ) 
                                                         @if($order->status_id == 2 && $order->estacion_id == $estacion->id)
                                                             
-                                                            <li class="facet alert alert-danger mr-0 ml-0" style="margin-left: -2.6rem !important;" value="{{$order->cantidad_lts}}">
+                                                            <li class="facet alert btn-danger mr-0 ml-0" style="margin-left: -2.6rem !important;" value="{{$order->cantidad_lts}}">
                                                                 <div class="row">
-                                                                    <div class="col-sm-3 pr-1 ">
+                                                                    <div class="col-sm-3 pr-1 text-light">
                                                                         {{ $order->so_number }}
                                                                         <input type="hidden" name="{{$key}}" value="{{ $order->id }}">
                                                                     </div>
-                                                                    <div class="col-sm-3 pr-0 pl-0">
+                                                                    <div class="col-sm-3 pr-0 pl-0 text-light">
                                                                          {{ $estacion->nombre_sucursal }}
                                                                     </div>
-                                                                    <div class="col-sm-2 pr-0 pl-0">
+                                                                    <div class="col-sm-2 pr-0 pl-0 text-light">
                                                                         {{ $order->producto }}
                                                                     </div>
-                                                                    <div class="col-sm-2 pr-0 pl-0">
+                                                                    <div class="col-sm-2 pr-0 pl-0 text-light">
                                                                         {{ number_format($order->cantidad_lts, 0) }}L
                                                                     </div>
-                                                                    <div class="col-sm-2 pr-0 pl-0">
+                                                                    <div class="col-sm-2 pr-0 pl-0 text-light">
                                                                         {{ $order->dia_entrega }}
                                                                     </div>
                                                                 
@@ -197,22 +193,22 @@
                                                             @foreach($estaciones as $estacion ) 
                                                                 @if($order->estacion_id == $estacion->id)
                                                                     @if(count($estacion->freights) < 1)
-                                                                        <li class="facet alert alert-danger mr-0 ml-0" style="margin-left: -2.6rem !important;">
+                                                                        <li class="facet alert btn-danger mr-0 ml-0" style="margin-left: -2.6rem !important;">
                                                                             <div class="row">
-                                                                                <div class="col-md-2">
+                                                                                <div class="col-md-2 text-light">
                                                                                     {{ $order->so_number }}
                                                                                     <input type="hidden" name="{{$key}}" value="{{ $order->id }}">
                                                                                 </div>
-                                                                                <div class="col-md-3">
+                                                                                <div class="col-md-3 text-light">
                                                                                     {{ $estacion->nombre_sucursal }}
                                                                                 </div>
-                                                                                <div class="col-md-2">
+                                                                                <div class="col-md-2 text-light">
                                                                                     {{ $order->producto }}
                                                                                 </div>
-                                                                                <div class="col-md-2">
+                                                                                <div class="col-md-2 text-light">
                                                                                     {{ number_format($order->cantidad_lts, 0) }}L
                                                                                 </div>
-                                                                                <div class="col-md-3">
+                                                                                <div class="col-md-3 text-light">
                                                                                     {{ $order->dia_entrega }}
                                                                                 </div>
                                                                             </div>

@@ -38,7 +38,7 @@ class PriceImport implements ToModel, WithHeadingRow
                     $msj->to($for);
                 });
             }
-
+            //dd(Price::find($estacion_select[0]->id));
             Price::find($estacion_select[0]->id)->update(['created_at' => session('fecha_precio_sugerido')]);
 
             return new price([

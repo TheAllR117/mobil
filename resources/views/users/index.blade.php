@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'Usuarios', 'titlePage' => __('Gestión de usuarios')])
+@extends('layouts.app', ['page' => __('Gestión de usuarios'), 'pageSlug' => __('Usuarios')])
 
 @section('content')
   <div class="content">
@@ -31,7 +31,7 @@
                   </div>
                 </div>
                 <div class="table-responsive">
-                  <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables">
+                  <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables_1">
                     <thead class=" text-primary">
                       <th>
                           {{ __('Nombre') }}
@@ -41,9 +41,6 @@
                       </th>
                       <th>
                         {{ __('Teléfono') }}
-                      </th>
-                      <th>
-                        {{ __('Estatus') }}
                       </th>
                       <th>
                         {{ __('Rol') }}
@@ -72,13 +69,6 @@
                             {{ $user->phone }}
                           </td>
                           <td>
-                            @if($user->active == 0)
-                             Inactivo
-                            @else
-                              Activo
-                            @endif
-                          </td>
-                          <td>
                             @foreach( $user->roles as $rol)
                               {{ $rol->name }}
                             @endforeach
@@ -102,18 +92,15 @@
                                   @method('delete')
                               
                                   <a rel="tooltip" class="btn btn-success btn-link" href="{{ route('user.edit', $user) }}" data-original-title="" title="">
-                                    <i class="material-icons">edit</i>
-                                    <div class="ripple-container"></div>
+                                    <i class="tim-icons icon-pencil"></i>
                                   </a>
                                   <button type="button" class="btn btn-danger btn-link" data-original-title="" title="" onclick="confirm('{{ __("¿Estás seguro de que deseas eliminar a este usuario?") }}') ? this.parentElement.submit() : ''">
-                                      <i class="material-icons">delete_forever</i>
-                                      <div class="ripple-container"></div>
+                                    <i class="tim-icons icon-trash-simple"></i>
                                   </button>
                               </form>
                             @else
                               <a rel="tooltip" class="btn btn-success btn-link" href="{{ route('profile.edit') }}" data-original-title="" title="">
-                                <i class="material-icons">edit</i>
-                                <div class="ripple-container"></div>
+                                <i class="tim-icons icon-pencil"></i>
                               </a>
                             @endif
                           </td>
@@ -130,11 +117,3 @@
     </div>
   </div>
 @endsection
-@push('js')
-  <script>
-
-   $(document).ready(function() {
-    iniciar_date('datatables');
-    });
-  </script>
-@endpush

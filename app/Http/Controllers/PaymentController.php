@@ -56,7 +56,7 @@ class PaymentController extends Controller
             $estaciones = $estacion::select('id','razon_social','nombre_sucursal')->get();
 
         }else{
-            // en caso de que contar con el rol admin estacion solo le apareceran sus estaciones asignadas
+            // en caso de no contar con el rol admin estacion solo le apareceran sus estaciones asignadas
             $estaciones = array();
 
             for($i=0; $i<count($request->user()->estacions); $i++){

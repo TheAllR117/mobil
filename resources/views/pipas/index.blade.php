@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'Fleteras', 'titlePage' => __('Gestión de las pipas')])
+@extends('layouts.app', ['page' => __('Gestión de Fleteras'), 'pageSlug' => __('Fleteras')])
 
 @section('content')
   <div class="content">
@@ -8,8 +8,8 @@
             <div class="card">
               <div class="card-header card-header-primary">
                 <h4 class="card-title ">
-                  <a href="{{ route('fleteras.index') }}"  title="Regresar a la lista">
-                    <i class="material-icons font-weight-normal">arrow_back_ios</i>
+                  <a href="{{ route('fleteras.index') }}" title="Regresar a la lista">
+                    <i class="tim-icons icon-minimal-left text-danger"></i>
                   </a>
                   {{ __('Pipas') }}</h4>
                 <p class="card-category"> {{ __('Aquí puedes administrar todas las pipas.') }}</p>
@@ -37,7 +37,7 @@
                   </div>
                 </div>
                 <div class="table-responsive">
-                  <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables">
+                  <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables_1">
                     <thead class=" text-primary">
                       <th>
                         {{ __('# Economico') }}
@@ -101,13 +101,10 @@
                               <a class="btn btn-success btn-link" data-original-title=""
                                 href="{{ route('pipas.edit', $pipa) }}" rel="tooltip"
                                 title="">
-                                <i class="material-icons">edit</i>
-                                <div class="ripple-container">
-                                </div>
+                                <i class="tim-icons icon-pencil"></i>
                               </a>
                               <button type="button" class="btn btn-danger btn-link" data-original-title="" title="" onclick="confirm('{{ __("¿Estás seguro de que deseas eliminar a esta pipa?") }}') ? this.parentElement.submit() : ''">
-                                <i class="material-icons">close</i>
-                                <div class="ripple-container"></div>
+                                <i class="tim-icons icon-trash-simple"></i>
                               </button>
                             </form>
                           </td>
@@ -123,11 +120,3 @@
     </div>
   </div>
 @endsection
-@push('js')
-  <script>
-
-   $(document).ready(function() {
-    iniciar_date('datatables');
-    });
-  </script>
-@endpush

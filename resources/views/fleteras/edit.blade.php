@@ -1,10 +1,10 @@
-@extends('layouts.app', ['activePage' => 'Fleteras', 'titlePage' => __('Gestión de Fleteras')])
+@extends('layouts.app', ['page' => __('Gestión de Fleteras'), 'pageSlug' => __('Fleteras')])
 
 @section('content')
 <div class="content">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-8 mx-auto d-block mt-3">
+      <div class="col-md-6 mx-auto d-block mt-3">
 
         <form action="{{ route('fleteras.update', $fletera->id) }}" autocomplete="off" class="form-horizontal" enctype="multipart/form-data" method="post">
         	@csrf
@@ -13,29 +13,22 @@
 
           	<div class="card-header card-header-primary">
 			  <h4 class="card-title">
-			      {{ __('Editar Relación') }}
+			  	<a href="{{ route('fleteras.index') }}" title="Regresar a la lista">
+                    <i class="tim-icons icon-minimal-left text-danger"></i>
+                </a>
+			    {{ __('Editar Relación') }}
 			  </h4>
 			  <p class="card-category"></p>
 			</div>
 
             <div class="card-body">
-	            <div class="row">
-		            <div class="col-12 text-left">
-		              <a href="{{ route('fleteras.index') }}" class="btn btn-social btn-just-icon btn-primary" title="Regresar a la lista">
-		                  <i class="material-icons">arrow_back_ios</i>
-		              </a>
-		            </div>
-	            </div>
 
 	            <div class="row">
-	            	<div class="form-group{{ $errors->has('id_freights') ? ' has-danger' : '' }} mt-5 col-md-4">
+	            	<div class="form-group{{ $errors->has('id_freights') ? ' has-danger' : '' }} mt-5 col-md-6">
 
 	            		<label for="id_freights" class="">
 	            			{{ __('Nombre de la fletera') }}
 	            		</label>
-
-   
-
 	            		<select class="selectpicker show-tick show-menu-arrow bfh-languages" data-live-search="true" data-style="btn-danger" id="input-id_freights" data-language="es_MX" data-available="es_MX"  name="id_freights">
 	            			<option data-tokens="Selecciona una fletera" value="">Selecciona una fletera</option>
 	            			@foreach($freights as $freight)

@@ -1,39 +1,28 @@
-<!-- Navbar -->
-<!--nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top text-white">
-  <div class="container">
-    <div class="navbar-wrapper">
-      <a class="navbar-brand" href="{{ route('home') }}">{{ $title }}</a>
+<nav class="navbar navbar-expand-lg navbar-absolute navbar-transparent fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-wrapper">
+            <div class="navbar-toggle d-inline">
+                <button type="button" class="navbar-toggler">
+                    <span class="navbar-toggler-bar bar1"></span>
+                    <span class="navbar-toggler-bar bar2"></span>
+                    <span class="navbar-toggler-bar bar3"></span>
+                </button>
+            </div>
+            <a class="navbar-brand text-light" href="#">{{ $page ?? '' }}</a>
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navigation">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item ">
+                    <a href="{{ route('login') }}" class="nav-link text-light">
+                        <i class="tim-icons icon-single-02 text-light"></i> {{ _('Login') }}
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="navbar-toggler-icon icon-bar"></span>
-      <span class="navbar-toggler-icon icon-bar"></span>
-      <span class="navbar-toggler-icon icon-bar"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a href="{{ route('home') }}" class="nav-link">
-            <i class="material-icons">dashboard</i> {{ __('Dashboard') }}
-          </a>
-        </li>
-        <li class="nav-item{{ $activePage == 'register' ? ' active' : '' }}">
-          <a href="{{ route('register') }}" class="nav-link">
-            <i class="material-icons">person_add</i> {{ __('Register') }}
-          </a>
-        </li>
-        <li class="nav-item{{ $activePage == 'login' ? ' active' : '' }}">
-          <a href="{{ route('login') }}" class="nav-link">
-            <i class="material-icons">fingerprint</i> {{ __('Login') }}
-          </a>
-        </li>
-        <li class="nav-item ">
-          <a href="{{ route('profile.edit') }}" class="nav-link">
-            <i class="material-icons">face</i> {{ __('Profile') }}
-          </a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav-->
-<!-- End Navbar -->
+</nav>

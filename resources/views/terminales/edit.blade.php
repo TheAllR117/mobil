@@ -1,29 +1,25 @@
-@extends('layouts.app', ['activePage' => 'Terminales', 'titlePage' => __('Alta de Terminales')])
+@extends('layouts.app', ['page' => __('Alta de Terminales'), 'pageSlug' => __('Terminales')])
 
 @section('content')
 <div class="content">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-8 mx-auto d-block mt-3">
+            <div class="col-md-6 mx-auto d-block mt-3">
                 <form action="{{ route('terminales.update', $terminal) }}" autocomplete="off" class="form-horizontal" method="post">
                     @csrf
             		@method('post')
                     <div class="card ">
                         <div class="card-header card-header-primary">
                             <h4 class="card-title">
+                                <a href="{{ route('terminales.index') }}" title="Regresar a la lista">
+                                    <i class="tim-icons icon-minimal-left text-danger"></i>
+                                </a>
                                 {{ __('Editar Terminal') }}
                             </h4>
                             <p class="card-category">
                             </p>
                         </div>
                         <div class="card-body">
-                            <div class="row mb-4">
-                              <div class="col-12 text-left">
-                                <a href="{{ route('terminales.index') }}" class="btn btn-social btn-just-icon btn-primary" title="Regresar a la lista">
-                                    <i class="material-icons">arrow_back_ios</i>
-                                </a>
-                              </div>
-                            </div>
                             <div class="row">
                                 <div class="form-group{{ $errors->has('razon_social') ? ' has-danger' : '' }} col-sm-12">
                                     <label for="razon_social">{{ __('Nombre de la terminal') }}</label>

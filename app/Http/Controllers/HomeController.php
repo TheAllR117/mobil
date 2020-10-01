@@ -30,11 +30,17 @@ class HomeController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index(Request $request, Estacion $estacion, Pipe $pipe, Payment $payment)
+    public function index(Request $request, Estacion $estacion, Pipe $pipe, Payment $payment, Order $order)
     {
         $request->user()->authorizeRoles(['Administrador','Logistica','Admin-Estacion','Abonos & Pagos']);
         $saldo_total = 0;
         $terminals = Terminal::all();
+
+        //informacion de ventas
+        $order_totales = $order::where('status_id','==','4')->count();
+
+        //informacion de las estaciones
+        $estaciones_info = $estacion::where('razon_social','!=','*')->orderBy('nombre_sucursal')->get();
 
         //consulta de informacion
         $estacion_total = $estacion::where('razon_social','!=','*')->count();
@@ -100,7 +106,7 @@ class HomeController extends Controller
                             ORDER BY prices.created_at DESC
                     ');
 
-        return view('dashboard', compact('fechas', 'terminales','estacion_total', 'saldo_total', 'pipas_total','abonos_pendientes', 'estaciones_deudoras','precios_actuales_estaciones'));
+        return view('dashboard', compact('fechas', 'terminales','estacion_total', 'saldo_total', 'pipas_total','abonos_pendientes', 'estaciones_deudoras','precios_actuales_estaciones', 'estaciones_info', 'order_totales'));
     }
 
 }

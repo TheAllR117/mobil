@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'Facturas', 'titlePage' => __('Gestión de las Facturas')])
+@extends('layouts.app', ['page' => __('Gestión de las Facturas'), 'pageSlug' => __('Facturas')])
 
 @section('content')
 <div class="content">
@@ -6,24 +6,24 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="card">
-	              <div class="card-header card-header-primary">
-	              	<h4 class="card-title ">{{ __('Facturas') }}</h4>
-	                <p class="card-category"> {{ __('Aquí puedes administrar todas las facturas.') }}</p>
-	              </div>
-	              <div class="card-body">
+          <div class="card-header card-header-primary">
+            <h4 class="card-title ">{{ __('Facturas') }}</h4>
+            <p class="card-category"> {{ __('Aquí puedes administrar todas las facturas.') }}</p>
+          </div>
+          <div class="card-body">
 
-	                @if (session('status'))
-	                  <div class="row">
-	                    <div class="col-sm-12">
-	                      <div class="alert alert-success">
-	                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-	                          <i class="material-icons">close</i>
-	                        </button>
-	                        <span>{{ session('status') }}</span>
-	                      </div>
-	                    </div>
-	                  </div>
-	                @endif
+            @if (session('status'))
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <i class="material-icons">close</i>
+                    </button>
+                    <span>{{ session('status') }}</span>
+                  </div>
+                </div>
+              </div>
+            @endif
 
 	                <!--div class="row">
                       <div class="col-12 text-right">
@@ -32,7 +32,7 @@
                     </div-->
 
                     <div class="table-responsive">
-                      <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables">
+                      <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables_1">
                         <thead class=" text-primary">
                           <th>{{ __('SO Number') }}</th>
                           <th>{{ __('Estación') }}</th>
@@ -129,17 +129,15 @@
                                     </span>
                                 </div>
                               </div>
-                              <div class="form-group form-file-upload form-file-multiple">
-                                <div class="input-group">
-                                    <input type="number" class="form-control" placeholder="Ingresa el precio final del pedido ($)" name="costo_real">
-                                </div>
+                              
+                              <div class="input-group">
+                                <input type="number" class="form-control" placeholder="Ingresa el precio final del pedido ($)" name="costo_real">
                               </div>
-
-                              <div class="form-group form-file-upload form-file-multiple">
-                                <div class="input-group">
-                                    <input type="number" class="form-control" placeholder="Ingresa el total de litros" name="litros_final">
-                                </div>
+                             
+                              <div class="input-group">
+                                  <input type="number" class="form-control" placeholder="Ingresa el total de litros" name="litros_final">
                               </div>
+                              
 
 
                             </div>
@@ -174,11 +172,6 @@
       })
     });
 
-   $(document).ready(function() {
-    iniciar_selector_de_archivos();
-      $('#datatables').fadeIn(1100);
-   		iniciar_date('datatables');
-    });
 
   </script>
 @endpush

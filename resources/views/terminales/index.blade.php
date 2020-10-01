@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'Terminales', 'titlePage' => __('Alta de Terminales')])
+@extends('layouts.app', ['page' => __('Alta de Terminales'), 'pageSlug' => __('Terminales')])
 
 @section('content')
 <div class="content">
@@ -42,7 +42,7 @@
                         </div>
                         <div class="material-datatables">
                             <table cellspacing="0" class="table table-striped table-no-bordered table-hover"
-                                id="datatables" style="width:100%" width="100%">
+                                id="datatables_1" style="width:100%" width="100%">
                                 <thead class="text-primary">
                                     <th>
                                         {{ __('ID')}}
@@ -90,17 +90,12 @@
                                                 <a class="btn btn-success btn-link" data-original-title=""
                                                     href="{{ route('terminales.edit', $terminal) }}" rel="tooltip"
                                                     title="">
-                                                    <i class="material-icons">
-                                                        edit
-                                                    </i>
-                                                    <div class="ripple-container">
-                                                    </div>
+                                                    <i class="tim-icons icon-pencil"></i>
                                                 </a>
                                                 <button type="button" class="btn btn-danger btn-link"
                                                     data-original-title="" title=""
                                                     onclick="confirm('{{ __("¿Estás seguro de que deseas eliminar a esta Terminal?") }}') ? this.parentElement.submit() : ''">
-                                                    <i class="material-icons">delete_forever</i>
-                                                    <div class="ripple-container"></div>
+                                                    <i class="tim-icons icon-trash-simple"></i>
                                                 </button>
                                             </form>
                                         </td>
@@ -117,13 +112,3 @@
     </div>
 </div>
 @endsection
-
-@push('js')
-  <script>
-
-   $(document).ready(function() {
-    iniciar_date('datatables');
-    });
-
-  </script>
-@endpush

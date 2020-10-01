@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'Fleteras', 'titlePage' => __('Gestión de Fleteras')])
+@extends('layouts.app', ['page' => __('Gestión de Fleteras'), 'pageSlug' => __('Fleteras')])
 
 @section('content')
   <div class="content">
@@ -23,28 +23,28 @@
                     </div>
                   </div>
                 @endif
-                <div class="row justify-content-center">
+                <div class="row justify-content-center mt-2 mb-2">
                 	<div class="col-2">
-                		<a href="{{ route('registro_fleteras.index') }}" class="btn btn-sm btn-primary">{{ __('gestionar fleteras') }}
+                		<a href="{{ route('registro_fleteras.index') }}" class="btn btn-sm btn-simple">{{ __('gestionar fleteras') }}
                 		</a>
 	                </div>
 	                <div class="col-2">
-                    <a href="{{ route('tractores.index') }}" class="btn btn-sm btn-primary">{{ __('gestionar tractores') }}</a>
+                    <a href="{{ route('tractores.index') }}" class="btn btn-sm btn-simple">{{ __('gestionar tractores') }}</a>
 	                </div>
                   <div class="col-2">
-                    <a href="{{ route('pipas.index') }}" class="btn btn-sm btn-primary">{{ __('gestionar pipas') }}</a>
+                    <a href="{{ route('pipas.index') }}" class="btn btn-sm btn-simple">{{ __('gestionar pipas') }}</a>
                   </div>
 	                <div class="col-2">
-                		<a href="{{ route('conductores.index') }}" class="btn btn-sm btn-primary">{{ __('gestionar conductores') }}</a>
+                		<a href="{{ route('conductores.index') }}" class="btn btn-sm btn-simple">{{ __('gestionar conductores') }}</a>
 	                </div>
 	                <div class="col-2">
-	                  <a href="{{ route('fleteras.create') }}" class="btn btn-sm btn-primary">
+	                  <a href="{{ route('fleteras.create') }}" class="btn btn-sm btn-simple">
                       {{ __('Relacionar Fletera') }}
                     </a>
 	                </div>
                 </div>
                 <div class="table-responsive">
-                  <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables">
+                  <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables_1">
                     <thead class=" text-primary">
                       <th>
                         {{ __('Fletera') }}
@@ -101,13 +101,10 @@
                               <a class="btn btn-success btn-link" data-original-title=""
                                 href="{{ route('fleteras.edit', $freight) }}" rel="tooltip"
                                 title="">
-                                <i class="material-icons">edit</i>
-                                <div class="ripple-container">
-                                </div>
+                                <i class="tim-icons icon-pencil"></i>
                               </a>
                               <button type="button" class="btn btn-danger btn-link" data-original-title="" title="" onclick="confirm('{{ __("¿Estás seguro de que deseas eliminar esta relación.?") }}') ? this.parentElement.submit() : ''">
-                                <i class="material-icons">close</i>
-                                <div class="ripple-container"></div>
+                                <i class="tim-icons icon-trash-simple"></i> 
                               </button>
                             </form>
                           </td>
@@ -130,7 +127,7 @@
               <div class="card-body">
                
                 <div class="table-responsive">
-                  <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables1">
+                  <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables_2">
                     <thead class=" text-primary">
                       <th>
                         {{ __('Estación') }}
@@ -187,13 +184,10 @@
                               <a class="btn btn-success btn-link" data-original-title=""
                                 href="{{ route('fleteras.edit', $freight) }}" rel="tooltip"
                                 title="">
-                                <i class="material-icons">edit</i>
-                                <div class="ripple-container">
-                                </div>
+                                <i class="tim-icons icon-pencil"></i>
                               </a>
                               <button type="button" class="btn btn-danger btn-link" data-original-title="" title="" onclick="confirm('{{ __("¿Estás seguro de que deseas eliminar esta relación.?") }}') ? this.parentElement.submit() : ''">
-                                <i class="material-icons">close</i>
-                                <div class="ripple-container"></div>
+                                <i class="tim-icons icon-trash-simple"></i>
                               </button>
                             </form>
                           </td>
@@ -210,12 +204,3 @@
     </div>
   </div>
 @endsection
-@push('js')
-  <script>
-
-   $(document).ready(function() {
-      iniciar_date('datatables');
-      iniciar_date('datatables1');
-    });
-  </script>
-@endpush

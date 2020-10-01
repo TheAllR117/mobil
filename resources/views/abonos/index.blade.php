@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'Abonos', 'titlePage' => __('Gestión de los abonos')])
+@extends('layouts.app', ['page' => __('Gestión de los abonos'), 'pageSlug' => __('Abonos')])
 
 @section('content')
   <div class="content">
@@ -29,6 +29,7 @@
                        <a href="{{ route('abonos.create') }}" class="btn btn-sm btn-primary">{{ __('Hacer Abono') }}</a>
                     </div>
                 </div>
+                
                 <ul class="nav nav-pills nav-pills-primary mb-4" role="tablist">
                   <li class="nav-item">
                     <a class="nav-link active" data-toggle="tab" href="#link1" role="tablist" aria-expanded="true">
@@ -47,7 +48,7 @@
                     <div class="row">
 
                       <div class="table-responsive">
-                        <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables">
+                        <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables_1">
                           <thead class=" text-primary">
                             <th>{{ __('Estación') }}</th>
                             <th>{{ __('Nombre Sucursal') }}</th>
@@ -78,15 +79,12 @@
                                       @csrf
                                       @method('delete')
 
-                                      <a class="btn btn-social btn-just-icon btn-twitter btn-link" title="Validar Abono" data-original-title="" rel="tooltip" id="precio" onclick="cargar_id('{{ $payment->id_estacion }}','{{ $payment->id }}','{{ $payment->estacions[0]->nombre_sucursal }}','{{$payment->cantidad}}');">
-                                        <i class="material-icons">done_outline</i>
-                                        <div class="ripple-container">
-                                        </div>
+                                      <a class="btn btn-twitter btn-link" title="Validar Abono" data-original-title="" rel="tooltip" id="precio" onclick="cargar_id('{{ $payment->id_estacion }}','{{ $payment->id }}','{{ $payment->estacions[0]->nombre_sucursal }}','{{$payment->cantidad}}');">
+                                        <i class="tim-icons icon-check-2"></i>
                                       </a>
                                    
                                       <button type="button" class="btn btn-danger btn-link" data-original-title="" title="Eliminar Abono" onclick="confirm('{{ __("¿Estás seguro de que deseas eliminar a esta pipa?") }}') ? this.parentElement.submit() : ''">
-                                        <i class="material-icons">delete_forever</i>
-                                        <div class="ripple-container"></div>
+                                        <i class="tim-icons icon-trash-simple"></i> 
                                       </button>
                                     </form>
                                   </td>
@@ -104,7 +102,7 @@
                     <div class="row">
 
                       <div class="table-responsive">
-                        <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables1">
+                        <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables_2">
                           <thead class=" text-primary">
                             <th>{{ __('Estación') }}</th>
                             <th>{{ __('Nombre Sucursal') }}</th>
@@ -134,8 +132,7 @@
                                       @method('delete')
                                    
                                       <button type="button" class="btn btn-danger btn-link" data-original-title="" title="Eliminar Abono" onclick="confirm('{{ __("¿Estás seguro de que deseas eliminar a esta pipa?") }}') ? this.parentElement.submit() : ''">
-                                        <i class="material-icons">delete_forever</i>
-                                        <div class="ripple-container"></div>
+                                        <i class="tim-icons icon-trash-simple"></i> 
                                       </button>
                                     </form>
                                   </td>
@@ -260,9 +257,5 @@
       })
     });
 
-   $(document).ready(function() {
-    	iniciar_date('datatables');
-      iniciar_date('datatables1');
-    });
   </script>
 @endpush

@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'Pedidos', 'titlePage' => __('Gestión de los pedidos')])
+@extends('layouts.app', ['page' => __('Gestión de los pedidos'), 'pageSlug' => __('Pedidos')])
 
 @section('content')
   <div class="content">
@@ -16,29 +16,29 @@
                     <form action="{{ route('pedidos.import_pdf') }}" autocomplete="off" class="form-horizontal" enctype="multipart/form-data" method="post">
                       @csrf
                       @method('post')
-                          <div class="row">
-                            <div class="col-sm-3">
-                              <div class="form-group">
-                                  <input type="text" class="form-control datetimepicker text-light" id="input-dia_entrega" name="dia_entrega" value="10/05/2018"/>
-                              </div>
-                            </div>
-                            <div class="col-sm-9">
-                              <div class="form-group form-file-upload form-file-multiple">
-                                <input type="file" multiple="" accept="application/pdf" class="inputFileHidden" name="select_file" id="input-pdf">
-                                <div class="input-group">
-                                  <input type="text" class="form-control inputFileVisible text-light" placeholder="Selecciona un archivo PDF" id="archivo_pdf">
-                                  <span class="input-group-btn">
-                                      <button type="button" class="btn btn-fab btn-round ">
-                                          <i class="material-icons">attach_file</i>
-                                      </button>
-                                  </span>
-                                  <button type="submit" id="archivo_pdf_boton" class="btn btn-sm btn-danger" disabled>
-                                    Cargar
-                                  </button>
-                                </div>
-                              </div>
+                      <div class="row">
+                        <div class="col-sm-4">
+                          <div class="form-group">
+                            <input type="text" class="form-control datetimepicker text-light mt-2" id="input-dia_entrega" name="dia_entrega" value="10/05/2018"/>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group form-file-upload form-file-multiple">
+                            <input type="file" multiple="" accept="application/pdf" class="inputFileHidden" name="select_file" id="input-pdf">
+                            <div class="input-group">
+                              <input type="text" class="form-control inputFileVisible mt-2" placeholder="Selecciona un archivo PDF" id="archivo_pdf"> 
+                              <button type="button" class="btn btn-sm btn-primary mt-2" id="btn_archivo_excel">
+                                <i class="material-icons">attach_file</i>
+                              </button>
                             </div>
                           </div>
+                        </div>
+                        <div class="col-sm-2">
+                          <button type="submit" id="archivo_pdf_boton" class="mt-3 btn btn-sm btn-danger" disabled>
+                            Cargar
+                          </button>
+                        </div>
+                      </div>
                     </form>
                   </div>
                 </div>
@@ -58,7 +58,7 @@
                   </div>
                 @endif
 
-                <ul class="nav nav-pills nav-pills-primary" role="tablist">
+                <ul class="nav nav-pills nav-pills-primary mt-5" role="tablist">
 
                   <li class="nav-item">
                     <a class="nav-link active" data-toggle="tab" href="#link1" role="tablist" aria-expanded="true">
@@ -96,12 +96,13 @@
                     <!--Tabla 1 pedidos realizados-->
                     <div class="row">
                       <div class="col-12 text-right">
+                        <a class="btn btn-sm btn-primary" href="{{ route('exportar_excel') }}">Descargar Excel</a>
                         <a href="{{ route('pedidos.create') }}" class="btn btn-sm btn-primary">{{ __('Hacer Pedido') }}</a>
                       </div>
                     </div>
 
                     <div class="table-responsive">
-                      <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables">
+                      <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables_1">
                         <thead class=" text-primary">
                           <th>{{ __('SO Number') }}</th>
                           <th>{{ __('Estación') }}</th>
@@ -130,14 +131,11 @@
                                   @method('delete')
                                   @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                                   <a class="btn btn-social btn-just-icon btn-twitter btn-link sonomber" title="Asignar SO Number" data-original-title="" rel="tooltip" id="precio" onclick="so_number('{{ $order->id }}','{{ $order->estacions[0]->nombre_sucursal }}');">
-                                    <i class="material-icons">done_outline</i>
-                                    <div class="ripple-container">
-                                    </div>
+                                    <i class="tim-icons icon-check-2"></i>
                                   </a>
                                   @endif
                                   <button type="button" class="btn btn-danger btn-link" data-original-title="" title=" Eliminar Pedido" onclick="confirm('{{ __("¿Estás seguro de que deseas eliminar este pedido?") }}') ? this.parentElement.submit() : ''">
-                                    <i class="material-icons">delete_forever</i>
-                                    <div class="ripple-container"></div>
+                                    <i class="tim-icons icon-trash-simple"></i>
                                   </button>
                                 </form>
                               </td>
@@ -161,7 +159,7 @@
                       @endif
                     </div>
                     <div class="table-responsive">
-                      <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables1">
+                      <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables_2">
                         <thead class=" text-primary">
                           <th>{{ __('SO Number') }}</th>
                           <th>{{ __('Estación') }}</th>
@@ -220,7 +218,7 @@
                   <div class="tab-pane" id="link3" aria-expanded="false">
                     <!-- pedidos en camino -->
                     <div class="table-responsive">
-                      <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables2">
+                      <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables_3">
                         <thead class=" text-primary">
                           <th>{{ __('N° de Orden') }}</th>
                           <th>{{ __('Estación ') }}</th>
@@ -350,7 +348,7 @@
                   <div class="tab-pane" id="link4" aria-expanded="false">
 
                     <div class="table-responsive">
-                      <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables3">
+                      <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables_3">
                         <thead class=" text-primary">
                           <th>{{ __('N° de Orden') }}</th>
                           <th>{{ __('Fletera') }}</th>
@@ -595,7 +593,7 @@
                   </div>
                   <div class="tab-pane" id="link5" aria-expanded="false">
                     <div class="table-responsive">
-                      <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables4">
+                      <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables_4">
                         <thead class=" text-primary">
                           <th>{{ __('SO Number') }}</th>
                           <th>{{ __('Estación') }}</th>
@@ -860,22 +858,8 @@
         });
     });
 
-    $( "#archivo_pdf" ).change(function() {
-      if($( "#archivo_pdf" ).val() != ""){
-        $("#archivo_pdf_boton").prop('disabled', false);
-      } else {
-        $("#archivo_pdf_boton").prop('disabled', true);
-      }
-    });
-
    $(document).ready(function() {
-      init_calendar('input-dia_entrega', now(), '07-07-2025');
-      iniciar_selector_de_archivos();
-      iniciar_date('datatables');
-      iniciar_date('datatables1');
-      iniciar_date('datatables2');
-      iniciar_date('datatables3');
-      iniciar_date('datatables4');
+      init_calendar('input-dia_entrega','01-01-2020', '07-07-2025');
     });
   </script>
 @endpush

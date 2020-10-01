@@ -1,20 +1,20 @@
-@extends('layouts.app', ['activePage' => 'Fleteras', 'titlePage' => __('Gestión de las pipas')])
+@extends('layouts.app', ['page' => __('Gestión de Fleteras'), 'pageSlug' => __('Fleteras')])
 
 @section('content')
 <div class="content">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-8 mx-auto d-block mt-3">
+            <div class="col-md-6 mx-auto d-block mt-3">
                 <form action="{{ route('pipas.update', $pipe_edit) }}" autocomplete="off" class="form-horizontal" method="post">
                     @csrf
                     @method('post')
                     <div class="card ">
                         <div class="card-header card-header-primary">
                             <h4 class="card-title">
-                                <a href="{{ route('pipas.index') }}" title="Regresar a la lista">
-                                  <i class="material-icons">arrow_back_ios</i>
-                                </a>
-                                {{ __('Editar Pipa') }}
+                              <a href="{{ route('pipas.index') }}" title="Regresar a la lista">
+                                <i class="tim-icons icon-minimal-left text-danger"></i>
+                              </a>
+                              {{ __('Editar Pipa') }}
                             </h4>
                             <p class="card-category">
                             </p>

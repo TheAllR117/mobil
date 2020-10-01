@@ -1,29 +1,26 @@
-@extends('layouts.app', ['activePage' => 'Estaciones', 'titlePage' => __('Editar Estaciones')])
+@extends('layouts.app', ['page' => __('Gestión de Estaciones'), 'pageSlug' => __('Estaciones')])
 
 @section('content')
 <div class="content">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-10 mx-auto d-block mt-3">
+            <div class="col-md-8 mx-auto d-block mt-3">
                 <form action="{{ route('estaciones.update', $estacion_edit) }}" autocomplete="off" class="form-horizontal" method="post">
                     @csrf
                 @method('post')
                     <div class="card ">
                         <div class="card-header card-header-primary">
                             <h4 class="card-title">
+                                <a href="{{ route('estaciones.index') }}" title="Regresar a la lista">
+                                    <i class="tim-icons icon-minimal-left text-danger"></i>
+                                </a>
                                 {{ __('Editar Estación') }}
                             </h4>
                             <p class="card-category">
                             </p>
                         </div>
                         <div class="card-body">
-                            <div class="row mb-4">
-                              <div class="col-12 text-left">
-                                <a href="{{ route('estaciones.index') }}" class="btn btn-social btn-just-icon btn-primary" title="Regresar a la lista">
-                                    <i class="material-icons">arrow_back_ios</i>
-                                </a>
-                              </div>
-                            </div>
+                           
                             <div class="row mt-5">
                                 <div class="form-group{{ $errors->has('razon_social') ? ' has-danger' : '' }} col-sm-4">
                                     <label for="razon_social">
@@ -204,19 +201,17 @@
 
                             </div>
 
-                            <div class="row">
+                            <div class="row mt-2">
 
                                 <div class="form-group col-sm-4 text-center">
                                     <label for="credito">
-                                        {{ __('Estatus') }}
+                                        {{ __('Estatus activa') }}
                                     </label>
                                     <div class="togglebutton">
                                         <label>
-                                            Inactivo
                                             <input @if($estacion_edit->status == 1) checked="true" @endif name="status" type="checkbox">
                                                 <span class="toggle">
                                                 </span>
-                                                Activo
                                             </input>
                                         </label>
                                     </div>
@@ -227,11 +222,9 @@
                                     </label>
                                     <div class="togglebutton">
                                         <label>
-                                            No
                                             <input aria-controls="collapseExample" aria-expanded="false" data-toggle="collapse" href="#collapseExample" id="input-linea_credito" name="linea_credito" type="checkbox" @if($estacion_edit->linea_credito == 1) checked="true" @endif>
                                                 <span class="toggle">
                                                 </span>
-                                                Si
                                             </input>
                                         </label>
                                     </div>
@@ -242,11 +235,9 @@
                                     </label>
                                     <div class="togglebutton">
                                         <label>
-                                            No
                                             <input aria-controls="datosfiscales" aria-expanded="false" data-toggle="collapse" href="#datosfiscales" id="input-datos_fiscales" name="datos_fiscales" type="checkbox" @if($estacion_edit->datos_fiscales == 1) checked="true" @endif>
                                                 <span class="toggle">
                                                 </span>
-                                                Si
                                             </input>
                                         </label>
                                     </div>

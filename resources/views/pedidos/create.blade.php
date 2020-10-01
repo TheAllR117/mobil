@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'Pedidos', 'titlePage' => __('Gestión de los pedidos')])
+@extends('layouts.app', ['page' => __('Gestión de los pedidos'), 'pageSlug' => __('Pedidos')])
 
 @section('content')
   <div class="content">
@@ -11,39 +11,36 @@
                     <div class="card ">
                         <div class="card-header card-header-primary">
                             <h4 class="card-title">
-                                {{ __('Realizar Pedido') }}
+                              <a href="{{ route('pedidos.index') }}" title="Regresar a la lista">
+                                <i class="tim-icons icon-minimal-left text-danger"></i>
+                              </a>
+                              {{ __('Realizar Pedido') }}
                             </h4>
                             <p class="card-category">
                             </p>
                         </div>
                         <div class="card-body">
-
-                            <div class="row">
-                                <div class="col-md-12 text-right">
-                                    <a class="btn btn-sm btn-primary" href="{{ route('pedidos.index') }}">
-                                        {{ __('Volver a la lista') }}
-                                    </a>
-                                </div>
-                                <div class="col-md-6" id="col-actualizacion" style="display: none;">
-                                    <p>Precios actualizados <span id="span-fecha-ultima-actualizacion"></span></p>
-                                </div>
+                          <div class="row">
+                            <div class="col-md-6" id="col-actualizacion" style="display: none;">
+                              <p>Precios actualizados <span id="span-fecha-ultima-actualizacion"></span></p>
                             </div>
+                          </div>
 
                             <div class="row mt-4">
                             	<div class="col-lg-4 col-md-4 col-sm-4">
-                            		<label class="label-control">Estación</label>
-                                	<select class="selectpicker" data-style="btn btn-primary btn-round" title="Single Select" id="input-estacion_id" name="estacion_id">
-                                  		<option disabled selected>-- Seleccionar --</option>
-                                  		@foreach($estaciones as $estacion)
-                                    		<option value="{{ $estacion->id }}">{{ $estacion->nombre_sucursal }}</option>
-                                  		@endforeach
-                                	</select>
-                              	</div>
+                                <label class="label-control">Estación</label><br>
+                                <select class="selectpicker" data-style="btn btn-primary btn-round" title="Single Select" id="input-estacion_id" name="estacion_id">
+                                  <option disabled selected>-- Seleccionar --</option>
+                                  @foreach($estaciones as $estacion)
+                                    <option value="{{ $estacion->id }}">{{ $estacion->nombre_sucursal }}</option>
+                                  @endforeach
+                                </select>
+                              </div>
 
                               	<input type="hidden" name="status_id" value="1">
 
                               	<div class="col-lg-4 col-md-4 col-sm-4 justify-content-center">
-                              		<label class="label-control">Tipo de contenedor</label>
+                              		<label class="label-control">Tipo de contenedor</label><br>
                                 	<select class="selectpicker sele" data-style="btn btn-primary btn-round" title="Single Select" id="input-cantidad_lts" name="cantidad_lts">
                                       <option disabled selected>-- Seleccionar --</option>
                                       @for($i=0; $i<count($tem); $i++)
@@ -54,7 +51,7 @@
                               	</div>
 
                               	<div class="col-lg-4 col-md-4 col-sm-4">
-                              		<label class="label-control">Producto</label>
+                              		<label class="label-control">Producto</label><br>
                                 	<select class="selectpicker sele" data-style="btn btn-primary btn-round" title="Single Select" id="input-producto" name="producto">
                                   		<option disabled selected>-- Seleccionar --</option>
                                   		<option value="Extra">Extra</option>
@@ -166,8 +163,7 @@
 
 @push('js')
 <script>
-	$('#input-estacion_id').change(function(){
-
+	    $('#input-estacion_id').change(function(){
         $.ajax({
         	url: 'seleccionado',
         	type: 'POST',

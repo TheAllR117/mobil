@@ -158,6 +158,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('pedidos/emergencia','OrderController@emergencia')->name('pedidos.emergencia');
 	Route::post('pedidos/updateEstatus','OrderController@updateEstatus');
 	Route::post('pedidos/import_pdf','OrderController@import_pdf')->name('pedidos.import_pdf');
+	Route::get('exportar_excel', 'OrderController@exportar_excel')->name('exportar_excel');
 });
  
 // rutas de control
@@ -285,4 +286,29 @@ Route::group(['middleware' => 'auth'], function () {
 	//Route::get('estaciones', ['as' => 'estaciones.edit', 'uses' => 'EstacionController@edit']);
 	//Route::put('estaciones', ['as' => 'estaciones.update', 'uses' => 'ProfileController@update']);
 //});
+
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');
+
+Route::group(['middleware' => 'auth'], function () {
+		Route::get('icons', ['as' => 'pages.icons', 'uses' => 'PageController@icons']);
+		Route::get('maps', ['as' => 'pages.maps', 'uses' => 'PageController@maps']);
+		Route::get('notifications', ['as' => 'pages.notifications', 'uses' => 'PageController@notifications']);
+		Route::get('rtl', ['as' => 'pages.rtl', 'uses' => 'PageController@rtl']);
+		Route::get('tables', ['as' => 'pages.tables', 'uses' => 'PageController@tables']);
+		Route::get('typography', ['as' => 'pages.typography', 'uses' => 'PageController@typography']);
+		Route::get('upgrade', ['as' => 'pages.upgrade', 'uses' => 'PageController@upgrade']);
+});
+
+Route::group(['middleware' => 'auth'], function () {
+	Route::resource('user', 'UserController', ['except' => ['show']]);
+	Route::get('profile', ['as' => 'profile.edit', 'uses' => 'ProfileController@edit']);
+	Route::put('profile', ['as' => 'profile.update', 'uses' => 'ProfileController@update']);
+	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'ProfileController@password']);
+});
 

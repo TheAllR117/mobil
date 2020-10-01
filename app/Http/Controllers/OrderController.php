@@ -22,6 +22,9 @@ use DateTime;
 use vendor\autoload;
 use Exception;
 
+use App\Exports\OrdersExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class OrderController extends Controller
 {
     /**
@@ -610,5 +613,11 @@ class OrderController extends Controller
         }catch(Exception $e){
             return redirect()->route('pedidos.index')->withStatus(__('PDF no valido.'));
         }
+    }
+
+    public function exportar_excel(Request $request) 
+    {
+        
+        return Excel::download(new OrdersExport, 'invoices.xls');
     }
 }

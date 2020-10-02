@@ -169,10 +169,9 @@ class EstacionController extends Controller
 
         $path = $request->file('select_file');
         $fecha = $request->post('fecha_precio_sugerido');
+        $data = array($fecha);
 
-        session(['fecha_precio_sugerido' => $fecha]);
-
-        if(Excel::import(new PriceImport, $path)) {
+        if(Excel::import(new PriceImport($data), $path)) {
             return redirect()->route('estaciones.index')->withStatus(__('Excel importado correctamente.'));
         } else {
             return redirect()->route('estaciones.index')->withStatus(__('Error al importar el archivo Excel.'));

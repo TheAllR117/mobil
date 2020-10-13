@@ -97,8 +97,10 @@
         <script src="{{ asset('white') }}/js/plugins/bootstrap-notify.js"></script>
 
         <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-        <script src="{{ asset('white') }}/js/white-dashboard.js?v=2.1.1" type="text/javascript"></script>
-
+        <script src="{{ asset('white') }}/js/white-dashboard.js?v=1.0.0" type="text/javascript"></script>
+        
+        <script src="{{ asset('white') }}/js/plugins/bootstrap-switch.js"></script>
+        <script src="{{ asset('white') }}/jsjs/plugins/jquery.tablesorter.js"></script>
         
         <script src="{{ asset('white') }}/js/theme.js"></script>
         <script src="{{ asset('white') }}/js/settings.js"></script>
@@ -112,6 +114,206 @@
         @stack('js')
 
         <script>
+           
+            // funciones para la pagina de solicitar pedidos
+            
+            $('#input-estacion_id').change(function(){
+                $.ajax({
+                    url: 'seleccionado',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        'id' : $('#input-estacion_id').val(),
+                    },
+                    headers:{
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response){
+                        var datos =  response;
+                        $('#input-saldo').val(datos.estacion.saldo);
+                        $('#input-saldo1').val(datos.estacion.saldo);
+                        $('#input-credito').val(datos.estacion.credito);
+                        $('#input-disponible').val(dividir( multiplicar(datos.estacion.credito) - multiplicar(datos.estacion.credito_usado) ));
+                        // $('#precio_producto_extra').val(datos.price[datos.price.length - 1].extra_u);
+                        // $('#precio_producto_supreme').val(datos.price[datos.price.length - 1].supreme_u);
+                        // $('#precio_producto_diesel').val(datos.price[datos.price.length - 1].diesel_u);
+                        $('#input-credito_usado').val(0);
+                        $('#input-costo_aprox').val(0);
+
+                        if(datos.valores_ultima_actualizacion != null)
+                        {
+                            document.getElementById('col-actualizacion').style.display = "block";
+                            $('#span-fecha-ultima-actualizacion').text(datos.valores_ultima_actualizacion.fecha);
+
+                            $('#precio_producto_extra').val(datos.valores_ultima_actualizacion.extra_u);
+                            $('#precio_producto_supreme').val(datos.valores_ultima_actualizacion.supreme_u);
+                            $('#precio_producto_diesel').val(datos.valores_ultima_actualizacion.diesel_u);
+
+                        }else{
+                            $('#precio_producto_extra').val(datos.price[datos.price.length - 1].extra_u);
+                            $('#precio_producto_supreme').val(datos.price[datos.price.length - 1].supreme_u);
+                            $('#precio_producto_diesel').val(datos.price[datos.price.length - 1].diesel_u);
+                        }
+
+                        if(datos.hay_adeudo === 1)
+                        {
+                            document.getElementById('btn-guardar-div').style.display = "none";
+                            demo.showNotification('top','center', 'La estación tiene un adeudo que no ha pagado y ya expiró el plazo de pago.', 'tim-icons icon-bell-55');
+                            // alert('La estación tiene un adeudo que no ha pagado y ya expiró el plazo de pago.');
+                        }else{
+                            document.getElementById('btn-guardar-div').style.display = "block";
+                        }
+                    }
+                })
+            });
+
+            function costo_aprox(){
+                if ($('#input-producto').val() == 'Extra') {
+
+                $('#input-costo_aprox').val( dividir(dividir(multiplicar($('#precio_producto_extra').val()) * multiplicar( $('#input-cantidad_lts').val()))) );
+
+                } else if( $('#input-producto').val() == 'Supreme' ) {
+
+                $('#input-costo_aprox').val( dividir(dividir(multiplicar($('#precio_producto_supreme').val()) * multiplicar( $('#input-cantidad_lts').val()))) );
+
+
+                } else if( $('#input-producto').val() == 'Diesel' ) {
+                //alert(dividir(multiplicar($('#precio_producto_diesel').val()) * multiplicar( $('#input-cantidad_lts').val())) );
+                $('#input-costo_aprox').val( dividir(dividir(multiplicar($('#precio_producto_diesel').val()) * multiplicar( $('#input-cantidad_lts').val()))) );
+
+                }
+
+            }
+
+            $('.sele').change(function(){
+
+                $('#input-credito_usado').val(0);
+                $('#input-saldo1').val($('#input-saldo').val());
+                $('#input-costo_aprox').val(0);
+
+                costo_aprox();
+
+            if(parseFloat($('#input-saldo').val()) > 0 ) {
+                //hay saldo
+
+                if(parseFloat($('#input-costo_aprox').val()) <= parseFloat($('#input-saldo').val())){
+
+                    // alert('se puede comprar con el saldo.');
+                    demo.showNotification('top','center', 'Se puede comprar con el saldo.', 'tim-icons icon-bell-55');
+                    $('#input-saldo1').val($('#input-saldo').val() - $('#input-costo_aprox').val());
+                    $('#input-credito_usado').val($('#input-disponible').val());
+                    // $("#guardar").removeClass("ocultar");
+
+                }else{
+                    //el saldo no es suficiente
+
+                    //alert('hola');
+
+                    if(parseFloat($('#input-disponible').val()) >= 0 ){
+                    //se usara saldo y credito
+                    var suma_disponible_saldo = dividir( multiplicar(parseFloat($('#input-disponible').val())) + multiplicar(parseFloat($('#input-saldo').val())));
+                    var costo_apro = dividir(multiplicar(parseFloat( $('#input-costo_aprox').val())));
+
+                    if(suma_disponible_saldo >= costo_apro) {
+                        demo.showNotification('top','center', 'credito y saldo suficientes para comprar.', 'tim-icons icon-bell-55');
+                        //alert('credito y saldo suficientes para comprar');
+                        $('#input-saldo1').val(0);
+
+                        $('#input-credito_usado').val(dividir( multiplicar(suma_disponible_saldo) - multiplicar($('#input-costo_aprox').val())) ) ;
+                        // $("#guardar").removeClass("ocultar");
+
+                    }else{
+
+                        $('#input-saldo1').val($('#input-saldo').val());
+
+                        // alert('credito y saldo insuficientes para realizar la comprar');
+                        demo.showNotification('top','center', 'credito y saldo insuficientes para realizar la compra.', 'tim-icons icon-bell-55');
+                        // $("#guardar").addClass("ocultar");
+                    }
+
+                    }else{
+
+                        // alert('credito insuficientes para comprar');
+                        demo.showNotification('top','center','credito insuficientes para comprar', 'tim-icons icon-bell-55');
+                        // $("#guardar").addClass("ocultar");
+
+                    }
+
+                }
+
+
+
+            }else{
+                //no hay saldo
+                //alert('hola1');
+                //determinar si hay credito disponible suficiente
+                if(parseFloat($('#input-disponible').val()) != 0 && parseFloat($('#input-disponible').val()) >= 100000){
+
+                    if(parseFloat($('#input-disponible').val()) > parseFloat( $('#input-costo_aprox').val())) {
+
+                        //alert('no hay saldo pero si credito suficiente');
+                        demo.showNotification('top', 'center','no hay saldo pero si credito suficiente', 'tim-icons icon-bell-55');
+                        $('#input-credito_usado').val(dividir( multiplicar($('#input-disponible').val()) - multiplicar($('#input-costo_aprox').val())) ) ;
+                        // $("#guardar").removeClass("ocultar");
+
+                    }else{
+
+                        //alert('credito insuficiente');
+                        demo.showNotification('top','center','credito insuficiente', 'tim-icons icon-bell-55');
+                        // $("#guardar").addClass("ocultar");
+
+                    }
+
+                } else {
+                    // $("#guardar").addClass("ocultar");
+                }
+
+            }
+
+            });
+
+            $('#input-estacion_id, #input-cantidad_lts, #input-producto').change(function(){
+                if($("#input-credito_usado").val() == 0 && $("#input-costo_aprox").val() == 0){
+                    $("#guardar").addClass("d-none");
+                } 
+                else if($("#input-saldo1").val() == 0 && $("#input-costo_aprox").val() == 0) 
+                {
+                    $("#guardar").addClass("d-none");
+                }
+                else
+                {
+                    $("#guardar").removeClass("d-none");
+                }
+            
+            });
+
+            // funciones de la pagina abonos
+            $('#guardar_so').click(function(){
+                $.ajax({
+                    url: 'abonos/sal_o_cre',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        '_token': $('input[name=_token]').val(),
+                        'id_estacion' : $("#input-estacion_id").val(),
+                        'cantidad' : $("#input-cantidad").val(),
+                        'id': $("#input-id_order").val(),
+                    },
+                    headers:{ 
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 
+                    },
+                    success: function(response){
+                        $('#exampleModal').modal('toggle');
+                        //alert(response);
+                        demo.showNotification('top','center', response, 'tim-icons icon-bell-55');
+                        location.reload(true);
+                    }
+                });
+            });
+            // funcion para las notificaciones 
+                @if (session('status'))
+                    demo.showNotification('top','center', '{{ session('status') }}', 'tim-icons icon-bell-55');
+                @endif
             // funciones para la pagina de pedidos
 
             $("#input-pdf").change(function() {
@@ -132,7 +334,7 @@
             });
 
             $("#btn_archivo_excel").click(function() {
-                alert('hola');
+                // alert('hola');
                 if($( "#archivo_excel" ).val() != ""){
                     $("#archivo_excel_boton").prop('disabled', false);
                 } else {
@@ -181,6 +383,7 @@
                     success: function(response){
                     $('#exampleModal').modal('toggle');
                     alert(response);
+                    demo.showNotification('top','center', response, 'tim-icons icon-bell-55');
                     }
                 });
             });

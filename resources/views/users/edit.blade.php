@@ -9,19 +9,19 @@
           <form method="post" action="{{ route('user.update', $user) }}" autocomplete="off" class="form-horizontal">
             @csrf
             @method('put')
-
-            <div class="card ">
-
+            <div class="card bg-danger">
               <div class="card-header card-header-primary">
-                <h4 class="card-title">
+                <h4 class="card-title text-white">
                   <a href="{{ route('user.index') }}" title="Regresar a la lista">
-                    <i class="tim-icons icon-minimal-left text-danger"></i>
+                    <i class="tim-icons icon-minimal-left text-white"></i>
                   </a>
                   {{ __('Editar Usuario') }}
                 </h4>
                 <p class="card-category"></p>
               </div>
+            </div>
 
+            <div class="card ">
               <div class="card-body">
 
                 <div class="row">

@@ -141,7 +141,7 @@
         });
 
         // if que valida que los selects no tengan valores nulos
-        if($("#input-pipa_id").val() != [] && $("#input-tractor_id").val() != [] && $("#input-terminal_id").val() != [] && $("#input-conductor_id").val() != [] &&  $("#fletera").val() != []) {
+        if($("#input-pipa_id").val() != [] && $("#input-tractor_id").val() != [] && $("#input-terminal_id").val() != [] && $("#input-conductor_id").val() != [] &&  $("#fletera").val() != [] &&  $("#dia_entrega").val() != '') {
           // llamamos a la etiqueta donde estan los pedios a armar el flete
           el = document.getElementById('userFacets');
           // listamos los li del ul
@@ -160,20 +160,23 @@
 
           // if para validar que el tamaño de los pedidos no sobrepase la cantidad admitida
           if(vec.length > numero_de_pedidos){
-            alert('solo pude haber '+numero_de_pedidos+' pedidos');
+            //alert('solo pude haber '+numero_de_pedidos+' pedidos');
+            demo.showNotification('top','center','solo pude haber '+numero_de_pedidos+' pedidos', 'tim-icons icon-bell-55');
             // console.log($("#input-pipa_id option:selected").attr("name"));
             return false;
           } else{
             if(capacidad_total_pedidos > capacidad_total_compartimientos){
               capacidad_total_compartimientos = 0;
               capacidad_total_pedidos = 0;
-              alert('capacidad exedida.');
+              demo.showNotification('top','center','capacidad exedida.', 'tim-icons icon-bell-55');
+              // alert('capacidad exedida.');
               return false;
             }
             // console.log(el.getElementsByTagName('li').item(0).value);
           }
         } else {
-          alert('completa el formulario');
+          //alert('completa el formulario');
+          demo.showNotification('top','center','completa el formulario', 'tim-icons icon-bell-55');
           return false;
         }
         

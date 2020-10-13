@@ -19,7 +19,7 @@ class UserController extends Controller
      */
     public function index(User $model, Request $request)
     {   // validamos el rol del usuario para determinar si tine acceso a la vista si el usuario no tine ninguno de esos roles no se muestra las vista
-        $request->user()->authorizeRoles(['Administrador','Logistica']);
+        $request->user()->authorizeRoles(['Administrador']);
         
         // retornamos las informacion de todos los usurios
         return view('users.index', ['users' => $model::all()]);

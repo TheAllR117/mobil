@@ -8,17 +8,17 @@
         <form action="{{ route('registro_fleteras.store') }}" autocomplete="off" class="form-horizontal" enctype="multipart/form-data" method="post">
           @csrf
           @method('post')
-          <div class="card ">
-
+          <div class="card bg-danger">
             <div class="card-header card-header-primary">
-              <h4 class="card-title">
-                  <a href="{{ route('fleteras.index') }}" title="Regresar a la lista">
-                    <i class="tim-icons icon-minimal-left text-danger"></i>
-                  </a>
-                  {{ __('Editar Fletera') }}
+              <h4 class="card-title text-white">
+                <a href="{{ route('registro_fleteras.index') }}" title="Regresar a la lista">
+                  <i class="tim-icons icon-minimal-left text-white"></i>
+                </a>
+                {{ __('Editar Fletera') }}
               </h4>
-              <p class="card-category"></p>
             </div>
+          </div>
+          <div class="card ">
 
             <div class="card-body">
               <div class="row">

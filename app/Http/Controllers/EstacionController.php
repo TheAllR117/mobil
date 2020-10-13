@@ -98,7 +98,61 @@ class EstacionController extends Controller
     public function show(Request $request, $id)
     {
         $request->user()->authorizeRoles(['Administrador','Logistica','Admin-Estacion']);
-        return view('estaciones.show', ['estacion' => Estacion::findOrFail($id)]);
+        // array para almacenar los ultimos 12 meses
+        $meses_hasta_el_actual = [];
+        $nombre_del_mes = [];
+
+        // varible para sumar los litros
+        $litros_extra = 0;
+        $litros_supreme = 0;
+        $litros_diesel = 0;
+
+        // arrays para dividir los litros por mes
+        $meses_extra = [];
+        $meses_supreme = [];
+        $meses_diesel = [];
+
+
+        // foreach para crear las fechas y almacenarlas en el array
+        for($i=1; $i<=11; $i++){
+            array_push($meses_hasta_el_actual, date("Y-m", mktime(0 ,0 ,0, date("m")-$i, date("d"), date("Y"))));
+            array_push($nombre_del_mes, date("M", mktime(0 ,0 ,0, date("m")-$i, date("d"), date("Y"))));
+        }
+        array_unshift($meses_hasta_el_actual, date("Y-m", mktime(0 ,0 ,0, date("m"), date("d"), date("Y"))));
+        array_unshift($nombre_del_mes, date("M", mktime(0 ,0 ,0, date("m"), date("d"), date("Y"))));
+
+        // revertimos el orden del array
+        $meses_hasta_el_actual = array_reverse($meses_hasta_el_actual);
+        $nombre_del_mes = array_reverse($nombre_del_mes);
+
+
+        $estacion_buscada = Estacion::findOrFail($id);
+
+        for($i=0; $i<12; $i++){
+            $ventas_extra = $estacion_buscada->orders()->where('producto','Extra')->where('status_id','5')->whereDate('created_at','like', '%'.$meses_hasta_el_actual[$i].'%')->get();
+            $ventas_supreme = $estacion_buscada->orders()->where('producto','Supreme')->where('status_id','5')->whereDate('created_at','like', '%'.$meses_hasta_el_actual[$i].'%')->get();
+            $ventas_diesel = $estacion_buscada->orders()->where('producto','Diesel')->where('status_id','5')->whereDate('created_at','like', '%'.$meses_hasta_el_actual[$i].'%')->get();
+            
+            for($j=0; $j<count($ventas_extra); $j++){
+                $litros_extra = $ventas_extra[$j]->cantidad_lts + $litros_extra;
+            }
+            array_push($meses_extra, $litros_extra);
+            $litros_extra = 0;
+
+            for($j=0; $j<count($ventas_supreme); $j++){
+                $litros_supreme = $ventas_supreme[$j]->cantidad_lts + $litros_supreme;
+            }
+            array_push($meses_supreme, $litros_supreme);
+            $litros_supreme = 0;
+
+            for($j=0; $j<count($ventas_diesel); $j++){
+                $litros_diesel = $ventas_diesel[$j]->cantidad_lts + $litros_diesel;
+            }
+            array_push($meses_diesel, $litros_diesel);
+            $litros_diesel = 0;
+        }
+
+        return view('estaciones.show', ['estacion' => Estacion::findOrFail($id), 'meses' => $nombre_del_mes, 'extra' => $meses_extra, 'supreme' => $meses_supreme, 'diesel' => $meses_diesel]);
     }
 
     /**
@@ -165,14 +219,14 @@ class EstacionController extends Controller
     }
 
     public function import_excel(Request $request) {
-        $request->user()->authorizeRoles(['Administrador']);
+
+        $request->user()->authorizeRoles(['Administrador', 'Logistica']);
 
         $path = $request->file('select_file');
         $fecha = $request->post('fecha_precio_sugerido');
+        $data = array($fecha);
 
-        session(['fecha_precio_sugerido' => $fecha]);
-
-        if(Excel::import(new PriceImport, $path)) {
+        if(Excel::import(new PriceImport($data), $path)) {
             return redirect()->route('estaciones.index')->withStatus(__('Excel importado correctamente.'));
         } else {
             return redirect()->route('estaciones.index')->withStatus(__('Error al importar el archivo Excel.'));

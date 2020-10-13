@@ -5,18 +5,19 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
+                    <div class="card bg-danger">
+                        <div class="card-header card-header-primary">
+                            <h4 class="card-title text-white">
+                            <a href="{{ route('pedidos.index') }}" title="Regresar a la lista">
+                                <i class="tim-icons icon-minimal-left text-white"></i>
+                            </a>
+                            {{ __('Armar Envio') }} {{--date("d/m/Y",strtotime($fecha))--}}
+                            </h4>
+                        </div>
+                    </div>
                 
                     <div class="card ">
-                        <div class="card-header card-header-primary">
-                            <h4 class="card-title">
-                                <a href="{{ route('pedidos.index') }}" title="Regresar a la lista">
-                                    <i class="tim-icons icon-minimal-left text-danger"></i>
-                                </a>
-                                {{ __('Armar Envio') }} {{--date("d/m/Y",strtotime($fecha))--}}
-                            </h4>
-                            <p class="card-category">
-                            </p>
-                        </div>
+                       
                         <div class="card-body">
                             <div class="row mb-5 justify-content-center">
                                 <div class="col-sm-2">
@@ -108,20 +109,20 @@
                                                             
                                                             <li class="facet alert btn-danger mr-0 ml-0" style="margin-left: -2.6rem !important;" value="{{$order->cantidad_lts}}">
                                                                 <div class="row">
-                                                                    <div class="col-sm-3 pr-1 text-light">
+                                                                    <div class="col-sm-3 pr-1 text-white">
                                                                         {{ $order->so_number }}
                                                                         <input type="hidden" name="{{$key}}" value="{{ $order->id }}">
                                                                     </div>
-                                                                    <div class="col-sm-3 pr-0 pl-0 text-light">
+                                                                    <div class="col-sm-3 pr-0 pl-0 text-white">
                                                                          {{ $estacion->nombre_sucursal }}
                                                                     </div>
-                                                                    <div class="col-sm-2 pr-0 pl-0 text-light">
+                                                                    <div class="col-sm-2 pr-0 pl-0 text-white">
                                                                         {{ $order->producto }}
                                                                     </div>
-                                                                    <div class="col-sm-2 pr-0 pl-0 text-light">
+                                                                    <div class="col-sm-2 pr-0 pl-0 text-white">
                                                                         {{ number_format($order->cantidad_lts, 0) }}L
                                                                     </div>
-                                                                    <div class="col-sm-2 pr-0 pl-0 text-light">
+                                                                    <div class="col-sm-2 pr-0 pl-0 text-white">
                                                                         {{ $order->dia_entrega }}
                                                                     </div>
                                                                 
@@ -154,22 +155,22 @@
                                                         Pedidos a enviar
                                                     </h4>
                                                 </div>
-                                                    <input class="form-control" type="date" name="dia_entrega" id="dia_entrega" >
+                                                <input class="form-control" type="date" name="dia_entrega" id="dia_entrega" >
 
-                                                    <div class="d-inline-block" id="fecha_flete">
-                                                        
-                                                    </div>
+                                                <div class="d-inline-block" id="fecha_flete">
+                                                    
+                                                </div>
                                                 
                                             </div>
                                             <div class="card-body">
                                                 <div class="row">
-                                                    <div class="col-sm-3 pr-0 ml-2">
+                                                    <div class="col-sm-2 pr-0 ml-2 mr-3">
                                                         SO Number
                                                     </div>
                                                     <div class="col-sm-2 pl-0">
                                                         Estación
                                                     </div>
-                                                    <div class="col-sm-2 ml-4">
+                                                    <div class="col-sm-2 mr-0 ml-2">
                                                         Producto
                                                     </div>
                                                     <div class="col-sm-2">
@@ -187,7 +188,7 @@
                                                 <input type="hidden" name="id_chofer" id="id_chofer" value="">
                                                 <input type="hidden" name="idOrderControler" id="idOrderControler" value="{{$idOrderControler}}">
 
-                                                <ul class="facet-list ml-0" id="userFacets" name="ordenes[]" style=" height: auto; min-height: 41px;" ondrop="cambio()">
+                                                <ul class="facet-list ml-0" id="userFacets" name="ordenes[]"  ondrop="cambio()">
                                                     @if (count($orderControler)>0)
                                                         @foreach($orderControler as $key => $order)
                                                             @foreach($estaciones as $estacion ) 
@@ -195,22 +196,26 @@
                                                                     @if(count($estacion->freights) < 1)
                                                                         <li class="facet alert btn-danger mr-0 ml-0" style="margin-left: -2.6rem !important;">
                                                                             <div class="row">
-                                                                                <div class="col-md-2 text-light">
+                                                                                <div class="col-md-2 pr-0 pl-1 text-white">
                                                                                     {{ $order->so_number }}
                                                                                     <input type="hidden" name="{{$key}}" value="{{ $order->id }}">
                                                                                 </div>
-                                                                                <div class="col-md-3 text-light">
+                                                                                <div class="col-md-3 pr-0 pl-0 text-white">
                                                                                     {{ $estacion->nombre_sucursal }}
                                                                                 </div>
-                                                                                <div class="col-md-2 text-light">
+                                                                                <div class="col-md-2 pr-0 pl-0 text-white">
                                                                                     {{ $order->producto }}
                                                                                 </div>
-                                                                                <div class="col-md-2 text-light">
+                                                                                <div class="col-md-2 pr-0 pl-0 text-white">
                                                                                     {{ number_format($order->cantidad_lts, 0) }}L
                                                                                 </div>
-                                                                                <div class="col-md-3 text-light">
+                                                                                <div class="col-md-2 pr-0 pl-0 text-white">
                                                                                     {{ $order->dia_entrega }}
                                                                                 </div>
+                                                                                <div class="col-md-1 pr-0 pl-0 text-white">
+                                                                                    <i class="material-icons">close</i>
+                                                                                </div>
+                                                                                
                                                                             </div>
                                                                         </li>
                                                                     @endif
@@ -241,138 +246,145 @@
 
 @push('js')
   <script>
+     // funciones de crecion de fletes
 
-    $(".selectpicker").change(function() {
-        $("#pipa_id").val( $("#input-pipa_id").val());
-        $("#tractor_id").val($("#input-tractor_id").val());
-        $("#terminal_id").val($("#input-terminal_id").val());
-        $("#id_chofer").val($("#input-conductor_id").val());
-        visible($("#input-pipa_id").val(),$("#input-tractor_id").val(),$("#input-terminal_id").val(),$("#input-conductor_id").val(), $("#fletera").val());
-      
-    });
+            
+     $(".selectpicker").change(function() {
+                $("#pipa_id").val( $("#input-pipa_id").val());
+                $("#tractor_id").val($("#input-tractor_id").val());
+                $("#terminal_id").val($("#input-terminal_id").val());
+                $("#id_chofer").val($("#input-conductor_id").val());
+                visible($("#input-pipa_id").val(),$("#input-tractor_id").val(),$("#input-terminal_id").val(),$("#input-conductor_id").val(), $("#fletera").val());
+            
+            });
 
-    function visible(val1,val2,val3,val4,val5){
-        if(val1 != null && val2 != "" && val3 != "" && val4 != ""){
-            $("#enviar").removeClass("ocultar");
-        }  
-    }
-    // LLamando la lista de fleteras
-    if({{$idFreight}} != -1){
-        inputFletera($("#input-fletera").val())
-    }
-    $("#input-fletera").change(function() {
-        inputFletera($("#input-fletera").val())
-    });
-    // LLamando la lista de tractores
-    $("#input-tractor_id").change(function() {
-        inputTractor($("#input-tractor_id").val())
-    });
-
-    $("#dia_entrega").blur(function() {
-        var fecha = $("#dia_entrega").val();
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            function visible(val1,val2,val3,val4,val5){
+                if(val1 != null && val2 != "" && val3 != "" && val4 != ""){
+                    $("#enviar").removeClass("ocultar");
+                }  
             }
-        });
-        $.ajax({
-            url: 'fletes_contador',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-              'dia_entrega' : $("#dia_entrega").val(),
-            },
-            success: function(response){
-              $("#fecha_flete").html('<p class="alert alert-danger">Hay '+response+' fletes programados para el: '+fecha+'</p>');
+            // LLamando la lista de fleteras
+            if({{$idFreight ?? ''}} != -1){
+                inputFletera($("#input-fletera").val())
             }
-        });
-    });
-   
-   function inputFletera(id){
-        $.ajax({
-            url: '../../control/seleccionar_tractor',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                '_token': $('input[name=_token]').val(),
-                'id_freights' : id,
-            },
-            headers:{ 
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 
-            },
-            success: function(response){
+            $("#input-fletera").change(function() {
+                inputFletera($("#input-fletera").val())
+            });
+            // LLamando la lista de tractores
+            $("#input-tractor_id").change(function() {
+                inputTractor($("#input-tractor_id").val())
+            });
 
-                $('#input-tractor_id').children('option:not(:first)').remove();
-                console.log(response);
-                for(i=0; i<response.tractores.length; i++){
-                    for(j=0;j<response.tractores[i].length;j++){
-                        if(response.tractores[i][j].id == {{$idTractor}}){
-                            $('#input-tractor_id').append('<option value="'+response.tractores[i][j].id+'" selected>'+response.tractores[i][j].tractor+' - '+response.tractores[i][j].placas+'</option>');
-                            inputTractor({{$idTractor}})
-                        }else{
-                            $('#input-tractor_id').append('<option value="'+response.tractores[i][j].id+'">'+response.tractores[i][j].tractor+' - '+response.tractores[i][j].placas+'</option>');
-                        }
-                    }  
-                }
-                $('#input-tractor_id').selectpicker('render');
-                $('#input-tractor_id').selectpicker('refresh');
-
-                //refresh select pipas
-                $('#input-pipa_id').children('option:not(:first)').remove();
-                $('#input-pipa_id').selectpicker('render');
-                $('#input-pipa_id').selectpicker('refresh');
-                $("#id_freights").val(response.id);
-   
-              
-            },
-            error: function(error){
-                console.log('error de consulta');
-                $('#input-tractor_id').children('option:not(:first)').remove();
-                $('#input-tractor_id').selectpicker('render');
-                $('#input-tractor_id').selectpicker('refresh');
-
-                //refresh select pipas
-                $('#input-pipa_id').children().remove();
-                $('#input-pipa_id').selectpicker('render');
-                $('#input-pipa_id').selectpicker('refresh');
-                
-            }
-        });
-
-   }
-
-   function inputTractor(id){
-        $.ajax({
-            url: '../../control/seleccionar_pipa',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-              '_token': $('input[name=_token]').val(),
-              'id_tractor' : id,
-            },
-            headers:{ 
-              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 
-            },
-            success: function(response){
-                console.log(response);
-                $('#input-pipa_id').children().remove();
-                for(i=0; i<response.pipas.length; i++){
-                    if(response.pipas[i].id == {{$idPipaUno}}){
-                        $('#input-pipa_id').append('<option value="'+response.pipas[i].id+'" selected>'+response.pipas[i].numero_economico+' - '+response.pipas[i].capacidad+'LTS</option>');
-                    }else if(response.pipas[i].id == {{$idPipaDos}}){
-                        $('#input-pipa_id').append('<option value="'+response.pipas[i].id+'" selected>'+response.pipas[i].numero_economico+' - '+response.pipas[i].capacidad+'LTS</option>');
-                    }else if(response.pipas[i].id == {{$idPipaTres}}){
-                        $('#input-pipa_id').append('<option value="'+response.pipas[i].id+'" selected>'+response.pipas[i].numero_economico+' - '+response.pipas[i].capacidad+'LTS</option>');
+            $("#dia_entrega").blur(function() {
+                var fecha = $("#dia_entrega").val();
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
-                    else{
-                        $('#input-pipa_id').append('<option value="'+response.pipas[i].id+'">'+response.pipas[i].numero_economico+' - '+response.pipas[i].capacidad+'LTS</option>');
-                    }                
-                }
-                $('#input-pipa_id').selectpicker('render');
-                $('#input-pipa_id').selectpicker('refresh');
+                });
+                $.ajax({
+                    url: 'fletes_contador',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                    'dia_entrega' : $("#dia_entrega").val(),
+                    },
+                    success: function(response){
+                    $("#fecha_flete").html('<p class="alert alert-danger">Hay '+response+' fletes programados para el: '+fecha+'</p>');
+                    }
+                });
+            });
+        
+        function inputFletera(id){
+                $.ajax({
+                    url: '../../control/seleccionar_tractor',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        '_token': $('input[name=_token]').val(),
+                        'id_freights' : id,
+                    },
+                    headers:{ 
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 
+                    },
+                    success: function(response){
+
+                        $('#input-tractor_id').children('option:not(:first)').remove();
+                        console.log(response);
+                        for(i=0; i<response.tractores.length; i++){
+                            for(j=0;j<response.tractores[i].length;j++){
+                                if(response.tractores[i][j].id == {{$idTractor ?? ''}}){
+                                    $('#input-tractor_id').append('<option value="'+response.tractores[i][j].id+'" selected>'+response.tractores[i][j].tractor+' - '+response.tractores[i][j].placas+'</option>');
+                                    inputTractor({{$idTractor ?? ''}})
+                                }else{
+                                    $('#input-tractor_id').append('<option value="'+response.tractores[i][j].id+'">'+response.tractores[i][j].tractor+' - '+response.tractores[i][j].placas+'</option>');
+                                }
+                            }  
+                        }
+                        $('#input-tractor_id').selectpicker('render');
+                        $('#input-tractor_id').selectpicker('refresh');
+
+                        //refresh select pipas
+                        $('#input-pipa_id').children('option:not(:first)').remove();
+                        $('#input-pipa_id').selectpicker('render');
+                        $('#input-pipa_id').selectpicker('refresh');
+                        $("#id_freights").val(response.id);
+        
+                    
+                    },
+                    error: function(error){
+                        console.log('error de consulta');
+                        $('#input-tractor_id').children('option:not(:first)').remove();
+                        $('#input-tractor_id').selectpicker('render');
+                        $('#input-tractor_id').selectpicker('refresh');
+
+                        //refresh select pipas
+                        $('#input-pipa_id').children().remove();
+                        $('#input-pipa_id').selectpicker('render');
+                        $('#input-pipa_id').selectpicker('refresh');
+                        
+                    }
+                });
+
+        }
+
+        function inputTractor(id){
+                $.ajax({
+                    url: '../../control/seleccionar_pipa',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                    '_token': $('input[name=_token]').val(),
+                    'id_tractor' : id,
+                    },
+                    headers:{ 
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 
+                    },
+                    success: function(response){
+                        console.log(response);
+                        $('#input-pipa_id').children().remove();
+                        for(i=0; i<response.pipas.length; i++){
+                            if(response.pipas[i].id == {{$idPipaUno ?? ''}}){
+                                $('#input-pipa_id').append('<option value="'+response.pipas[i].id+'" selected>'+response.pipas[i].numero_economico+' - '+response.pipas[i].capacidad+'LTS</option>');
+                            }else if(response.pipas[i].id == {{$idPipaDos ?? ''}}){
+                                $('#input-pipa_id').append('<option value="'+response.pipas[i].id+'" selected>'+response.pipas[i].numero_economico+' - '+response.pipas[i].capacidad+'LTS</option>');
+                            }else if(response.pipas[i].id == {{$idPipaTres ?? ''}}){
+                                $('#input-pipa_id').append('<option value="'+response.pipas[i].id+'" selected>'+response.pipas[i].numero_economico+' - '+response.pipas[i].capacidad+'LTS</option>');
+                            }
+                            else{
+                                $('#input-pipa_id').append('<option value="'+response.pipas[i].id+'">'+response.pipas[i].numero_economico+' - '+response.pipas[i].capacidad+'LTS</option>');
+                            }                
+                        }
+                        $('#input-pipa_id').selectpicker('render');
+                        $('#input-pipa_id').selectpicker('refresh');
+                    }
+                });
             }
-        });
-    }
+
+
+    $(document).ready(function(){
+        $("#userFacets").height($("#allFacets").height());
+    });
 
   </script>
 @endpush

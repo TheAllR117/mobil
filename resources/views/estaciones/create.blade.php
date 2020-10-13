@@ -7,18 +7,21 @@
         <div class="col-md-8 mx-auto d-block mt-3">
           <form method="post" action="{{ route('estaciones.store') }}" autocomplete="off" class="form-horizontal">
             @csrf
-            @method('post')
+			@method('post')
+			
+			<div class="card bg-danger">
+				<div class="card-header card-header-primary">
+					<h4 class="card-title text-white">
+						<a href="{{ route('estaciones.index') }}" title="Regresar a la lista">
+							<i class="tim-icons icon-minimal-left text-white"></i>
+						</a>
+						{{ __('Agregar estación') }}
+					</h4>
+					<p class="card-category"></p>
+				</div>
+			</div>
 
             <div class="card ">
-              <div class="card-header card-header-primary">
-                <h4 class="card-title">
-					<a href="{{ route('estaciones.index') }}" title="Regresar a la lista">
-                        <i class="tim-icons icon-minimal-left text-danger"></i>
-                    </a>
-					{{ __('Agregar estación') }}
-				</h4>
-                <p class="card-category"></p>
-              </div>
               <div class="card-body ">
                 <div class="row mt-5">
 

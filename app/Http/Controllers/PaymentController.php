@@ -21,7 +21,7 @@ class PaymentController extends Controller
      */
     public function index(Request $request, Payment $payment)
     {
-        $request->user()->authorizeRoles(['Administrador','Logistica','Admin-Estacion','Abonos & Pagos']);
+        $request->user()->authorizeRoles(['Administrador','Admin-Estacion','Abonos & Pagos']);
 
         //validamos los roles
         if($request->user()->roles[0]->name == "Administrador" || $request->user()->roles[0]->name == "Logistica" || $request->user()->roles[0]->name == "Abonos & Pagos") {
@@ -51,7 +51,7 @@ class PaymentController extends Controller
         $request->user()->authorizeRoles(['Administrador','Abonos & Pagos','Admin-Estacion']);
 
         // validamos los roles para determinar si el usuario en cuestion puede hacer abonos a cualquier estacion o solo la que le corresponde
-        if($request->user()->roles[0]->name == "Administrador" || $request->user()->roles[0]->name == "Logistica") {
+        if($request->user()->roles[0]->name == "Administrador" || $request->user()->roles[0]->name == "Logistica" || $request->user()->roles[0]->name == "Abonos & Pagos") {
             // seleccionamos id, razon_social y nombre de la sucursal para llenar el select
             $estaciones = $estacion::select('id','razon_social','nombre_sucursal')->get();
 

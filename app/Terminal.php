@@ -29,6 +29,6 @@ class Terminal extends Model
         return $this->hasMany('App\Valero');
     }
     protected $fillable = [
-        'id', 'razon_social', 'rfc', 'nombre_terminal', 'status', 'codigo_postal', 'tipo_de_vialidad', 'nombre_de_vialidad', 'n_exterior', 'n_interior',
+        'id', 'razon_social', 'codigo'
     ];
 }

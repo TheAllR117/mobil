@@ -36,6 +36,9 @@ class OrderController extends Controller
     {
         $request->user()->authorizeRoles(['Administrador', 'Logistica', 'Admin-Estacion']);
 
+        // eliminar pedidos vencidos que tengan status 1 o 2
+        Order::whereDate('fecha_eliminacion', '<=', date("Y/m/d"))->where('status_id', '==', '2')->delete();
+
         $sucursal_usuario = $request->user()->estacions[0]->id;
 
         $fecha = "+3 days";
@@ -53,7 +56,7 @@ class OrderController extends Controller
                 array_push($estaciones, $request->user()->estacions[$i]->id);
             }
 
-            return view('pedidos.index', ['orders' => $model::all(), 'fecha' => date("d/m/Y", strtotime($fecha)), 'fecha_sig' => '', 'controls' => $control::all(), 'terminals' => $terminal::all(), 'freights' => $freight::all()]);
+            return view('pedidos.index', ['orders' => $model::whereIn('estacion_id', $estaciones)->get(), 'fecha' => date("d/m/Y", strtotime($fecha)), 'fecha_sig' => '', 'controls' => $control::all(), 'terminals' => $terminal::all(), 'freights' => $freight::all()]);
         }
     }
 
@@ -203,6 +206,7 @@ class OrderController extends Controller
         $estacion_up = $estacion::findorfail($request->estacion_id);
 
         $order_last = Order::all();
+
         if( count($order_last) > 0 )
         {
             $po_array = explode('MO', $order_last->last()->po);
@@ -218,10 +222,21 @@ class OrderController extends Controller
             $po_last = "MO50000";
         }
 
+        // asignar clave del producto
+        $clave = '';
+        if($request->producto == 'Extra'){
+            $clave = '123497';
+        } elseif($request->producto == 'Supreme'){
+            $clave = '125427';
+        } else{
+            $clave = '123499';
+        }
+
         $order = new Order();
         $order->estacion_id = $request->estacion_id;
         $order->status_id = $request->status_id;
         $order->producto = $request->producto;
+        $order->clave_producto = $clave;
         $order->cantidad_lts = $request->cantidad_lts;
         $order->costo_aprox = $request->costo_aprox;
         $order->dia_entrega = $request->dia_entrega;
@@ -233,14 +248,11 @@ class OrderController extends Controller
 
         if ($request->saldo != $request->saldo1 && $request->saldo > 0) {
             $resta = $request->disponible - $request->credito_usado;
-            //dd($request->all());
-            //dd($resta);
+
             $order->metodo_pago = "saldo";
             $estacion_up->update($request->merge(['saldo' => $request->saldo1, 'credito_usado' => $resta])->all());
         } else {
             $order->metodo_pago = "credito";
-            //dd($request->costo_aprox);
-            //$request->credito_usado
             $credito = $estacion_up->credito_usado + $request->costo_aprox;
             $estacion_up->update($request->merge(['credito_usado' => $credito])->all());
         }
@@ -604,11 +616,22 @@ class OrderController extends Controller
                 //array_push($nuevo_array_mo, trim($limpiar_array_4[$f]));
             }
 
-            for($k=0; $k<20; $k++){
-                echo $nuevo_array_so[$k].' - '.$nuevo_array_mo[$k].'<br>';
+            $fecha = "+2 days";
+            if (date("l") == 'Friday') {
+                $fecha = "+3 days";
+            } elseif( date("l") == 'Saturday'){
+                $fecha = "+2 days";
+            }else{
+                $fecha = "+1 days";
             }
 
-            //return $nuevo_array_mo;
+            for($k=0; $k<20; $k++){
+                $fechas_entregas_antiguas = Order::where('po', $nuevo_array_mo[$k])->get();
+                Order::where('po', $nuevo_array_mo[$k])->where('status_id', '1')->update(['so_number' => $nuevo_array_so[$k], 'status_id'=> '2', 'fecha_eliminacion' => date("Y-m-d",strtotime($fechas_entregas_antiguas[0]->dia_entrega.$fecha ))]);
+                // echo $nuevo_array_so[$k].' - '.$nuevo_array_mo[$k].'<br>';
+            }
+
+            return redirect()->route('pedidos.index')->withStatus(__('SO NUMBERS asignados correctamente.'));
 
         }catch(Exception $e){
             return redirect()->route('pedidos.index')->withStatus(__('PDF no valido.'));
@@ -620,4 +643,5 @@ class OrderController extends Controller
         
         return Excel::download(new OrdersExport, 'invoices.xls');
     }
+
 }

@@ -21,6 +21,7 @@ class CreateOrdersTable extends Migration
             //$table->unsignedBigInteger('factura_id')->nullable();
             $table->unsignedBigInteger('status_id');
             $table->string('producto');
+            $table->string('clave_producto')->nullable();
             $table->string('so_number')->nullable();
             $table->integer('cantidad_lts');
             $table->double('costo_aprox', 12, 3)->nullable();
@@ -34,8 +35,10 @@ class CreateOrdersTable extends Migration
             $table->string('metodo_pago');
             $table->double('total_abonado', 12, 3)->nullable();
             $table->double('costo_real', 12, 3)->nullable();
-            $table->integer('cantidad_lts_final')->nullable();;
+            $table->integer('cantidad_lts_final')->nullable();
 
+            $table->string('factura_a');
+            $table->date('fecha_eliminacion')->nullable();
             $table->timestamps();
 
 

@@ -8,17 +8,17 @@
         <form action="{{ route('abonos.store') }}" autocomplete="off" class="form-horizontal" enctype="multipart/form-data" method="post">
           @csrf
           @method('post')
-          <div class="card ">
+          <div class="card bg-danger">
             <div class="card-header card-header-primary">
-              <h4 class="card-title">
-                  <a href="{{ route('abonos.index') }}" title="Regresar a la lista">
-                      <i class="tim-icons icon-minimal-left text-danger"></i>
-                  </a>
-                  {{ __('Solicitar Abono') }}
+              <h4 class="card-title text-white">
+                <a href="{{ route('abonos.index') }}" title="Regresar a la lista">
+                  <i class="tim-icons icon-minimal-left text-white"></i>
+                </a>
+                {{ __('Solicitar Abono') }}
               </h4>
-              <p class="card-category">
-              </p>
             </div>
+          </div>
+          <div class="card ">
             <div class="card-body">
 
               <div class="container">
@@ -27,10 +27,12 @@
 
                     <div class="form-group{{ $errors->has('id_estacion') ? ' has-danger' : '' }} mt-5">
                       <label class="label-control" for="id_estacion">Estación</label><br>
-                      <select class="selectpicker" data-style="btn btn-primary btn-round" title="Single Select" id="input-id_estacion" name="id_estacion">
+                      <select class="selectpicker" data-style="btn btn-primary" data-live-search="true" data-width="100%" id="input-id_estacion" name="id_estacion">
                         <option disabled selected>-- Seleccionar --</option>
                         @foreach($estaciones as $estacion)
-                        <option value="{{ $estacion->id }}">{{ $estacion->nombre_sucursal }}</option>
+                          @if($estacion->nombre_sucursal != '*')
+                          <option value="{{ $estacion->id }}">{{ $estacion->nombre_sucursal }}</option>
+                          @endif
                         @endforeach
                       </select><br>
                       @if ($errors->has('id_estacion'))

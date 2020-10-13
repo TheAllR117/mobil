@@ -24,7 +24,7 @@ class InvoiceController extends Controller
      */
     public function index(Request $request, Order $order)
     {
-        $request->user()->authorizeRoles(['Administrador','Logistica','Admin-Estacion']);
+        $request->user()->authorizeRoles(['Administrador','Logistica','Admin-Estacion', 'Abonos & Pagos']);
         $sucursal_usuario = $request->user()->estacions[0]->id;
 
         /*$fecha = "+1 days";
@@ -33,14 +33,19 @@ class InvoiceController extends Controller
         }*/
         //dd(date("l"));
 
-        if($request->user()->roles[0]->name == "Administrador" || $request->user()->roles[0]->name == "Logistica") {
+        if($request->user()->roles[0]->name == "Administrador" || $request->user()->roles[0]->name == "Logistica" || $request->user()->roles[0]->name == "Abonos & Pagos") {
 
             //return view('facturas.index', ['orders' => $order::where('dia_entrega',date("Y-m-d"))->where('status_id',5)->orderBy('dia_entrega','asc')->get()]);
-            return view('facturas.index', ['orders' => $order::where('status_id',4)->orderBy('dia_entrega','asc')->get()]);
+            return view('facturas.index', ['orders' => $order::where('status_id', 5)->orderBy('dia_entrega','asc')->get()]);
 
         }else{
+            $estaciones = array();
 
-            return view('facturas.index', ['orders' => $order::where('estacion_id',$sucursal_usuario)->where('status_id',5)->get()]);
+            for($i=0; $i<count($request->user()->estacions); $i++){
+                array_push($estaciones, $request->user()->estacions[$i]->id);
+            }
+
+            return view('facturas.index', ['orders' => $order::whereIn('estacion_id', $estaciones)->where('status_id',5)->get()]);
         }
         //return view('facturas.index');
     }
@@ -129,7 +134,7 @@ class InvoiceController extends Controller
 
         }
 
-        $order::where('id', $request->order_id)->update(['pdf' => $nombre_pdf, 'xml' => $nombre_xml, 'costo_real' => $costo_real, 'cantidad_lts_final' => $litros_final]);
+        $order::where('id', $request->order_id)->update(['pdf' => $nombre_pdf, 'xml' => $nombre_xml, 'costo_real' => $costo_real, 'cantidad_lts_final' => $litros_final, 'fecha_expiracion'=> $request->fecha_expiracion]);
 
         return redirect()->route('facturas.index')->withStatus(__('PDF y XML agregados correctamente.'));
         //dd($request->all());

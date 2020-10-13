@@ -78,9 +78,23 @@ return [
             'visibility' => 'public',
         ],
 
+        'facturas_pdf_2' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/facturas_pdf_2'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+        ],
+
         'facturas_xml' => [
             'driver' => 'local',
             'root' => storage_path('app/public/facturas_xml'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+        ],
+
+        'facturas_xml_2' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/facturas_xml_2'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],

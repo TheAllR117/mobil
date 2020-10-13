@@ -5,62 +5,51 @@
   <div class="content">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-12 ">
-            <div class="card">
-              <div class="card-header card-header-primary">
-                <div class="row">
-                  <div class="col mt-3">
-                    <h4 class="card-title ">{{ __('Estaciones') }}</h4>
-                    <p class="card-category"> {{ __('Aquí puedes administrar todas las estaciones.') }}</p>
-                  </div>
-                  <div class="col mt-3">
-                    <form action="{{ route('estaciones.import_excel') }}" autocomplete="off" class="form-horizontal" enctype="multipart/form-data" method="post">
-                      @csrf
-                      @method('post')
-                        <div class="row">
-                          <div class="col-sm-4">
-                            <div class="form-group">
-                              <input type="date" class="form-control mt-2"  name="fecha_precio_sugerido" required> 
-                            </div>
-                          </div>
-                          <div class="col-sm-6">
-                            <div class="form-group form-file-upload form-file-multiple">
-                              <input type="file" multiple="" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" class="inputFileHidden" name="select_file" id="input-excel">
-                              <div class="input-group">
-                                <input type="text" class="form-control inputFileVisible mt-2" placeholder="Selecciona un archivo Excel" id="archivo_excel"> 
-                                <button type="button" class="btn btn-sm btn-primary mt-2" id="btn_archivo_excel">
-                                  <i class="material-icons">attach_file</i>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-sm-2">
-                            <button type="submit" id="archivo_excel_boton" class="mt-3 btn btn-sm btn-danger" disabled>
-                              Cargar
-                            </button>
+        <div class="col-md-12">
+          <div class="card bg-danger">
+            <div class="card-header card-header-primary">
+              <div class="row">
+                <div class="col mt-3">
+                  <h4 class="card-title text-white">{{ __('Estaciones') }}</h4>
+                  <p class="card-category text-white"> {{ __('Aquí puedes administrar todas las estaciones.') }}</p>
+                </div>
+                <div class="col mt-3">
+                  @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3)
+                  <form action="{{ route('estaciones.import_excel') }}" autocomplete="off" class="form-horizontal" enctype="multipart/form-data" method="post">
+                    @csrf
+                    @method('post')
+                      <div class="row">
+                        <div class="col-sm-4">
+                          <div class="form-group">
+                            <input type="date" class="form-control mt-2 bg-white"  name="fecha_precio_sugerido" required> 
                           </div>
                         </div>
-                      
-                      
-                    </form>
-                  </div>
+                        <div class="col-sm-6">
+                          <div class="form-group form-file-upload form-file-multiple">
+                            <input type="file" multiple="" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" class="inputFileHidden" name="select_file" id="input-excel">
+                            <div class="input-group">
+                              <input type="text" class="form-control inputFileVisible mt-2 bg-white" placeholder="Selecciona un archivo Excel" id="archivo_excel"> 
+                              <button type="button" class="btn btn-sm btn-primary mt-2" id="btn_archivo_excel">
+                                <i class="material-icons">attach_file</i>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-2">
+                          <button type="submit" id="archivo_excel_boton" class="mt-3 btn btn-sm btn-primary" disabled>
+                            Cargar
+                          </button>
+                        </div>
+                      </div>           
+                  </form>
+                  @endif
                 </div>
-
               </div>
-              <div class="card-body">
-                @if (session('status'))
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <div class="alert alert-success">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                          <i class="material-icons">close</i>
-                        </button>
-                        <span>{{ session('status') }}</span>
-                      </div>
-                    </div>
-                  </div>
-                @endif
+            </div>
+          </div>
 
+            <div class="card">
+              <div class="card-body">
                 <div class="row">
                   <div class="col-12 text-right">
                     @if(auth()->user()->roles[0]->id == 1)

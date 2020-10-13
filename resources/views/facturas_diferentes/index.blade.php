@@ -1,17 +1,17 @@
-@extends('layouts.app', ['page' => __('Alta de Terminales'), 'pageSlug' => __('Terminales')])
+@extends('layouts.app', ['page' => __('Registrar facturas'), 'pageSlug' => __('Facturas diversas')])
 
 @section('content')
 <div class="content">
     <div class="container-fluid">
         <div class="row justify-content-center">
-            <div class="col-md-8 col-sm-12">
+            <div class="col-md-10 col-sm-12">
                 <div class="card bg-danger">
                     <div class="card-header card-header-primary">
                         <h4 class="card-title text-white">
-                            {{ __('Terminales') }}
+                            {{ __('Registrar facturas') }}
                         </h4>
                         <p class="card-category text-white">
-                            {{ __('Aquí puedes administrar todas las terminales.') }}
+                            {{ __('Aquí puedes administrar todas las facturas atrasadas.') }}
                         </p>
                     </div>
                 </div>
@@ -20,8 +20,8 @@
                         <div class="row">
                             <div class="col-12 text-right">
                                 @if(auth()->user()->roles[0]->id == 1)
-                                <a class="btn btn-sm btn-primary" href="{{ route('terminales.create') }}">
-                                    {{ __('Agregar Terminal') }}
+                                <a class="btn btn-sm btn-primary" href="{{ route('facturas_diferentes.create') }}">
+                                    {{ __('Agregar factura') }}
                                 </a>
                                 @endif
                             </div>
@@ -30,17 +30,30 @@
                             <table cellspacing="0" class="table table-striped table-no-bordered table-hover"
                                 id="datatables_1" style="width:100%" width="100%">
                                 <thead class="text-primary">
+                                    @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3)
                                     <th>
-                                        {{ __('ID')}}
+                                        {{ __('Estación')}}
+                                    </th>
+                                    @endif
+                                    <th>
+                                        {{ __('Descripción')}}
+                                    </th>
+                                    @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3)
+                                    <th>
+                                        {{ __('Movimiento')}}
+                                    </th>
+                                    @endif
+                                    <th>
+                                        {{ __('Cantidad')}}
                                     </th>
                                     <th>
-                                        {{ __('Nombre')}}
+                                        {{ __('PDF')}}
                                     </th>
                                     <th>
-                                        {{ __('Clave')}}
+                                        {{ __('XML')}}
                                     </th>
                                     <th>
-                                        {{ __('Fecha de Alta')}}
+                                        {{ __('Fecha de registro')}}
                                     </th>
                                     @if(auth()->user()->roles[0]->id == 1)
                                     <th class="disabled-sorting text-right">
@@ -49,34 +62,46 @@
                                     @endif
                                 </thead>
                                 <tbody>
-                                    @foreach($terminals as $terminal)
+                                    @foreach($facturas as $factura)
                                     <tr>
                                         <td>
-                                            {{ $terminal->id }}
+                                            {{ $factura->estacions[0]->nombre_sucursal}}
                                         </td>
                                         <td>
-                                            {{ $terminal->razon_social }}
+                                            {{ $factura->description }}
                                         </td>
                                         <td>
-                                            {{ $terminal->codigo }}
+                                            @if($factura->add_or_subtract == 1)
+                                            Cobro
+                                            @else
+                                            Devolución
+                                            @endif
                                         </td>
                                         <td>
-                                            {{ $terminal->created_at->format('d/m/Y')  }}
+                                            ${{ number_format($factura->quantity, 2) }}
+                                        </td>
+                                        <td>
+                                            <a class="" href="{{url('storage/facturas_pdf_2/'.$factura->id_estacion.'/'.$factura->file_pdf ) }}" download="{{ $factura->file_pdf }}">
+                                                <i class="material-icons text-danger">picture_as_pdf</i>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{url('storage/facturas_xml_2/'.$factura->id_estacion.'/'.$factura->file_xml ) }}" download="{{ $factura->file_xml }}">
+                                                <i class="material-icons text-danger">insert_drive_file</i>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            {{ $factura->created_at->format('d/m/Y')  }}
                                         </td>
                                         @if(auth()->user()->roles[0]->id == 1)
                                         <td class="td-actions text-right">
-                                            <form action="{{ route('terminales.destroy', $terminal->id) }}"
+                                            <form action="{{ route('facturas_diferentes.destroy', $factura->id) }}"
                                                 method="post">
                                                 @csrf
                                                 @method('delete')
-                                                <a class="btn btn-success btn-link" data-original-title=""
-                                                    href="{{ route('terminales.edit', $terminal) }}" rel="tooltip"
-                                                    title="">
-                                                    <i class="tim-icons icon-pencil"></i>
-                                                </a>
                                                 <button type="button" class="btn btn-danger btn-link"
                                                     data-original-title="" title=""
-                                                    onclick="confirm('{{ __("¿Estás seguro de que deseas eliminar a esta Terminal?") }}') ? this.parentElement.submit() : ''">
+                                                    onclick="confirm('{{ __("¿Estás seguro de que deseas eliminar esta factura?") }}') ? this.parentElement.submit() : ''">
                                                     <i class="tim-icons icon-trash-simple"></i>
                                                 </button>
                                             </form>

@@ -5,28 +5,19 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
-            <div class="card">
+            <div class="card bg-danger">
               <div class="card-header card-header-primary">
-                <h4 class="card-title ">
+                <h4 class="card-title text-white">
                   <a href="{{ route('fleteras.index') }}" title="Regresar a la lista">
-                    <i class="tim-icons icon-minimal-left text-danger"></i>
+                    <i class="tim-icons icon-minimal-left text-white"></i>
                   </a>
-                  {{ __('Pipas') }}</h4>
-                <p class="card-category"> {{ __('Aquí puedes administrar todas las pipas.') }}</p>
+                  {{ __('Pipas') }}
+                </h4>
+                <p class="card-category text-white"> {{ __('Aquí puedes administrar todas las pipas.') }}</p>
               </div>
+            </div>
+            <div class="card">
               <div class="card-body">
-                @if (session('status'))
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <div class="alert alert-success">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                          <i class="material-icons">close</i>
-                        </button>
-                        <span>{{ session('status') }}</span>
-                      </div>
-                    </div>
-                  </div>
-                @endif
                 <div class="row">
                   
                   <div class="col-10 text-left">

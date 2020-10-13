@@ -10,6 +10,12 @@ use Mail;
 
 class PriceImport implements ToModel, WithHeadingRow
 {
+    private $data;
+
+    public function __construct(array $data = [])
+    {
+        $this->data = $data;
+    }
     /**
     * @param array $row
     *
@@ -29,17 +35,17 @@ class PriceImport implements ToModel, WithHeadingRow
             $precio_con_utilidad_d = $row['diesel'] - ($estacion_select[0]->utilidad_d + ($estacion_select[0]->utilidad_d * 0.16));
             $subject = "Precios del día de mañana";
 
-            for($i=0; $i<count($estacion_select[0]->users); $i++){
-                $for = $estacion_select[0]->users[$i]->email;
-                // $for = "andrees0801@gmail.com";
-                Mail::send('mail.prices',$row, function($msj) use($subject, $for){
-                    $msj->from("pruebamobil@lealtaddigitalsoft.mx","Mobil");
-                    $msj->subject($subject);
-                    $msj->to($for);
-                });
-            }
+            // for($i=0; $i<count($estacion_select[0]->users); $i++){
+            //     $for = $estacion_select[0]->users[$i]->email;
+            //     // $for = "andrees0801@gmail.com";
+            //     Mail::send('mail.prices',$row, function($msj) use($subject, $for){
+            //         $msj->from("pruebamobil@lealtaddigitalsoft.mx","Mobil");
+            //         $msj->subject($subject);
+            //         $msj->to($for);
+            //     });
+            // }
+
             //dd(Price::find($estacion_select[0]->id));
-            Price::find($estacion_select[0]->id)->update(['created_at' => session('fecha_precio_sugerido')]);
 
             return new price([
                 'id_estacion' => $estacion_select[0]->id,
@@ -49,6 +55,7 @@ class PriceImport implements ToModel, WithHeadingRow
                 'extra_u' => $precio_con_utilidad_r,
                 'supreme_u' => $precio_con_utilidad_p,
                 'diesel_u' => $precio_con_utilidad_d,
+                'created_at' => $this->data[0],
             ]);
 
         }else{

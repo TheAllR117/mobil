@@ -6,19 +6,20 @@
       <div class="col-md-6 mx-auto d-block mt-3">
 
         <form action="{{ route('fleteras.store') }}" autocomplete="off" class="form-horizontal" enctype="multipart/form-data" method="post">
-        	@csrf
-        	@method('post')
+		@csrf
+		@method('post')
+			<div class="card bg-danger">
+				<div class="card-header card-header-primary">
+					<h4 class="card-title text-white">
+						<a href="{{ route('fleteras.index') }}" title="Regresar a la lista">
+							<i class="tim-icons icon-minimal-left text-white"></i>
+						</a>
+						{{ __('Agregar Relación') }}
+					</h4>
+				</div>
+			</div>
           <div class="card ">
 
-          	<div class="card-header card-header-primary">
-			  <h4 class="card-title">
-			  	<a href="{{ route('fleteras.index') }}" title="Regresar a la lista">
-                    <i class="tim-icons icon-minimal-left text-danger"></i>
-                </a>
-			    {{ __('Agregar Relación') }}
-			  </h4>
-			  <p class="card-category"></p>
-			</div>
 
             <div class="card-body">
 

@@ -40,11 +40,26 @@ class HomeController extends Controller
         $order_totales = $order::where('status_id','==','4')->count();
 
         //informacion de las estaciones
-        $estaciones_info = $estacion::where('razon_social','!=','*')->orderBy('nombre_sucursal')->get();
+        if($request->user()->roles[0]->name == "Administrador" || $request->user()->roles[0]->name == "Logistica" || $request->user()->roles[0]->name == "Abonos & Pagos") {
+
+            $estaciones_info = $estacion::where('razon_social','!=','*')->orderBy('nombre_sucursal')->get();
+
+        } else {
+
+            $estaciones = array();
+
+            for($i=0; $i<count($request->user()->estacions); $i++){
+                array_push($estaciones, $request->user()->estacions[$i]->nombre_sucursal);
+            }
+
+            $estaciones_info = $estacion::whereIn('nombre_sucursal', $estaciones)->orderBy('nombre_sucursal')->get();
+            //return view('estaciones.index', ['estaciones' => $model::whereIn('nombre_sucursal', $estaciones)->get()]);
+        }
+        
 
         //consulta de informacion
         $estacion_total = $estacion::where('razon_social','!=','*')->count();
-        $pipas_total = $pipe::all()->count();
+
         $abonos_pendientes = $payment::where('id_status','1')->count();
 
         $estacion_saldo = $estacion::select('saldo')->get();
@@ -52,27 +67,7 @@ class HomeController extends Controller
         foreach ($estacion_saldo as $saldos) {
             $saldo_total = $saldo_total + $saldos['saldo'];
         }
-        $terminales = array();
-
-        foreach ($terminals as $terminal) {
-            $datos = array();
-            array_push($datos, $terminal->razon_social);
-            $fechas = array();
-            $precios_valero_regular = array();
-            $precios_valero_premium = array();
-            $precios_valero_diesel = array();
-
-            foreach ($terminal->valeros as $valero) {
-                array_push($fechas, $valero->created_at->format('j - m'));
-                array_push($precios_valero_regular, $valero->precio_regular);
-                array_push($precios_valero_premium, $valero->precio_premium);
-                array_push($precios_valero_diesel, $valero->precio_disel);
-            }
-
-            array_push($datos, $fechas, $precios_valero_regular, $precios_valero_premium, $precios_valero_diesel);
-            array_push($terminales, $datos);
-        }
-
+        
         $ordenes = Order::select( '*' ,
             DB::raw('DATEDIFF( STR_TO_DATE(orders.fecha_expiracion, "%d-%m-%Y") , CURDATE()) as dias'),
             DB::raw('DATE_FORMAT( STR_TO_DATE(orders.fecha_expiracion, "%d-%m-%Y") , "%d-%m-%Y") as expiracion_date')
@@ -106,7 +101,31 @@ class HomeController extends Controller
                             ORDER BY prices.created_at DESC
                     ');
 
-        return view('dashboard', compact('fechas', 'terminales','estacion_total', 'saldo_total', 'pipas_total','abonos_pendientes', 'estaciones_deudoras','precios_actuales_estaciones', 'estaciones_info', 'order_totales'));
+        // array para almacenar las estaciones con mas ventas
+        $ventas_nombre_estaciones = [];
+        $resultado_estaciones = [];
+        $nombre_estacion = [];
+        $ventas_estacion = [];
+        $estaciones = Estacion::all();
+
+        foreach($estaciones as $estacion){
+            if($estacion->razon_social != '*'){
+                array_push($ventas_nombre_estaciones, count($estacion->orders()->where('status_id','5')->get()));
+                array_push($ventas_nombre_estaciones, $estacion->nombre_sucursal);
+                array_push($resultado_estaciones, $ventas_nombre_estaciones);
+                $ventas_nombre_estaciones = [];
+            }
+        }
+        rsort($resultado_estaciones);
+        //return $resultado_estaciones;
+
+        for($s=0;$s<7; $s++){
+            array_push($ventas_estacion, $resultado_estaciones[$s][0]); 
+            array_push($nombre_estacion, $resultado_estaciones[$s][1]);  
+        }
+
+        //return geoip_continent_code_by_name($nombre_estacion[1]);
+        return view('dashboard', compact('fechas', 'terminales','estacion_total', 'saldo_total', 'pipas_total','abonos_pendientes', 'estaciones_deudoras','precios_actuales_estaciones', 'estaciones_info', 'order_totales', 'nombre_estacion', 'ventas_estacion'));
     }
 
 }

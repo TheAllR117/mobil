@@ -8,17 +8,17 @@
                 <form action="{{ route('pipas.update', $pipe_edit) }}" autocomplete="off" class="form-horizontal" method="post">
                     @csrf
                     @method('post')
+                    <div class="card bg-danger">
+                      <div class="card-header card-header-primary">
+                        <h4 class="card-title text-white">
+                          <a href="{{ route('pipas.index') }}" title="Regresar a la lista">
+                            <i class="tim-icons icon-minimal-left text-white"></i>
+                          </a>
+                          {{ __('Editar Pipa') }}
+                        </h4>
+                      </div>
+                    </div>
                     <div class="card ">
-                        <div class="card-header card-header-primary">
-                            <h4 class="card-title">
-                              <a href="{{ route('pipas.index') }}" title="Regresar a la lista">
-                                <i class="tim-icons icon-minimal-left text-danger"></i>
-                              </a>
-                              {{ __('Editar Pipa') }}
-                            </h4>
-                            <p class="card-category">
-                            </p>
-                        </div>
                         <div class="card-body">
                             
                             <div class="row mt-3">
@@ -101,7 +101,7 @@
 
                             <div class="row mt-3 mb-3">
                               <div class="col-sm-6">
-                                <select class="selectpicker" data-style="btn btn-primary btn-round" title="Single Select" id="input-id_status" name="id_status" data-width="100%">
+                                <select class="selectpicker" data-style="btn btn-primary" title="Single Select" id="input-id_status" name="id_status" data-width="100%">
                                   <option disabled>Estatus</option>
                                   @foreach($states as $state)
                                     @if($pipe_edit->id_status == $state->id)
@@ -114,7 +114,7 @@
                               </div>
 
                               <div class="col-sm-6">
-                                <select class="selectpicker" data-style="btn btn-primary btn-round" title="Single Select" id="input-tractor_id" name="tractor_id" data-width="100%">
+                                <select class="selectpicker" data-style="btn btn-primary" title="Single Select" id="input-tractor_id" name="tractor_id" data-width="100%">
                                   <option disabled>Tractores</option>
                                   @foreach($tractors as $tractor)
                                     @if(count($tractor->pipes)<2)

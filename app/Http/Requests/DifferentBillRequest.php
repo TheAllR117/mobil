@@ -2,11 +2,11 @@
 
 namespace App\Http\Requests;
 
-use App\Terminal;
+use App\DifferentBill;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class TerminalRequest extends FormRequest
+class DifferentBillRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,7 +15,7 @@ class TerminalRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return auth()->check();
     }
 
     /**
@@ -26,14 +26,24 @@ class TerminalRequest extends FormRequest
     public function rules()
     {
         return [
-
-            'razon_social' => [
+            'id_estacion' => [
+                'required',
+            ],
+            'description' => [
                 'required', 'min:3'
             ],
-            'codigo' => [
-                'required', 'min:3'
+            'add_or_subtract' => [
+                'required',
+            ],
+            'quantity' => [
+                'required',
+            ],
+            'file_pdf' => [
+                'required',
+            ],
+            'file_xml' => [
+                'required',
             ]
-            
         ];
     }
 }

@@ -8,16 +8,17 @@
         <form action="{{ route('conductores.update',$conductor_edit) }}" autocomplete="off" class="form-horizontal" enctype="multipart/form-data" method="post">
           @csrf
           @method('post')
-          <div class="card ">
+          <div class="card bg-danger">
             <div class="card-header card-header-primary">
-              <h4 class="card-title">
+              <h4 class="card-title text-white">
                 <a href="{{ route('conductores.index') }}" title="Regresar a la lista">
-                  <i class="tim-icons icon-minimal-left text-danger"></i>
+                  <i class="tim-icons icon-minimal-left text-white"></i>
                 </a>
                 {{ __('Agregar Conductor') }}
               </h4>
-              <p class="card-category"></p>
             </div>
+          </div>
+          <div class="card ">
             <div class="card-body">
               <div class="row">
                 <div class="col-sm-6">
@@ -34,7 +35,7 @@
                 </div>
                 <div class="col-sm-6">
                   <label for="name" class="mt-2">{{ __('Estatus') }}</label>
-                  <select class="selectpicker mt-4" data-style="btn btn-primary btn-round" title="Single Select" id="input-id_status" name="id_status" data-width="100%">
+                  <select class="selectpicker mt-4" data-style="btn btn-primary" title="Single Select" id="input-id_status" name="id_status" data-width="100%">
                     <option disabled selected>Estatus</option>
                     @foreach($states as $state)
                       @if($state->id < 2)

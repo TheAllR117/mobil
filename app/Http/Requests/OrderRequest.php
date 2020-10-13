@@ -54,6 +54,9 @@ class OrderRequest extends FormRequest
             'po' => [
                 'nullable'
             ],
+            'fecha_eliminacion' => [
+                'nullable'
+            ],
 
         ];
     }

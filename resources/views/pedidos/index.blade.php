@@ -5,98 +5,82 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
-            <div class="card">
-              <div class="card-header card-header-primary">
-                <div class="row">
-                  <div class="col-sm-6">
-                    <h4 class="card-title ">{{ __('Pedidos para el día: ') }} {{$fecha}} {{$fecha_sig}}</h4>
-                    <p class="card-category"> {{ __('Aquí puedes administrar todos los pedidos.') }}</p>
-                  </div>
-                  <div class="col-sm-6">
-                    <form action="{{ route('pedidos.import_pdf') }}" autocomplete="off" class="form-horizontal" enctype="multipart/form-data" method="post">
-                      @csrf
-                      @method('post')
-                      <div class="row">
-                        <div class="col-sm-4">
-                          <div class="form-group">
-                            <input type="text" class="form-control datetimepicker text-light mt-2" id="input-dia_entrega" name="dia_entrega" value="10/05/2018"/>
-                          </div>
-                        </div>
-                        <div class="col-sm-6">
-                          <div class="form-group form-file-upload form-file-multiple">
-                            <input type="file" multiple="" accept="application/pdf" class="inputFileHidden" name="select_file" id="input-pdf">
-                            <div class="input-group">
-                              <input type="text" class="form-control inputFileVisible mt-2" placeholder="Selecciona un archivo PDF" id="archivo_pdf"> 
-                              <button type="button" class="btn btn-sm btn-primary mt-2" id="btn_archivo_excel">
-                                <i class="material-icons">attach_file</i>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-sm-2">
-                          <button type="submit" id="archivo_pdf_boton" class="mt-3 btn btn-sm btn-danger" disabled>
-                            Cargar
-                          </button>
+          <div class="card bg-danger">
+            <div class="card-header card-header-primary">
+              <div class="row">
+                <div class="col-sm-6">
+                  <h4 class="card-title text-white">{{ __('Pedidos para el día: ') }} {{$fecha}} {{$fecha_sig}}</h4>
+                  <p class="card-category text-white"> {{ __('Aquí puedes administrar todos los pedidos.') }}</p>
+                </div>
+                <div class="col-sm-6">
+                  @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3)
+                  <form action="{{ route('pedidos.import_pdf') }}" autocomplete="off" class="form-horizontal" enctype="multipart/form-data" method="post">
+                    @csrf
+                    @method('post')
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <input type="text" class="form-control datetimepicker bg-white mt-2" id="input-dia_entrega" name="dia_entrega" value="10/05/2018"/>
                         </div>
                       </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-              <div class="card-body">
-
-                @if (session('status'))
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <div class="alert alert-success">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                          <i class="material-icons">close</i>
+                      <div class="col-sm-6">
+                        <div class="form-group form-file-upload form-file-multiple">
+                          <input type="file" multiple="" accept="application/pdf" class="inputFileHidden" name="select_file" id="input-pdf">
+                          <div class="input-group">
+                            <input type="text" class="form-control inputFileVisible bg-white mt-2" placeholder="Selecciona un archivo PDF" id="archivo_pdf"> 
+                            <button type="button" class="btn btn-sm btn-primary mt-2" id="btn_archivo_excel">
+                              <i class="material-icons">attach_file</i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-2">
+                        <button type="submit" id="archivo_pdf_boton" class="mt-3 btn btn-sm btn-primary" disabled>
+                          Cargar
                         </button>
-                        <span>{{ session('status') }}</span>
                       </div>
                     </div>
+                  </form>
+                  @endif
+                </div>
+              </div>
+            </div>
+          </div>
+            <div class="card">
+              
+              <div class="card-body">
+                <div class="nav-tabs-navigation">
+                  <div class="nav-tabs-wrapper">
+                    <ul class="nav nav-tabs" data-tabs="tabs">
+                      <li class="nav-item">
+                        <a class="nav-link active" href="#link1" data-toggle="tab">Pedidos Pendientes</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="#link2" data-toggle="tab">Pedidos Autorizados</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="#link3" data-toggle="tab">Pedidos en Camino</a>
+                      </li>
+                      @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3)
+                      <li class="nav-item">
+                        <a class="nav-link" href="#link4" data-toggle="tab">Fletes en Camino</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="#link5" data-toggle="tab">Pedidos Cancelados</a>
+                      </li>
+                      @endif
+                    </ul>
                   </div>
-                @endif
-
-                <ul class="nav nav-pills nav-pills-primary mt-5" role="tablist">
-
-                  <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#link1" role="tablist" aria-expanded="true">
-                      Pedidos Pendientes
-                    </a>
-                  </li>
-
-                  <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#link2" role="tablist" aria-expanded="false">
-                      Pedidos Autorizados
-                    </a>
-                  </li>
-
-                  <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#link3" role="tablist" aria-expanded="false">
-                      Pedidos en Camino
-                    </a>
-                  </li>
-
-                  <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#link4" role="tablist" aria-expanded="false">
-                      Pedidos Entregados
-                    </a>
-                  </li>
-
-                  <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#link5" role="tablist" aria-expanded="false">
-                      Pedidos Cancelados
-                    </a>
-                  </li>
-
-                </ul>
+                </div>
+               
                 <div class="tab-content tab-space">
                   <div class="tab-pane active" id="link1" aria-expanded="true">
                     <!--Tabla 1 pedidos realizados-->
                     <div class="row">
                       <div class="col-12 text-right">
+                        @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3)
                         <a class="btn btn-sm btn-primary" href="{{ route('exportar_excel') }}">Descargar Excel</a>
+                        @endif
                         <a href="{{ route('pedidos.create') }}" class="btn btn-sm btn-primary">{{ __('Hacer Pedido') }}</a>
                       </div>
                     </div>
@@ -130,8 +114,8 @@
                                   @csrf
                                   @method('delete')
                                   @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
-                                  <a class="btn btn-social btn-just-icon btn-twitter btn-link sonomber" title="Asignar SO Number" data-original-title="" rel="tooltip" id="precio" onclick="so_number('{{ $order->id }}','{{ $order->estacions[0]->nombre_sucursal }}');">
-                                    <i class="tim-icons icon-check-2"></i>
+                                  <a class="btn btn-just-icon btn-link sonomber" title="Asignar SO Number" data-original-title="" rel="tooltip" id="precio" onclick="so_number('{{ $order->id }}','{{ $order->estacions[0]->nombre_sucursal }}');">
+                                    <i class="tim-icons icon-check-2 text-success"></i>
                                   </a>
                                   @endif
                                   <button type="button" class="btn btn-danger btn-link" data-original-title="" title=" Eliminar Pedido" onclick="confirm('{{ __("¿Estás seguro de que deseas eliminar este pedido?") }}') ? this.parentElement.submit() : ''">
@@ -191,7 +175,7 @@
 
                                   @foreach($freights as $freight )
                                     @if($order->estacion_id == $freight->id_estacion )
-                                    <a class="btn btn-social btn-just-icon btn-twitter btn-link enviar" title="Enviar" data-original-title="" rel="tooltip" id="boton_enviar" onclick="autorizar('{{ $order->estacion_id }}','{{ $order->estacions[0]->nombre_sucursal }}','{{ $order->id }}');">
+                                    <a class="btn btn-social btn-just-icon btn-link enviar" title="Enviar" data-original-title="" rel="tooltip" id="boton_enviar" onclick="autorizar('{{ $order->estacion_id }}','{{ $order->estacions[0]->nombre_sucursal }}','{{ $order->id }}');">
                                       <i class="material-icons">local_shipping</i>
                                       <div class="ripple-container"></div>
                                     </a>
@@ -227,7 +211,7 @@
                           <th>{{ __('Producto ') }}</th>
                           <th>{{ __('Cantidad LTS. ') }}</th>
                           <th>{{ __('Costo Aprox ') }}</th>
-                          <th>{{ __('Estatus ') }}</th>
+                          <!--th>{{ __('Estatus ') }}</th-->
                           <th>{{ __('Fecha de entrega solicitada ') }}</th>
                           @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                           <th class="text-center th-actions">{{ __('Acciones ') }}</th>
@@ -244,7 +228,7 @@
                               <td>{{ $order->producto }}</td>
                               <td>{{ number_format($order->cantidad_lts, 0) }}L</td>
                               <td>${{ number_format($order->costo_aprox, 2) }}</td>
-                              <td>
+                              {{-- <td>
                                 @if(auth()->user()->roles[0]->name == 'Administrador' || auth()->user()->roles[0]->name == 'Logistica' )
                                   <select name="estatus_pedido" class="estatus_pedido selectpicker" data-style="btn-danger" style="background: #fff">
                                   @switch($order->camino)
@@ -316,14 +300,14 @@
                                       @break
                                   @endswitch
                                 @endif
-                              </td>
+                              </td> --}}
                               <td>{{ $order->dia_entrega }}</td>
                               @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                               <td class="td-actions">
                                 <form action="{{ route('pedidos.destroy', $order->id) }}" method="post">
                                   @csrf
                                   @method('delete')
-                                  <a class="btn btn-social btn-just-icon btn-twitter btn-link" data-original-title="" href="{{ route('pedidos.cambiar_status', $order) }}" rel="tooltip" title="Concluir pedido">
+                                  <a class="btn btn-social btn-just-icon btn-link" data-original-title="" href="{{ route('pedidos.cambiar_status', $order) }}" rel="tooltip" title="Concluir pedido">
                                     <i class="material-icons">check_circle_outline</i>
                                     <div class="ripple-container">
                                     </div>
@@ -348,14 +332,13 @@
                   <div class="tab-pane" id="link4" aria-expanded="false">
 
                     <div class="table-responsive">
-                      <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables_3">
+                      <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables_4">
                         <thead class=" text-primary">
                           <th>{{ __('N° de Orden') }}</th>
                           <th>{{ __('Fletera') }}</th>
                           <th>{{ __('Tractor') }}</th>
                           <th>{{ __('Pipa 1') }}</th>
                           <th>{{ __('Pipa 2') }}</th>
-                          <th>{{ __('Pipa 3') }}</th>
                           <th>{{ __('Conductor') }}</th>
                           @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                             <th class="text-center th-actions">{{ __('Acciones') }}</th>
@@ -379,7 +362,6 @@
 
                                     <td>{{ $control->orders[0]->pipes->numero_economico}}</td>
                                     <td>{{ __('No hay segunda pipa') }}</td>
-                                    <td>{{ __('No hay tercera pipa') }}</td>
 
                                     <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
@@ -437,7 +419,6 @@
                                     @else
                                       <td>{{ __('No hay segunda pipa') }}</td>    
                                     @endif
-                                    <td>{{ __('No hay tercera pipa') }}</td>
 
                                     <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
@@ -491,7 +472,6 @@
                                     
                                     <td>{{ $control->orders[0]->pipes->numero_economico}}</td>
                                     <td>{{ $control->orders[2]->pipes->numero_economico}}</td>
-                                    <td>{{ __('No hay tercera pipa') }}</td>
 
                                     <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
@@ -545,7 +525,6 @@
 
                                     <td>{{ $control->orders[0]->pipes->numero_economico}}</td>
                                     <td>{{ $control->orders[3]->pipes->numero_economico}}</td>
-                                    <td>{{ __('No hay tercera pipa') }}</td>
 
                                     <td>{{$control->driver->name}}</td>
                                     @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
@@ -593,7 +572,7 @@
                   </div>
                   <div class="tab-pane" id="link5" aria-expanded="false">
                     <div class="table-responsive">
-                      <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables_4">
+                      <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables_5">
                         <thead class=" text-primary">
                           <th>{{ __('SO Number') }}</th>
                           <th>{{ __('Estación') }}</th>
@@ -704,9 +683,11 @@
                               <label class="label-control" for="id_estacion">Chofer</label><br>
                               <select class="selectpicker" data-style="btn btn-primary btn-round" title="Single Select" id="input-id_chofer" data-width="100%" name="id_chofer">
                                 <option disabled selected>Elije</option>
+                                @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3)
                                 @foreach($choferes as $chofer)
-                                <option value="{{ $chofer->id }}">{{ $chofer->name }}</option>
+                                <option value="{{ $chofer->id }}">{{ $chofer->name  }}</option>
                                 @endforeach
+                                @endif
                               </select><br>
                               @if ($errors->has('id_estacion'))
                                 <span class="error text-danger" for="input-id_estacion" id="id_estacion-error">
@@ -802,7 +783,8 @@
         },
         success: function(response){
           $('#exampleModal').modal('toggle');
-          alert(response);
+          // alert(response);
+          demo.showNotification('top','center', response, 'tim-icons icon-bell-55');
           location.reload(true);
         }
       });

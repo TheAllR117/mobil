@@ -171,6 +171,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('control/pipa_escogida','ControlController@pipa_escogida')->name('control.pipa_escogida');
 	Route::post('control/fletes_contador','ControlController@fletes_contador');
 	Route::post('control/update','ControlController@update')->name('control.update');
+	Route::get('control/factura/{id}','ControlController@factura')->name('control.factura');
 });
 
 // rutas de facturas
@@ -286,6 +287,14 @@ Route::group(['middleware' => 'auth'], function () {
 	//Route::get('estaciones', ['as' => 'estaciones.edit', 'uses' => 'EstacionController@edit']);
 	//Route::put('estaciones', ['as' => 'estaciones.update', 'uses' => 'ProfileController@update']);
 //});
+
+// rutas de facturas diferentes
+Route::group(['middleware' => 'auth'], function () {
+	Route::resource('facturas_diferentes','DifferentBillController');
+	Route::post('facturas_diferentes/create','DifferentBillController@create');
+	Route::post('facturas_diferentes/store','DifferentBillController@store');
+	Route::delete('facturas_diferentes/destroy/{id}','DifferentBillController@destroy')->name('facturas_diferentes.destroy');;
+});
 
 
 Auth::routes();

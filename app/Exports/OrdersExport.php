@@ -18,7 +18,7 @@ class OrdersExport implements FromCollection, WithHeadings
     {
         $array_principal = [];
         $pedidos = [];
-        $ordenes = Order::where('status_id', 1)->get();
+        $ordenes = Order::where('status_id', 1)->limit(20)->get();
         foreach($ordenes as $estacion){
             $pedidos = [];
             foreach($estacion->estacions as $sh){
@@ -26,15 +26,12 @@ class OrdersExport implements FromCollection, WithHeadings
                 array_push($pedidos, 'OTJC');
                 array_push($pedidos, date("Ymd", strtotime($estacion->dia_entrega)));
                 array_push($pedidos, $estacion->po);
-                array_push($pedidos, '123499');
+                array_push($pedidos, $estacion->clave_producto);
                 array_push($pedidos, $estacion->cantidad_lts);
                 array_push($array_principal, $pedidos);
             }
         }
-        //dd($array_principal[0]);
-        //return $array_principal[0];
         return collect($array_principal);
-        //return Order::all();
     }
 
     public function headings(): array

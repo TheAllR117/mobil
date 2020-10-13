@@ -7,18 +7,20 @@
             <div class="col-md-8 mx-auto d-block mt-3">
                 <form action="{{ route('estaciones.update', $estacion_edit) }}" autocomplete="off" class="form-horizontal" method="post">
                     @csrf
-                @method('post')
-                    <div class="card ">
+                    @method('post')
+                    <div class="card bg-danger">
                         <div class="card-header card-header-primary">
-                            <h4 class="card-title">
+                            <h4 class="card-title text-white">
                                 <a href="{{ route('estaciones.index') }}" title="Regresar a la lista">
-                                    <i class="tim-icons icon-minimal-left text-danger"></i>
+                                    <i class="tim-icons icon-minimal-left text-white"></i>
                                 </a>
                                 {{ __('Editar Estación') }}
                             </h4>
                             <p class="card-category">
                             </p>
                         </div>
+                    </div>
+                    <div class="card ">
                         <div class="card-body">
                            
                             <div class="row mt-5">

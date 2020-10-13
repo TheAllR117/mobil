@@ -8,17 +8,17 @@
                 <form action="{{ route('tractores.update',$tractor_edit) }}" autocomplete="off" class="form-horizontal" method="post">
                   @csrf
                   @method('post')
+                    <div class="card bg-danger">
+                      <div class="card-header card-header-primary">
+                        <h4 class="card-title text-white">
+                          <a href="{{ route('tractores.index') }}" title="Regresar a la lista">
+                            <i class="tim-icons icon-minimal-left text-white"></i>
+                          </a>
+                          {{ __('Editar Tractor') }}
+                        </h4>
+                      </div>
+                    </div>
                     <div class="card ">
-                        <div class="card-header card-header-primary">
-                            <h4 class="card-title">
-                              <a href="{{ route('tractores.index') }}" title="Regresar a la lista">
-                                <i class="tim-icons icon-minimal-left text-danger"></i>
-                              </a>
-                              {{ __('Agregar Tractor') }}
-                            </h4>
-                            <p class="card-category">
-                            </p>
-                        </div>
                         <div class="card-body">
                             <div class="row">
 

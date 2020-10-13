@@ -1,6 +1,7 @@
 @extends('layouts.app', ['pageSlug' => 'dashboard'])
 
 @section('content')
+    @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
     <div class="row">
         <div class="col-lg-8 col-md-6">
             <div class="row">
@@ -9,29 +10,29 @@
                         <div class="col-lg-4 col-md-6">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Ventas Totales</h4>
-                                    <h4 class="text-dark title">{{ $order_totales }}</h4>
+                                    <h4 class="card-title mb-0">Ventas Totales</h4>
+                                    <h3 class="text-dark title mt-0 mb-0">{{ $order_totales }}</h3>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Estaciones Registradas</h4>
-                                    <h4 class="text-dark title">{{ $estacion_total }}</h4>
+                                    <h4 class="card-title mb-0">Estaciones Registradas</h4>
+                                    <h3 class="text-dark title mt-0 mb-0">{{ $estacion_total }}</h3>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Abonos Solicitados</h4>
-                                    <h4 class="text-dark title">
+                                    <h4 class="card-title mb-0">Abonos Solicitados</h4>
+                                    <h3 class="text-dark title mt-0 mb-0">
                                         {{ $abonos_pendientes }}
                                         <a href="{{ route('abonos.index') }}">
-                                            <span class="badge badge-info ml-3">Autorizar</span>
+                                            <span class="badge badge-info ml-2 mt-0 mb-0">Autorizar</span>
                                         </a>
-                                    </h4>
+                                    </h3>
                                 </div>
                             </div>
                         </div>
@@ -43,7 +44,7 @@
                         <div class="card-header ">
                             <div class="row">
                                 <div class="col-sm-6 text-left">
-                                    <h2 class="card-title">VENTAS TOTALES</h2>
+                                    <h2 class="card-title text-info">VENTAS TOTALES</h2>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
@@ -51,28 +52,28 @@
                                         <input type="radio" name="options" checked>
                                         <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Extra</span>
                                         <span class="d-block d-sm-none">
-                                            <i class="tim-icons icon-single-02"></i>
+                                            EX
                                         </span>
                                     </label>
-                                    <label class="btn btn-sm btn-primary btn-simple" id="1">
+                                    <label class="btn btn-sm btn-danger btn-simple" id="1">
                                         <input type="radio" class="d-none d-sm-none" name="options">
                                         <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Supreme</span>
                                         <span class="d-block d-sm-none">
-                                            <i class="tim-icons icon-gift-2"></i>
+                                            SU
                                         </span>
                                     </label>
-                                    <label class="btn btn-sm btn-primary btn-simple" id="2">
+                                    <label class="btn btn-sm btn-default btn-simple" id="2">
                                         <input type="radio" class="d-none" name="options">
                                         <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Diésel</span>
                                         <span class="d-block d-sm-none">
-                                            <i class="tim-icons icon-tap-02"></i>
+                                            DI
                                         </span>
                                     </label>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body mt-4">
+                        <div class="card-body">
                             <div class="chart-area ">
                                 <canvas id="chartBig1"></canvas>
                             </div>
@@ -84,7 +85,7 @@
         <div class="col-lg-4 col-md-6">
             <div class="card card-tasks">
                 <div class="card-header ">
-                    <h3 class="title d-inline">Estaciones</h3>
+                    <h3 class="title d-inline text-info">Estaciones</h3>
                     <!--div class="dropdown">
                         <button type="button" class="btn btn-link dropdown-toggle btn-icon" data-toggle="dropdown">
                             <i class="tim-icons icon-settings-gear-63"></i>
@@ -103,7 +104,7 @@
                                 @foreach($estaciones_info as $estacion_1)
                                 <tr>
                                     <td>
-                                        <p class="title">{{ $estacion_1->nombre_sucursal }}</p>
+                                        <p class="title text-info">{{ $estacion_1->nombre_sucursal }}</p>
                                         <p class="text-muted">Saldo ${{ number_format($estacion_1->saldo, 2) }}</p>
                                         <p class="text-muted">Credito ${{ number_format($estacion_1->credito, 2) }}</p>
                                     </td>
@@ -111,7 +112,7 @@
                                         <a class="btn btn-danger btn-link" data-original-title=""
                                             href="{{ route('estaciones.show', $estacion_1) }}" rel="tooltip"
                                             title="Ver información de la estación">
-                                            <i class="tim-icons icon-minimal-right"></i>
+                                            <i class="tim-icons icon-minimal-right text-info"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -127,13 +128,13 @@
     <div class="row">
 
         <div class="col-lg-6">
-            <div class="card card-chart">
+            <div class="card card-chart card-tasks">
                 <div class="card-header">
-                    <h5 class="card-category">ESTACIONES CON MÁS COMPRAS</h5>
-                    <h3 class="card-title"><i class="tim-icons icon-delivery-fast text-info"></i> 3,500</h3>
+                    <h3 class="card-title mt-2">ESTACIONES CON MÁS COMPRAS</h3>
+                    <h4 class="card-title mt-2"><i class="tim-icons icon-delivery-fast text-info"></i> 3,500</h4>
                 </div>
                 <div class="card-body">
-                    <div class="chart-area">
+                    <div class="chart-area mt-5">
                         <canvas id="CountryChart"></canvas>
                     </div>
                 </div>
@@ -143,11 +144,11 @@
         <div class="col-lg-6">
             <div class="card card-tasks">
                 <div class="card-header">
-                    <h5 class="card-category">Historial de precios</h5>
+                    <h3 class="card-title mt-2">Historial de precios</h3>
                 </div>
-                <div class="card-body">
+                <div class="card-body pt-0 pb-0">
                     <div class="table-full-width table-responsive">
-                        <table class="table  table-sm table-striped table-no-bordered table-hover" cellspacing="0" width="100%" id="datatables_1">
+                        <table class="table table-no-bordered table-hover mt-0 mb-0 pt-0 pb-0" cellspacing="0" width="100%" id="datatables_1">
                             <thead class="text-primary">
                                 <th>{{ __('Fecha') }}</th>
                                 <th>{{ __('Nombre Sucursal') }}</th>
@@ -201,6 +202,164 @@
             </div>
         </div>
     </div>
+    @else
+    <div class="row">
+        <div class="col-lg-8 col-md-6">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-chart card-tasks">
+                        <div class="card-header ">
+                            <div class="row">
+                                <div class="col-sm-6 text-left">
+                                    <h2 class="card-title text-info">Pedidos TOTALES</h2>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                                    <label class="btn btn-sm btn-primary btn-simple active" id="0">
+                                        <input type="radio" name="options" checked>
+                                        <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Extra</span>
+                                        <span class="d-block d-sm-none">
+                                            EX
+                                        </span>
+                                    </label>
+                                    <label class="btn btn-sm btn-danger btn-simple" id="1">
+                                        <input type="radio" class="d-none d-sm-none" name="options">
+                                        <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Supreme</span>
+                                        <span class="d-block d-sm-none">
+                                            SU
+                                        </span>
+                                    </label>
+                                    <label class="btn btn-sm btn-default btn-simple" id="2">
+                                        <input type="radio" class="d-none" name="options">
+                                        <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Diésel</span>
+                                        <span class="d-block d-sm-none">
+                                            DI
+                                        </span>
+                                    </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-area mt-5">
+                                <canvas id="chartBig1"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="card card-tasks">
+                <div class="card-header ">
+                    <h3 class="title d-inline text-info">Estaciones</h3>
+                </div>
+                <div class="card-body ">
+                    <div class="table-full-width table-responsive">
+                        <table class="table">
+                            <tbody>
+                                @foreach($estaciones_info as $estacion_1)
+                                <tr>
+                                    <td>
+                                        <p class="title text-info">{{ $estacion_1->nombre_sucursal }}</p>
+                                        <p class="text-muted">Saldo ${{ number_format($estacion_1->saldo, 2) }}</p>
+                                        <p class="text-muted">Credito ${{ number_format($estacion_1->credito, 2) }}</p>
+                                    </td>
+                                    <td class="td-actions text-right">
+                                        <a class="btn btn-danger btn-link" data-original-title=""
+                                            href="{{ route('estaciones.show', $estacion_1) }}" rel="tooltip"
+                                            title="Ver información de la estación">
+                                            <i class="tim-icons icon-minimal-right text-info"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                @endforeach                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-6 d-none">
+            <div class="card card-chart card-tasks">
+                <div class="card-header">
+                    <h3 class="card-title mt-2">ESTACIONES CON MÁS COMPRAS</h3>
+                    <h4 class="card-title mt-2"><i class="tim-icons icon-delivery-fast text-info"></i> 3,500</h4>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area mt-5">
+                        <canvas id="CountryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 d-none">
+            <div class="card card-tasks">
+                <div class="card-header">
+                    <h3 class="card-title mt-2">Historial de precios</h3>
+                </div>
+                <div class="card-body pt-0 pb-0">
+                    <div class="table-full-width table-responsive">
+                        <table class="table table-no-bordered table-hover mt-0 mb-0 pt-0 pb-0" cellspacing="0" width="100%" id="datatables_1">
+                            <thead class="text-primary">
+                                <th>{{ __('Fecha') }}</th>
+                                <th>{{ __('Nombre Sucursal') }}</th>
+                                <th>{{ __('Extra') }}</th>
+                                <th>{{ __('Supreme') }}</th>
+                                <th>{{ __('Diesel') }}</th>
+                            </thead>
+                            <tbody>
+                                @foreach ( $precios_actuales_estaciones as $precio_actual_estacion )
+                                    <tr>
+                                        <td>{{ $precio_actual_estacion->fecha }}</td>
+                                        <td>{{ $precio_actual_estacion->nombre_sucursal }}</td>
+                                        <td>{{ $precio_actual_estacion->extra }}</td>
+                                        <td>{{ $precio_actual_estacion->supreme }}</td>
+                                        <td>{{ $precio_actual_estacion->diesel }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-4 d-none">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h5 class="card-category">Total Shipments</h5>
+                    <h3 class="card-title"><i class="tim-icons icon-bell-55 text-primary"></i> 763,215</h3>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="chartLinePurple"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 d-none">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h5 class="card-category">Completed Tasks</h5>
+                    <h3 class="card-title"><i class="tim-icons icon-send text-success"></i> 12,100K</h3>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="chartLineGreen"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
  
 @endsection
 
@@ -444,6 +603,7 @@
                     zeroLineColor: "transparent",
                 },
                 ticks: {
+                    display: false,
                     padding: 20,
                     fontColor: "#9e9e9e"
                 }
@@ -588,9 +748,9 @@
 
             var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
 
-            gradientStroke.addColorStop(1, 'rgba(29,140,248,0.2)');
-            gradientStroke.addColorStop(0.4, 'rgba(29,140,248,0.0)');
-            gradientStroke.addColorStop(0, 'rgba(29,140,248,0)'); //blue colors
+            gradientStroke.addColorStop(1, 'rgba(223, 6, 50,1)');
+            gradientStroke.addColorStop(0.4, 'rgba(223, 6, 50,1)');
+            gradientStroke.addColorStop(0, 'rgba(26, 97, 171,1)'); //blue colors
 
 
             var myChart = new Chart(ctx, {
@@ -600,9 +760,9 @@
                 display: false
             },
             data: {
-                labels: ['USA', 'GER', 'AUS', 'UK', 'RO', 'BR'],
+                labels: @json($nombre_estacion),
                 datasets: [{
-                label: "Countries",
+                label: "Ventas",
                 fill: true,
                 backgroundColor: gradientStroke,
                 hoverBackgroundColor: gradientStroke,
@@ -610,7 +770,7 @@
                 borderWidth: 2,
                 borderDash: [],
                 borderDashOffset: 0.0,
-                data: [53, 20, 10, 80, 100, 45],
+                data: @json($ventas_estacion),
                 }]
             },
             options: gradientBarChartConfiguration

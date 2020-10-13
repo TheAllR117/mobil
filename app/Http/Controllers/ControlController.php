@@ -228,6 +228,16 @@ class ControlController extends Controller
         //
     }
 
+    public function factura(Request $request)
+    {
+        $request->user()->authorizeRoles(['Administrador', 'Logistica']);
+        $actualizar_pedido = Order::find($request->id);
+        $actualizar_pedido->update(['factura_a' => $request->factura_a]);
+        return json_encode('Factura A actualizada.');
+
+       //dd($request->all());
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -334,4 +344,6 @@ class ControlController extends Controller
         }
         return $p;
     }
+
+    
 }

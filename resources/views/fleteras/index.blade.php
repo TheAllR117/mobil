@@ -5,24 +5,14 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
-            <div class="card">
+            <div class="card bg-danger">
               <div class="card-header card-header-primary">
-                <h4 class="card-title ">{{ __('Relación de Fleteras') }}</h4>
-                <p class="card-category"> {{ __('Aquí puedes administrar todas las relaciones de las fleteras.') }}</p>
+                <h4 class="card-title text-white">{{ __('Relación de Fleteras') }}</h4>
+                <p class="card-category text-white"> {{ __('Aquí puedes administrar todas las relaciones de las fleteras.') }}</p>
               </div>
+            </div>
+            <div class="card">
               <div class="card-body">
-                @if (session('status'))
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <div class="alert alert-success">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                          <i class="material-icons">close</i>
-                        </button>
-                        <span>{{ session('status') }}</span>
-                      </div>
-                    </div>
-                  </div>
-                @endif
                 <div class="row justify-content-center mt-2 mb-2">
                 	<div class="col-2">
                 		<a href="{{ route('registro_fleteras.index') }}" class="btn btn-sm btn-simple">{{ __('gestionar fleteras') }}
@@ -120,10 +110,13 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-            <div class="card">
+            <div class="card bg-danger">
               <div class="card-header card-header-primary">
-                <h4 class="card-title ">{{ __('Relación de Estación') }}</h4>
+                <h4 class="card-title text-white">{{ __('Relación de Estación') }}</h4>
+               
               </div>
+            </div>
+            <div class="card">
               <div class="card-body">
                
                 <div class="table-responsive">

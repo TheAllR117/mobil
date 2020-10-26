@@ -175,7 +175,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        LaravelFrontendPresets\MaterialPreset\MaterialPresetServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
 
     ],

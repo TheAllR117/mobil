@@ -21,9 +21,11 @@ class CreateDifferentBillsTable extends Migration
             $table->string('quantity');
             $table->string('file_pdf');
             $table->string('file_xml');
+            $table->unsignedBigInteger('id_status');
             $table->timestamps();
 
             $table->foreign('id_estacion')->references('id')->on('estacions')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_status')->references('id')->on('statu_orders')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

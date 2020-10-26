@@ -57,7 +57,7 @@ class DifferentBillController extends Controller
     {
         $request->user()->authorizeRoles(['Administrador']);
 
-        $cobro_devolucion = false;
+        //$cobro_devolucion = false;
 
         $file_pdf = $request->file('file_pdf');
         $file_xml = $request->file('file_xml');
@@ -67,21 +67,21 @@ class DifferentBillController extends Controller
 
         Storage::disk('facturas_pdf_2')->put('/'.$request->id_estacion.'/'.$nombre_pdf, \File::get($file_pdf));
         Storage::disk('facturas_xml_2')->put('/'.$request->id_estacion.'/'.$nombre_xml, \File::get($file_xml));
-        if($request->add_or_subtract == 'on'){
+        /*if($request->add_or_subtract == 'on'){
             $cobro_devolucion = true;
-        }
-        $new = $model->create($request->merge(['add_or_subtract' => $cobro_devolucion, 'file_pdf' => $nombre_pdf, 'file_xml' => $nombre_xml])->all());
+        }*/
+        $new = $model->create($request->merge(['add_or_subtract' => 1, 'file_pdf' => $nombre_pdf, 'file_xml' => $nombre_xml, 'id_status' => 1])->all());
         $new->update(['file_pdf' => $nombre_pdf, 'file_xml' => $nombre_xml]);
 
         $estacion_selecionada = $estacion::find($request->id_estacion);
 
-        if($request->add_or_subtract == true){
+        /*if($request->add_or_subtract == true){*/
             $estacion_selecionada->update(['credito_usado' => ($estacion_selecionada->credito_usado + $request->quantity)]);
-        } else {
+        /*} else {
             $estacion_selecionada->update(['credito_usado' => ($estacion_selecionada->credito_usado - $request->quantity)]);
-        }
+        }*/
 
-        return redirect()->route('facturas_diferentes.index')->withStatus(__('Factura cargada exitosamente.'));        
+        return redirect()->route('facturas.index')->withStatus(__('Factura cargada exitosamente.'));        
        
     }
 
@@ -128,11 +128,13 @@ class DifferentBillController extends Controller
     public function destroy(Request $request, $id)
     {
         $request->user()->authorizeRoles(['Administrador']);
-
         $factura = DifferentBill::findorfail($id);
+        $estacion = Estacion::find($factura->id_estacion);
 
+        $estacion->update(['credito_usado'=> $estacion->credito_usado - $factura->quantity]);
+        
         $factura->delete();
 
-        return redirect()->route('facturas_diferentes.index')->withStatus(__('Factura eliminada.'));
+        return redirect()->route('facturas.index')->withStatus(__('Factura eliminada.'));
     }
 }

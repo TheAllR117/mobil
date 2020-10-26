@@ -32,9 +32,9 @@ class DifferentBillRequest extends FormRequest
             'description' => [
                 'required', 'min:3'
             ],
-            'add_or_subtract' => [
+            /*'add_or_subtract' => [
                 'required',
-            ],
+            ],*/
             'quantity' => [
                 'required',
             ],

@@ -7,11 +7,10 @@
             @csrf
 
             <div class="card card-login card-white">
-                <div class="card-header mt-3 mb-3">
-                    <img class="mx-auto d-block mt-3 mb-3 pr-4 pl-4" src="{{ asset('white') }}/img/mobil-logo.png" alt="">
-                    
-                </div>
-                <div class="card-body mt-5">
+                
+                    <img class="mx-auto d-block mt-4" src="{{ asset('white') }}/img/mobil-logo.png" alt="" style="height:60px">
+                
+                <div class="card-body mt-3">
                     
                     <div class="input-group{{ $errors->has('email') ? ' has-danger' : '' }}">
                         <div class="input-group-prepend">
@@ -31,15 +30,20 @@
                         <input type="password" placeholder="{{ __('Contraseña') }}" name="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}">
                         @include('alerts.feedback', ['field' => 'password'])
                     </div>
+                    
+                    <div class="input-group mt-4 mb-0">
+                        <button type="submit" href="" class="btn btn-primary btn-lg btn-block">{{ __('Iniciar sesión') }}</button>
+                    </div>
                 </div>
-                <div class="card-footer">
+                   
+                <!--div class="card-footer mt-0">
                     <button type="submit" href="" class="btn btn-primary btn-lg btn-block mb-3">{{ __('Iniciar sesión') }}</button>
-                    <!--div class="pull-right">
+                    <div class="pull-right">
                         <h6>
                             <a href="{{ route('password.request') }}" class="link footer-link" >{{ __('¿Olvidaste tu contraseña?') }}</a>
                         </h6>
-                    </div-->
-                </div>
+                    </div>
+                </div-->
             </div>
         </form>
     </div>

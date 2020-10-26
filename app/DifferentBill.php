@@ -12,6 +12,6 @@ class DifferentBill extends Model
     }
 
     protected $fillable = [
-        'id_estacion', 'description', 'add_or_subtract', 'quantity', 'file_pdf', 'file_xml'
+        'id_estacion', 'description', 'add_or_subtract', 'quantity', 'file_pdf', 'file_xml', 'id_status'
     ];
 }

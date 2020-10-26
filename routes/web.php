@@ -161,13 +161,14 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('exportar_excel', 'OrderController@exportar_excel')->name('exportar_excel');
 });
  
+
 // rutas de control
 Route::group(['middleware' => 'auth'], function () {
 	Route::resource('control','ControlController');
 	Route::post('control/create/{id?}','ControlController@create')->name('control.create');
 	Route::post('control/store','ControlController@store');
-	Route::post('control/seleccionar_tractor','ControlController@seleccionar_tractor');
-	Route::post('control/seleccionar_pipa','ControlController@seleccionar_pipa');
+	Route::post('control/seleccionar_tractor','ControlController@seleccionar_tractor')->name('control.seleccionar_tractor');
+	Route::post('control/seleccionar_pipa','ControlController@seleccionar_pipa')->name('control.seleccionar_pipa');
 	Route::post('control/pipa_escogida','ControlController@pipa_escogida')->name('control.pipa_escogida');
 	Route::post('control/fletes_contador','ControlController@fletes_contador');
 	Route::post('control/update','ControlController@update')->name('control.update');

@@ -64,12 +64,15 @@
                           @endforeach
                         </td>
                         <td  width="5%">
-                          <select id="input-razon_social" name="razon_social[]" class="selectpicker mb-2 text-white" multiple data-style="btn-primary text-white">
+                          <select id="input-razon_social" name="razon_social[]" class="selectpicker p-0 m-0 text-white" multiple data-style="btn-primary text-white">
                             @foreach( $user->estacions as $estacion)
+                              @if($estacion->nombre_sucursal == '*')
+                              <option selected disabled>Todas las Estaciones</option>
+                              @else
                               <option selected disabled>{{ $estacion->nombre_sucursal }}</option>
+                              @endif
                             @endforeach  
                           </select>
-                          
                         </td>
                         <td>
                           {{ $user->created_at->format('d/m/Y') }}

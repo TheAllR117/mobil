@@ -297,7 +297,7 @@
         
         function inputFletera(id){
                 $.ajax({
-                    url: '../../control/seleccionar_tractor',
+                    url: "{{ route('control.seleccionar_tractor') }}",
                     type: 'POST',
                     dataType: 'json',
                     data: {
@@ -350,7 +350,7 @@
 
         function inputTractor(id){
                 $.ajax({
-                    url: '../../control/seleccionar_pipa',
+                    url: "{{ route('control.seleccionar_pipa') }}",
                     type: 'POST',
                     dataType: 'json',
                     data: {

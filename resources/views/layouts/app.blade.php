@@ -20,6 +20,7 @@
         <link href="{{ asset('white') }}/css/white-dashboard.css?v=2.1.2" rel="stylesheet" />
         <link href="{{ asset('white') }}/css/theme.css" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
     </head>
     <body class="white-content {{ $class ?? '' }} sidebar-mini">
         @auth()
@@ -110,11 +111,12 @@
         <script src="{{ asset('js') }}/tabla_inicializador.js"></script>
         <script src="{{ asset('js') }}/precios_combustible.js"></script>
         <script src="{{ asset('js') }}/arrastrar.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 
         @stack('js')
 
         <script>
-           
+        
             // funciones para la pagina de solicitar pedidos
             
             $('#input-estacion_id').change(function(){
@@ -158,8 +160,8 @@
                         if(datos.hay_adeudo === 1)
                         {
                             document.getElementById('btn-guardar-div').style.display = "none";
-                            demo.showNotification('top','center', 'La estación tiene un adeudo que no ha pagado y ya expiró el plazo de pago.', 'tim-icons icon-bell-55');
-                            // alert('La estación tiene un adeudo que no ha pagado y ya expiró el plazo de pago.');
+                            demo.showNotification('top','center', 'La estaci贸n tiene un adeudo que no ha pagado y ya expir贸 el plazo de pago.', 'tim-icons icon-bell-55');
+                            // alert('La estaci贸n tiene un adeudo que no ha pagado y ya expir贸 el plazo de pago.');
                         }else{
                             document.getElementById('btn-guardar-div').style.display = "block";
                         }
@@ -265,6 +267,8 @@
                     }
 
                 } else {
+                    document.getElementById('btn-guardar-div').style.display = "none";
+                    demo.showNotification('top','center', 'Excediste tu linea de credito.', 'tim-icons icon-bell-55');
                     // $("#guardar").addClass("ocultar");
                 }
 

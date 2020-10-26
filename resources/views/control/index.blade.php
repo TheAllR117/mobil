@@ -44,7 +44,7 @@
                         {{ __('Cantidad') }}
                       </th>
                       <th>
-                        {{ __('Estación') }}
+                        {{ __('Estaci贸n') }}
                       </th>
                       <th>
                         {{ __('PO Cliente') }}
@@ -113,7 +113,7 @@
               <input type="text" class="form-control" id="input-estacion_id" aria-describedby="estacion_idHelp"  value="" required="true" aria-required="true" name="estacion_id">
             </div>
             <div class="form-group  col-sm-4">
-              <label for="supreme">{{ __('Estación') }}</label>
+              <label for="supreme">{{ __('Estaci贸n') }}</label>
               <input type="text" class="form-control" id="input-estacion" aria-describedby="supremeHelp"  value="" required="true" aria-required="true" name="estacion">
             </div>
             <div class="form-group  col-sm-4">
@@ -139,7 +139,7 @@
 <script>
   $('#guardar_so').click(function(){
     $.ajax({
-      url: 'factura/'+$("#input-estacion_id").val(),
+      url: 'control/factura/'+$("#input-estacion_id").val(),
       type: 'get',
       dataType: 'json',
       data: {

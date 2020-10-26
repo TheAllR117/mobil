@@ -14,6 +14,7 @@ use App\Estacion;
 use App\Terminal;
 use App\Statu_order;
 use App\Invoice;
+use App\DifferentBill;
 
 class InvoiceController extends Controller
 {
@@ -22,7 +23,7 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, Order $order)
+    public function index(Request $request, Order $order, DifferentBill $model)
     {
         $request->user()->authorizeRoles(['Administrador','Logistica','Admin-Estacion', 'Abonos & Pagos']);
         $sucursal_usuario = $request->user()->estacions[0]->id;
@@ -36,7 +37,7 @@ class InvoiceController extends Controller
         if($request->user()->roles[0]->name == "Administrador" || $request->user()->roles[0]->name == "Logistica" || $request->user()->roles[0]->name == "Abonos & Pagos") {
 
             //return view('facturas.index', ['orders' => $order::where('dia_entrega',date("Y-m-d"))->where('status_id',5)->orderBy('dia_entrega','asc')->get()]);
-            return view('facturas.index', ['orders' => $order::where('status_id', 5)->orderBy('dia_entrega','asc')->get()]);
+            return view('facturas.index', ['orders' => $order::where('status_id', 5)->orderBy('dia_entrega','asc')->get(), 'facturas' => $model::all()]);
 
         }else{
             $estaciones = array();
@@ -45,7 +46,7 @@ class InvoiceController extends Controller
                 array_push($estaciones, $request->user()->estacions[$i]->id);
             }
 
-            return view('facturas.index', ['orders' => $order::whereIn('estacion_id', $estaciones)->where('status_id',5)->get()]);
+            return view('facturas.index', ['orders' => $order::whereIn('estacion_id', $estaciones)->where('status_id',5)->get(), 'facturas' => $model::whereIn('id_estacion', $estaciones)->get()]);
         }
         //return view('facturas.index');
     }

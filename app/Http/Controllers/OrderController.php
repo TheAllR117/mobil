@@ -37,7 +37,51 @@ class OrderController extends Controller
         $request->user()->authorizeRoles(['Administrador', 'Logistica', 'Admin-Estacion']);
 
         // eliminar pedidos vencidos que tengan status 1 o 2
-        Order::whereDate('fecha_eliminacion', '<=', date("Y/m/d"))->where('status_id', '==', '2')->delete();
+        // Order::whereDate('fecha_eliminacion', '<=', date("Y/m/d"))->where('status_id', '==', '2')->delete();
+        $pedidos_a_cancelar = Order::where('status_id', '2')->whereDate('fecha_eliminacion', '<=', date("Y/m/d"))->get();
+
+        for($c=0; $c<count($pedidos_a_cancelar); $c++){
+            // buscamos la estación
+            $info_estacion = $estacion::findOrFail($pedidos_a_cancelar[$c]->estacion_id);
+            // credito de la estación
+            $credito = $info_estacion->credito;
+            // credito usado de la estación
+            $credito_usado = $info_estacion->credito_usado;
+            // credito disponible de la estación
+            $disponible = $credito - $credito_usado;
+            
+            /*  
+                verificamos si la estación tiene credito usado igual a cero y saldo igual o mayor a cero, 
+                para agregar el costo_aprox al saldo
+            */
+            if(floatval($info_estacion->saldo) >= 0 && floatval($info_estacion->credito_usado) == 0){
+                $info_estacion->update(['saldo' => $pedidos_a_cancelar[$c]->costo_aprox + floatval($info_estacion->saldo)]);
+            } 
+            elseif (floatval($info_estacion->credito_usado) > 0) {
+                /*  
+                    verificamos si la estación tiene credito usado mayor a cero, 
+                    para agregar el costo_aprox al credito_usado
+                */
+                $total = $pedidos_a_cancelar[$c]->costo_aprox + $disponible;
+    
+                if($total == $credito){
+                   $info_estacion->update(['credito_usado' => 0]);
+                }
+                elseif($total < $credito)
+                {
+                    $info_estacion->update(['credito_usado' => $credito - $total]);
+                }
+                else
+                {
+                    $info_estacion->update(['credito_usado' => 0 ,'saldo' => $info_estacion->saldo + abs($total) ]);
+                }
+            }else{
+                return json_encode($info_estacion->saldo);
+            }
+
+            $pedidos_a_cancelar[$c]->update(['status_id' => 6]);
+            
+        }
 
         $sucursal_usuario = $request->user()->estacions[0]->id;
 

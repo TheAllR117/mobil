@@ -88,22 +88,22 @@
                     <div class="table-responsive">
                       <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables_1">
                         <thead class=" text-primary">
-                          <th>{{ __('SO Number') }}</th>
-                          <th>{{ __('Estación') }}</th>
-                          <th>{{ __('Nombre de la sucursal') }}</th>
-                          <th>{{ __('Producto') }}</th>
-                          <th>{{ __('Cantidad LTS.') }}</th>
-                          <th>{{ __('Costo Aprox') }}</th>
-                          <th>{{ __('Fecha de entrega solicitada') }}</th>
-                          <th class="text-center th-actions">{{ __('Acciones') }}</th>
+                              <th>{{ __('MO') }}</th>
+                              <th>{{ __('SO Number') }}</th>
+                              <th>{{ __('Sucursal') }}</th>
+                              <th>{{ __('Producto') }}</th>
+                              <th>{{ __('Litros') }}</th>
+                              <th>{{ __('Costo') }}</th>
+                              <th>{{ __('Fecha de entrega solicitada') }}</th>
+                              <th class="text-center th-actions">{{ __('Acciones') }}</th>
                         </thead>
                         <tbody>
                           @foreach($orders as $order)
                           
                             @if($order->status_id == 1)
                             <tr>
+                              <td>{{ $order->po }}</td>
                               <td>{{ $order->so_number }}</td>
-                              <td>{{ $order->estacions[0]->razon_social}}</td>
                               <td>{{ $order->estacions[0]->nombre_sucursal }}</td>
                               <td>{{ $order->producto }}</td>
                               <td>{{ number_format($order->cantidad_lts, 0) }}L</td>
@@ -145,13 +145,16 @@
                     <div class="table-responsive">
                       <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables_2">
                         <thead class=" text-primary">
-                          <th>{{ __('SO Number') }}</th>
-                          <th>{{ __('Estación') }}</th>
-                          <th>{{ __('Nombre de la sucursal') }}</th>
-                          <th>{{ __('Producto') }}</th>
-                          <th>{{ __('Cantidad LTS.') }}</th>
-                          <th>{{ __('Costo Aprox') }}</th>
-                          <th>{{ __('Fecha de entrega solicitada') }}</th>
+                          
+                              <th>{{ __('MO') }}</th>
+                              <th>{{ __('SO Number') }}</th>
+                              <th>{{ __('Sucursal') }}</th>
+                              <th>{{ __('Producto') }}</th>
+                              <th>{{ __('Litros') }}</th>
+                              <th>{{ __('Costo') }}</th>
+                              <th>{{ __('Factura A') }}</th>
+                              <th>{{ __('Fecha de entrega solicitada') }}</th>
+                          
                           @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                           <th class="text-center th-actions">{{ __('Acciones') }}</th>
                           @endif
@@ -160,12 +163,13 @@
                           @foreach($orders as $order)
                             @if($order->status_id == 2)
                             <tr>
+                              <td>{{ $order->po }}</td>
                               <td>{{ $order->so_number }}</td>
-                              <td>{{ $order->estacions[0]->razon_social }}</td>
                               <td>{{ $order->estacions[0]->nombre_sucursal }}</td>
                               <td>{{ $order->producto }}</td>
                               <td>{{ number_format($order->cantidad_lts, 0) }}L</td>
                               <td>${{ number_format($order->costo_aprox, 2) }}</td>
+                              <td>{{ $order->factura_a }}</td>
                               <td>{{ $order->dia_entrega }}</td>
                               @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                               <td class="td-actions">
@@ -205,12 +209,13 @@
                       <table class="table dataTable table-sm table-striped table-no-bordered table-hover material-datatables" cellspacing="0" width="100%"  id="datatables_3">
                         <thead class=" text-primary">
                           <th>{{ __('N° de Orden') }}</th>
-                          <th>{{ __('Estación ') }}</th>
+                          <th>{{ __('MO') }}</th>
                           <th>{{ __('SO Number') }}</th>
-                          <th>{{ __('Nombre de la sucursal ') }}</th>
+                          <th>{{ __('sucursal ') }}</th>
                           <th>{{ __('Producto ') }}</th>
-                          <th>{{ __('Cantidad LTS. ') }}</th>
-                          <th>{{ __('Costo Aprox ') }}</th>
+                          <th>{{ __('Litros ') }}</th>
+                          <th>{{ __('Costo ') }}</th>
+                          <th>{{ __('Factura A ') }}</th>
                           <!--th>{{ __('Estatus ') }}</th-->
                           <th>{{ __('Fecha de entrega solicitada ') }}</th>
                           @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
@@ -222,85 +227,13 @@
                             @if($order->status_id == 3)
                             <tr>
                               <td>{{ $order->controls[0]->id }}</td>
-                              <td>{{ $order->estacions[0]->razon_social }}</td>
+                              <td>{{ $order->po }}</td>
                               <td>{{ $order->so_number }}</td>
                               <td>{{ $order->estacions[0]->nombre_sucursal }}</td>
                               <td>{{ $order->producto }}</td>
                               <td>{{ number_format($order->cantidad_lts, 0) }}L</td>
                               <td>${{ number_format($order->costo_aprox, 2) }}</td>
-                              {{-- <td>
-                                @if(auth()->user()->roles[0]->name == 'Administrador' || auth()->user()->roles[0]->name == 'Logistica' )
-                                  <select name="estatus_pedido" class="estatus_pedido selectpicker" data-style="btn-danger" style="background: #fff">
-                                  @switch($order->camino)
-                                      @case(1)
-                                          <option value="{{$order->camino}}" hidden>En espera de la Fletera</option>
-                                          <option value="1" data_id="{{$order->id}}">En camino hacia la terminal</option>
-                                          <option value="2" data_id="{{$order->id}}">Cargando pedido</option>
-                                          <option value="3" data_id="{{$order->id}}">Saliendo de la terminal</option>
-                                          <option value="4" data_id="{{$order->id}}">En camino hacia la estacion</option>
-                                          <option value="5" data_id="{{$order->id}}">Recibido en estacion</option>
-                                          @break
-
-                                      @case(2)
-                                          <option value="{{$order->camino}}" hidden>Cargando pedido</option>
-                                          <option value="1" data_id="{{$order->id}}">En camino hacia la terminal</option>
-                                          <option value="2" data_id="{{$order->id}}">Cargando pedido</option>
-                                          <option value="3" data_id="{{$order->id}}">Saliendo de la terminal</option>
-                                          <option value="4" data_id="{{$order->id}}">En camino hacia la estacion</option>
-                                          <option value="5" data_id="{{$order->id}}">Recibido en estacion</option>
-                                          @break
-
-                                      @case(3)
-                                          <option value="{{$order->camino}}" hidden>Saliendo de la terminal</option>
-                                          <option value="1" data_id="{{$order->id}}">En camino hacia la terminal</option>
-                                          <option value="2" data_id="{{$order->id}}">Cargando pedido</option>
-                                          <option value="3" data_id="{{$order->id}}">Saliendo de la terminal</option>
-                                          <option value="4" data_id="{{$order->id}}">En camino hacia la estacion</option>
-                                          <option value="5" data_id="{{$order->id}}">Recibido en estacion</option>
-                                          @break
-
-                                      @case(4)
-                                          <option value="{{$order->camino}}" hidden>En camino hacia la estacion</option>
-                                          <option value="1" data_id="{{$order->id}}">En camino hacia la terminal</option>
-                                          <option value="2" data_id="{{$order->id}}">Cargando pedido</option>
-                                          <option value="3" data_id="{{$order->id}}">Saliendo de la terminal</option>
-                                          <option value="4" data_id="{{$order->id}}">En camino hacia la estacion</option>
-                                          <option value="5" data_id="{{$order->id}}">Recibido en estacion</option>
-                                          @break
-
-                                      @case(5)
-                                          <option value="{{$order->camino}}" hidden>Recibido en estacion</option>
-                                          <option value="1" data_id="{{$order->id}}">En camino hacia la terminal</option>
-                                          <option value="2" data_id="{{$order->id}}">Cargando pedido</option>
-                                          <option value="3" data_id="{{$order->id}}">Saliendo de la terminal</option>
-                                          <option value="4" data_id="{{$order->id}}">En camino hacia la estacion</option>
-                                          <option value="5" data_id="{{$order->id}}">Recibido en estacion</option>
-                                          @break
-
-                                      @default
-                                          Sin estatus
-                                  @endswitch
-                                  </select>
-                                @else
-                                  @switch($order->camino)
-                                    @case(1)
-                                      En camino hacia la terminal
-                                      @break
-                                    @case(2)
-                                      Cargando pedido
-                                      @break
-                                    @case(3)
-                                      Saliendo de la terminal
-                                      @break
-                                    @case(4)
-                                      En camino hacia la estacion
-                                      @break
-                                    @case(5)
-                                      Recibido en estacion
-                                      @break
-                                  @endswitch
-                                @endif
-                              </td> --}}
+                              <td>{{ $order->factura_a }}</td>
                               <td>{{ $order->dia_entrega }}</td>
                               @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                               <td class="td-actions">
@@ -580,7 +513,7 @@
                           <th>{{ __('Producto') }}</th>
                           <th>{{ __('Cantidad LTS.') }}</th>
                           <th>{{ __('Costo Aprox') }}</th>
-                          <th>{{ __('Fecha de entrega solicitada') }}</th>
+                          <th>{{ __('Fecha de vencimiento') }}</th>
                         </thead>
                         <tbody>
                           @foreach($orders as $order)
@@ -592,7 +525,7 @@
                               <td>{{ $order->producto }}</td>
                               <td>{{ number_format($order->cantidad_lts, 0) }}L</td>
                               <td>${{ number_format($order->costo_aprox, 2) }}</td>
-                              <td>{{ $order->dia_entrega }}</td>
+                              <td>{{ $order->fecha_eliminacion }}</td>
                             </tr>
                             @endif
                           @endforeach

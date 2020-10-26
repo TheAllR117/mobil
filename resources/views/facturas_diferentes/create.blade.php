@@ -11,7 +11,7 @@
                     <div class="card bg-danger">
                       <div class="card-header card-header-primary">
                           <h4 class="card-title text-white">
-                              <a href="{{ route('facturas_diferentes.index') }}" title="Regresar a la lista">
+                              <a href="{{ route('facturas.index') }}" title="Regresar a la lista">
                                   <i class="tim-icons icon-minimal-left text-white"></i>
                               </a>
                               {{ __('Agregar Factura') }}
@@ -106,7 +106,7 @@
                             
                           </div>
 
-                          <div class="row mt-6 mb-6">
+                          <!--div class="row mt-6 mb-6">
                             
                             <div class="form-group{{ $errors->has('add_or_subtract') ? ' has-danger' : '' }} col-sm-6">
                               <label for="add_or_subtract">{{ __('Cobro o devolución') }}</label><br>
@@ -115,7 +115,7 @@
                                   data-off-label="+"
                               />
                             </div>
-                          </div>
+                          </div-->
 
                           <div class="card-footer ml-auto mr-auto">
                               <button class="btn btn-primary" type="submit">

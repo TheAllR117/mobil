@@ -106,7 +106,12 @@
                                     <td>
                                         <p class="title text-info">{{ $estacion_1->nombre_sucursal }}</p>
                                         <p class="text-muted">Saldo ${{ number_format($estacion_1->saldo, 2) }}</p>
-                                        <p class="text-muted">Credito ${{ number_format($estacion_1->credito, 2) }}</p>
+                                        @if($estacion_1->credito_usado > $estacion_1->credito)
+                                        <p class="text-danger">Crédito utilizado  ${{ number_format($estacion_1->credito_usado, 2) }}</p>
+                                        @else
+                                        <p class="text-muted">Crédito utilizado  ${{ number_format($estacion_1->credito_usado, 2) }}</p>
+                                        @endif
+                                        <p class="text-muted">Crédito ${{ number_format($estacion_1->credito, 2) }}</p>
                                     </td>
                                     <td class="td-actions text-right">
                                         <a class="btn btn-danger btn-link" data-original-title=""
@@ -144,7 +149,7 @@
         <div class="col-lg-6">
             <div class="card card-tasks">
                 <div class="card-header">
-                    <h3 class="card-title mt-2">Historial de precios</h3>
+                    <h3 class="card-title mt-2">Ultima actualización de precios</h3>
                 </div>
                 <div class="card-body pt-0 pb-0">
                     <div class="table-full-width table-responsive">
@@ -686,7 +691,7 @@
 
 
             var chart_labels = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-            var chart_data = [100, 70, 90, 70, 85, 60, 75, 60, 90, 80, 110, 100];
+            var chart_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 
             var ctx = document.getElementById("chartBig1").getContext('2d');
@@ -728,7 +733,7 @@
             myChartData.update();
             });
             $("#1").click(function() {
-            var chart_data = [80, 120, 105, 110, 95, 105, 90, 100, 80, 95, 70, 120];
+            var chart_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             var data = myChartData.config.data;
             data.datasets[0].data = chart_data;
             data.labels = chart_labels;
@@ -736,7 +741,7 @@
             });
 
             $("#2").click(function() {
-            var chart_data = [60, 80, 65, 130, 80, 105, 90, 130, 70, 115, 60, 130];
+            var chart_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             var data = myChartData.config.data;
             data.datasets[0].data = chart_data;
             data.labels = chart_labels;

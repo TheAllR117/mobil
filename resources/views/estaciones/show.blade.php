@@ -27,7 +27,7 @@
 </div-->
 
 <div class="row">
-  <div class="col-8">
+  <div class="col-lg-8 col-md-6">
     <div class="card card-chart card-tasks">
         <div class="card-header ">
             <div class="row">

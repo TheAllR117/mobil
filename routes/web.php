@@ -140,7 +140,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::delete('fleteras/destroy/{id}','FreightController@destroy')->name('fleteras.destroy');
 });
 
-// rutas de pedidos 
+// rutas de pedidos
 Route::group(['middleware' => 'auth'], function () {
 	Route::resource('pedidos','OrderController');
 	Route::post('pedidos/update/{id}','OrderController@update')->name('pedidos.update');
@@ -160,7 +160,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('pedidos/import_pdf','OrderController@import_pdf')->name('pedidos.import_pdf');
 	Route::get('exportar_excel', 'OrderController@exportar_excel')->name('exportar_excel');
 });
- 
+
 // rutas de control
 Route::group(['middleware' => 'auth'], function () {
 	Route::resource('control','ControlController');
@@ -276,6 +276,10 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::resource('table_descount','DiscountController');
 	Route::post('table_descount/create','DiscountController@create');
 	Route::post('table_descount/store','DiscountController@store');
+});
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('envios', 'ConsultaEnviosController@index')->name('consultaenvios.index');
 });
 
 

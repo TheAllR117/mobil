@@ -33,7 +33,7 @@
             <div class="row">
                 <div class="col-sm-6 text-left">
                     <h2 class="card-title text-info">
-                      <a href="{{ route('estaciones.index') }}" title="Regresar a la lista">
+                      <a href="{{ URL::previous()}}" title="Regresar atras">
                         <i class="tim-icons icon-minimal-left text-info"></i>
                       </a>
                       VENTAS TOTALES

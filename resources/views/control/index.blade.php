@@ -4,10 +4,10 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
-            <div class="card bg-danger">
+            <div class="card bg-blue">
               <div class="card-header card-header-primary">
                 <h4 class="card-title text-white">{{ __('Cotrol de pedidos') }}</h4>
-                <p class="card-category text-white"> {{ __('') }}</p>
+                <p class="card-category text-white mb-3"> {{ __('') }}</p>
               </div>
             </div>
             <div class="card">
@@ -44,7 +44,7 @@
                         {{ __('Cantidad') }}
                       </th>
                       <th>
-                        {{ __('Estaci贸n') }}
+                        {{ __('Estación') }}
                       </th>
                       <th>
                         {{ __('PO Cliente') }}

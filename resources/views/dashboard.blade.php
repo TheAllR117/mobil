@@ -27,12 +27,15 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="card-title mb-0">Abonos Solicitados</h4>
-                                    <h3 class="text-dark title mt-0 mb-0">
-                                        {{ $abonos_pendientes }}
-                                        <a href="{{ route('abonos.index') }}">
-                                            <span class="badge badge-info ml-2 mt-0 mb-0">Autorizar</span>
+                                    <div class="row">
+                                        <h3 class="text-dark title mt-0 mb-0 col-sm-1">
+                                            {{ $abonos_pendientes }}
+                                        </h3>
+                                        <a href="{{ route('abonos.index') }}" class="col-sm-6 text-left mt-1">
+                                            <span class="badge badge-info mb-0">Autorizar</span>
                                         </a>
-                                    </h3>
+                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -44,7 +47,7 @@
                         <div class="card-header ">
                             <div class="row">
                                 <div class="col-sm-6 text-left">
-                                    <h2 class="card-title text-info">VENTAS TOTALES</h2>
+                                    <h2 class="card-title text-info">Ventas Totales</h2>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
@@ -131,11 +134,126 @@
     </div>
 
     <div class="row">
+        <div class="col-sm-12">
+            <div class="card card-tasks">
+                <div class="card-header mb-1">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h3 class="card-title">Estado de Cuenta</h3>
+                        </div>
+                        <div class="col-sm-9">
+                            <div class="form-group col-sm-3">
+                                <select id="input-rol" class="selectpicker show-menu-arrow mt-0 pt-0" data-style="btn-primary" data-live-search="true" data-width="100%">
+                                    <option value="*">Todas</option>
+                                @foreach($estaciones_info as $estacion)
+                                    <option value="{{ $estacion->id }}">{{ $estacion->nombre_sucursal }}</option>
+                                @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body pt-0 pb-0">
+                    <div class="row">
+                        <div class="table-full-width table-responsive col-sm-4">
+                            <table class="table">
+                                <thead class=" text-primary">
+                                    <th>{{ __('Estación') }}</th>
+                                    <th>{{ __('Credito utilizado') }}</th>
+                                </thead>
+                                <tbody>
+                                    @foreach($estaciones_info as $estacion_1)
+                                    @if($estacion_1->credito_usado > 0)
+                                    <tr>
+                                        <td>
+                                            <p class="title text-info">{{ $estacion_1->nombre_sucursal }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-muted">${{ number_format($estacion_1->credito_usado, 2) }}</p>
+                                        </td>
+                                    </tr>
+                                    @endif
+                                    @endforeach  
+                                    <tr>
+                                        <td>
+                                            <h4 class="title text-darker text-right">Total:</h4>
+                                        </td>
+                                        <td>
+                                            <h4 class="title text-darker">${{ number_format($estaciones_info->sum('credito_usado'), 2) }}</h4>
+                                        </td>
+                                    </tr>              
+                                </tbody>
+                            </table>
+                            
+                        </div>
+                        <div class="table-full-width table-responsive col-sm-8">
+                            <table class="table">
+                                <thead class=" text-primary">
+                                    <th>{{ __('Estación') }}</th>
+                                    <th>{{ __('Descripción') }}</th>
+                                    <th>{{ __('Importe') }}</th>
+                                    <th>{{ __('Cubierto') }}</th>
+                                    <th>{{ __('Fecha') }}</th>
+                                </thead>
+                                <tbody>
+                                @php
+                                    $total_suma = 0;
+                                @endphp
+                                @foreach($estaciones_info as $estacion_1)
+                                    @foreach($estacion_1->orders->where('status_id', '<=',4) as $ventas)
+                                    <tr>
+                                        <td>{{ $estacion_1->nombre_sucursal }}</td>
+                                        <td>{{ $ventas->po }} - {{ $ventas->producto }} - {{  number_format($ventas->cantidad_lts, 0) }}L</td>
+                                        <td>
+                                            @if($ventas->costo_real == '')
+                                            ${{ number_format($ventas->costo_aprox, 2) }}
+                                            @else
+                                            ${{ number_format($ventas->costo_real, 2) }}
+                                            @endif
+                                        </td>
+                                        <td>${{ number_format($ventas->total_abonado, 2) }}</td>
+                                        <td>{{ $ventas->fecha_expiracion }}</td>
+                                    </tr>
+                                    @endforeach
+                                    @foreach($estacion_1->differentbill->where('id_status', 1) as $factura)
+                                    <tr>
+                                        <td>{{ $estacion_1->nombre_sucursal }}</td>
+                                        <td>{{ $factura->description }}</td>
+                                        <td>${{ number_format($factura->quantity, 2) }}</td>
+                                        <td>${{ number_format($factura->differentbills->where('id_status', 2)->sum('cantidad'), 2) }}</td>
+                                        <td>{{ $factura->created_at->format('Y-m-d') }}</td>
+                                    </tr>
+                                    @php
+                                        $total_suma = $total_suma + $factura->differentbills->where('id_status', 2)->sum('cantidad');
+                                    @endphp
+                                    @endforeach
+                                @endforeach
+                                    <tr>
+                                        <td colspan="2" scope="row" class="text-right">Total:</td>
+                                        <td>
+                                            ${{ number_format($info_pedidos->where(['status_id', '<=',5] ,['pagado', FALSE])->sum('costo_real') + $info_pedidos->where(['status_id', '<=',5],['costo_real', '==', ''],['pagado', FALSE])->sum('costo_aprox') + $info_facturas->where('id_status', 1)->sum('quantity'), 2 )}}
+                                        </td>
+                                        <td colspan="2">
+                                            ${{ number_format($info_pedidos->where(['status_id', '<=',4] ,['pagado', FALSE])->sum('total_abonado') + $total_suma, 2 )}}
+                                        </td>
+                                    </tr>             
+                                </tbody>
+                            </table>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
 
         <div class="col-lg-6">
             <div class="card card-chart card-tasks">
                 <div class="card-header">
-                    <h3 class="card-title mt-2">ESTACIONES CON MÁS COMPRAS</h3>
+                    <h3 class="card-title mt-2">Estaciones con más Compras</h3>
                     <h4 class="card-title mt-2"><i class="tim-icons icon-delivery-fast text-info"></i> 3,500</h4>
                 </div>
                 <div class="card-body">
@@ -149,7 +267,7 @@
         <div class="col-lg-6">
             <div class="card card-tasks">
                 <div class="card-header">
-                    <h3 class="card-title mt-2">Ultima actualización de precios</h3>
+                    <h3 class="card-title mt-2">Ultima Actualización de Precios</h3>
                 </div>
                 <div class="card-body pt-0 pb-0">
                     <div class="table-full-width table-responsive">
@@ -293,7 +411,7 @@
             <div class="card card-chart card-tasks">
                 <div class="card-header">
                     <h3 class="card-title mt-2">ESTACIONES CON MÁS COMPRAS</h3>
-                    <h4 class="card-title mt-2"><i class="tim-icons icon-delivery-fast text-info"></i> 3,500</h4>
+                    <!--h4 class="card-title mt-2"><i class="tim-icons icon-delivery-fast text-info"></i> 3,500</h4-->
                 </div>
                 <div class="card-body">
                     <div class="chart-area mt-5">
@@ -690,8 +808,8 @@
 
 
 
-            var chart_labels = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-            var chart_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            var chart_labels = @json($nombre_del_mes);
+            var chart_data = @json($meses_extra);
 
 
             var ctx = document.getElementById("chartBig1").getContext('2d');
@@ -706,7 +824,7 @@
             data: {
                 labels: chart_labels,
                 datasets: [{
-                label: "My First dataset",
+                label: "Litros distribuidos en el mes",
                 fill: true,
                 backgroundColor: gradientStroke,
                 borderColor: '#171ae6',
@@ -727,25 +845,31 @@
             };
             var myChartData = new Chart(ctx, config);
             $("#0").click(function() {
-            var data = myChartData.config.data;
-            data.datasets[0].data = chart_data;
-            data.labels = chart_labels;
-            myChartData.update();
+                var data = myChartData.config.data;
+                data.datasets[0].data = chart_data;
+                data.datasets[0].borderColor = '#1d8cf8';
+                data.datasets[0].pointBackgroundColor = '#0051b5';
+                data.labels = chart_labels;
+                myChartData.update();
             });
             $("#1").click(function() {
-            var chart_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            var data = myChartData.config.data;
-            data.datasets[0].data = chart_data;
-            data.labels = chart_labels;
-            myChartData.update();
+                var chart_data = @json($meses_supreme);
+                var data = myChartData.config.data;
+                data.datasets[0].data = chart_data;
+                data.datasets[0].borderColor = '#DF0632';
+                data.datasets[0].pointBackgroundColor = '#ff0034';
+                data.labels = chart_labels;
+                myChartData.update();
             });
 
             $("#2").click(function() {
-            var chart_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            var data = myChartData.config.data;
-            data.datasets[0].data = chart_data;
-            data.labels = chart_labels;
-            myChartData.update();
+                var chart_data = @json($meses_diesel);
+                var data = myChartData.config.data;
+                data.datasets[0].data = chart_data;
+                data.datasets[0].borderColor = '#403e3f';
+                data.datasets[0].pointBackgroundColor = '#0a0a0a';
+                data.labels = chart_labels;
+                myChartData.update();
             });
 
 

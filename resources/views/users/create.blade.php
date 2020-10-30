@@ -7,7 +7,7 @@
           <form method="post" action="{{ route('user.store') }}" autocomplete="off" class="form-horizontal">
             @csrf
             @method('post')
-            <div class="card bg-danger">
+            <div class="card bg-blue">
               <div class="card-header card-header-primary">
                 <h4 class="card-title text-white">
                   <a href="{{ route('user.index') }}" title="Regresar a la lista">

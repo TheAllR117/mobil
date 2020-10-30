@@ -8,6 +8,7 @@ use App\DifferentBill;
 use App\Estacion;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\File;
+use App\DifferentBillPayments;
 
 class DifferentBillController extends Controller
 {
@@ -91,9 +92,11 @@ class DifferentBillController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+        $request->user()->authorizeRoles(['Administrador', 'Admin-Estacion']);
+
+        return view('facturas_diferentes.show', ['facturas' => DifferentBillPayments::where('id_different_bill', $id)->get(), 'estacion' => DifferentBill::find($id)]);
     }
 
     /**
@@ -114,9 +117,58 @@ class DifferentBillController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(Request $request, DifferentBill $model)
+    {   
+        $request->user()->authorizeRoles(['Administrador']);
+
+        $billPayment = DifferentBillPayments::find($request->id);
+
+        $billPayment->update(['id_status' => 2, 'cantidad' => $request->cantidad_f]);
+
+        $differentBill = DifferentBill::find($billPayment->id_different_bill);
+
+        //return $differentBill->differentbills->where('id_status', 2)->sum('cantidad');
+
+        // if validación para cambiar el pedido a completado
+        if( $differentBill->differentbills->where('id_status', 2)->sum('cantidad') ==  $differentBill->quantity){
+            $differentBill->update(['id_status' => 2]);
+        }
+        
+
+        $station = Estacion::find($differentBill->id_estacion);
+
+        // credito de la estación
+        $credito = $station->credito;
+        // credito usado de la estación
+        $credito_usado = $station->credito_usado;
+        // credito disponible de la estación
+        $disponible = $credito - $credito_usado;
+
+        if(floatval($station->saldo) >= 0 && floatval($station->credito_usado) == 0){
+            $station->update(['saldo' => floatval($station->saldo) + $request->cantidad_f]);
+        } 
+        elseif (floatval($station->credito_usado) > 0) {
+            /*  
+                verificamos si la estación tiene credito usado mayor a cero, 
+                para agregar la cantidad abonada al credito_usado
+            */
+            $total = $request->cantidad_f + $disponible;
+
+            if($total == $credito){
+               $station->update(['credito_usado' => 0]);
+            }
+            elseif($total < $credito)
+            {
+                $station->update(['credito_usado' => $credito - $total]);
+            }
+            else
+            {
+                $station->update(['credito_usado' => 0 ,'saldo' => $station->saldo + abs($total) ]);
+            }
+        }
+
+        return redirect()->route('abonos.index')->withStatus(__('Abono Autorizado correctamente.'));
+
     }
 
     /**
@@ -136,5 +188,31 @@ class DifferentBillController extends Controller
         $factura->delete();
 
         return redirect()->route('facturas.index')->withStatus(__('Factura eliminada.'));
+    }
+
+    public function pay(Request $request, DifferentBillPayments $model)
+    {
+        $request->user()->authorizeRoles(['Administrador', 'Admin-Estacion']);
+
+        $file_img = $request->file('url');
+        $nombre_img = $request->id_estacion.'-'.date("dmY-His").'.'.$file_img->getClientOriginalExtension();
+
+        $new = $model->create($request->merge(['url'=> $nombre_img, 'id_status' => 1])->all());
+        $new->update(['url'=> $nombre_img]);
+        
+        Storage::disk('bill_payment')->put('/'.$request->id_estacion.'/'.$nombre_img, \File::get($file_img));
+        
+        return redirect()->route('facturas.index')->withStatus(__('Abono solicitado correctamente, espere hasta que sea autorizado.'));        
+       
+    }
+
+    public function destroy_payment(Request $request, $id)
+    {
+        $request->user()->authorizeRoles(['Administrador']);
+
+        $DifferentBill = DifferentBillPayments::findorfail($id);
+        $DifferentBill->delete();
+        return redirect()->route('abonos.index')->withStatus(__('Abono eliminado correctamente.'));
+
     }
 }

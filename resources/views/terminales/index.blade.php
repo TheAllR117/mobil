@@ -5,12 +5,12 @@
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-8 col-sm-12">
-                <div class="card bg-danger">
+                <div class="card bg-blue">
                     <div class="card-header card-header-primary">
                         <h4 class="card-title text-white">
                             {{ __('Terminales') }}
                         </h4>
-                        <p class="card-category text-white">
+                        <p class="card-category text-white mb-3">
                             {{ __('Aquí puedes administrar todas las terminales.') }}
                         </p>
                     </div>

@@ -4,18 +4,19 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DifferentBillPayments extends Model
+class OrderPayments extends Model
 {
+    public function order()
+    {
+        return $this->belongsTo('App\Order', 'id_order');
+    }
     // relacionamos los pedidos con los estatus
     public function status()
     {
         return $this->hasMany('App\Statu_order', 'id', 'id_status');
     }
-    public function differentbills()
-    {
-        return $this->belongsTo('App\DifferentBill', 'id_different_bill');
-    }
+
     protected $fillable = [
-        'id_different_bill', 'cantidad', 'url', 'id_status'
+        'id_order', 'cantidad', 'url', 'id_status'
     ];
 }

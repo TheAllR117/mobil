@@ -5,7 +5,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-6 mx-auto d-block mt-3">
-                <div class="card bg-danger">
+                <div class="card bg-blue">
                     <div class="card-header card-header-primary">
                         <h4 class="card-title text-white">
                             <a href="{{ route('terminales.index') }}" title="Regresar a la lista">
@@ -13,7 +13,7 @@
                             </a>
                             {{ __('Terminales') }}
                         </h4>
-                        <p class="card-category text-white">
+                        <p class="card-category text-white mb-3">
                             {{ __('Aquí puedes agregar una terminal.') }}
                         </p>
                     </div>

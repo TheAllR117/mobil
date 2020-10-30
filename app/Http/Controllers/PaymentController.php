@@ -11,6 +11,8 @@ use App\Payment;
 use App\Estacion;
 use App\Order;
 use DB;
+use App\OrderPayments;
+use App\DifferentBillPayments;
 
 class PaymentController extends Controller
 {
@@ -21,12 +23,12 @@ class PaymentController extends Controller
      */
     public function index(Request $request, Payment $payment)
     {
-        $request->user()->authorizeRoles(['Administrador','Admin-Estacion','Abonos & Pagos']);
+        $request->user()->authorizeRoles(['Administrador','Abonos & Pagos']);
 
         //validamos los roles
         if($request->user()->roles[0]->name == "Administrador" || $request->user()->roles[0]->name == "Logistica" || $request->user()->roles[0]->name == "Abonos & Pagos") {
 
-            return view('abonos.index', ['payments' => $payment::all()]);
+        return view('abonos.index', ['payments' => $payment::all(), 'order_payments' => OrderPayments::all(), 'different_bill_payments' => DifferentBillPayments::all()]);
 
         }else{
             // en caso de no tener el rol administrador, logistica o abonos & pagos se mostrara la informacion de los abonos de las estaciones que le corresponden al usuario
@@ -36,7 +38,7 @@ class PaymentController extends Controller
                 array_push($estaciones, $request->user()->estacions[$i]->id);
             }
 
-            return view('abonos.index', ['payments' => $payment::whereIn('id_estacion', $estaciones)->get()]);
+            return view('abonos.index', ['payments' => $payment::whereIn('id_estacion', $estaciones)->get(), 'order_payments' => OrderPayments::all(),'different_bill_payments' => DifferentBillPayments::all()]);
 
         }
     }

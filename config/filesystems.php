@@ -99,6 +99,19 @@ return [
             'visibility' => 'public',
         ],
 
+        'bill_payment' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/bill_payment'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+        ],
+
+        'order_payment' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/order_payments'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+        ],
 
 
     ],

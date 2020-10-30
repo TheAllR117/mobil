@@ -23,6 +23,12 @@ class Estacion extends Model
     {
         return $this->hasMany('App\Order', 'estacion_id');
     }
+
+    // relacionamos la estacion con sus facturas diversas correspondientes
+    public function differentbill()
+    {
+        return $this->hasMany('App\DifferentBill', 'id_estacion');
+    }
     
     // relacionamos la estacion con sus fleteras si llegara a tener
     public function freights()

@@ -6,14 +6,14 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
-          <div class="card bg-danger">
+          <div class="card bg-blue">
             <div class="card-header card-header-primary">
               <div class="row">
-                <div class="col mt-3">
+                <div class="col">
                   <h4 class="card-title text-white">{{ __('Estaciones') }}</h4>
-                  <p class="card-category text-white"> {{ __('Aquí puedes administrar todas las estaciones.') }}</p>
+                  <p class="card-category text-white mb-3"> {{ __('Aquí puedes administrar todas las estaciones.') }}</p>
                 </div>
-                <div class="col mt-3">
+                <div class="col">
                   @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3)
                   <form action="{{ route('estaciones.import_excel') }}" autocomplete="off" class="form-horizontal" enctype="multipart/form-data" method="post">
                     @csrf

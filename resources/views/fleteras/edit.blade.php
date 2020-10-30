@@ -9,7 +9,7 @@
         <form action="{{ route('fleteras.update', $fletera->id) }}" autocomplete="off" class="form-horizontal" enctype="multipart/form-data" method="post">
         	@csrf
         	@method('post')
-			<div class="card bg-danger">
+			<div class="card bg-blue">
 				<div class="card-header card-header-primary">
 					<h4 class="card-title text-white">
 						<a href="{{ route('fleteras.index') }}" title="Regresar a la lista">

@@ -116,6 +116,7 @@
         @stack('js')
 
         <script>
+
         
             // funciones para la pagina de solicitar pedidos
             
@@ -160,7 +161,7 @@
                         if(datos.hay_adeudo === 1)
                         {
                             document.getElementById('btn-guardar-div').style.display = "none";
-                            demo.showNotification('top','center', 'La estaci贸n tiene un adeudo que no ha pagado y ya expir贸 el plazo de pago.', 'tim-icons icon-bell-55');
+                            demo.showNotification('top','center', 'La estación tiene un adeudo que no ha pagado y ya expiró el plazo de pago.', 'tim-icons icon-bell-55');
                             // alert('La estaci贸n tiene un adeudo que no ha pagado y ya expir贸 el plazo de pago.');
                         }else{
                             document.getElementById('btn-guardar-div').style.display = "block";
@@ -247,7 +248,6 @@
 
             }else{
                 //no hay saldo
-                //alert('hola1');
                 //determinar si hay credito disponible suficiente
                 if(parseFloat($('#input-disponible').val()) != 0 && parseFloat($('#input-disponible').val()) >= 100000){
 

@@ -37,7 +37,7 @@ class CreateOrdersTable extends Migration
             $table->double('costo_real', 12, 3)->nullable();
             $table->integer('cantidad_lts_final')->nullable();
 
-            $table->string('factura_a');
+            $table->string('factura_a')->nullable();
             $table->date('fecha_eliminacion')->nullable();
             $table->timestamps();
 

@@ -5,7 +5,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
-            <div class="card bg-danger">
+            <div class="card bg-blue">
               <div class="card-header card-header-primary">
                 <h4 class="card-title text-white">{{ __('Relación de Fleteras') }}</h4>
                 <p class="card-category text-white"> {{ __('Aquí puedes administrar todas las relaciones de las fleteras.') }}</p>
@@ -110,7 +110,7 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-            <div class="card bg-danger">
+            <div class="card bg-blue">
               <div class="card-header card-header-primary">
                 <h4 class="card-title text-white">{{ __('Relación de Estación') }}</h4>
                

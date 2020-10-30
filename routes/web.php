@@ -20,12 +20,13 @@ Route::get('/logout', function () {
 });
 
 Route::group(['middleware' => 'auth'], function () {
-	Route::get('/', 'HomeController@index')->name('home')->middleware('auth');
+	Route::get('/', 'HomeController@index')->name('home')->middleware('auth');	
 });
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');
+Route::get('/search', 'HomeController@search')->name('search')->middleware('auth');
 
 
 Route::group(['middleware' => 'auth'], function () {
@@ -179,6 +180,7 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['middleware' => 'auth'], function () {
 	Route::resource('facturas','InvoiceController');
 	Route::post('facturas/create','InvoiceController@create');
+	Route::post('facturas/update','InvoiceController@update')->name('facturas.update');
 	Route::post('facturas/store','InvoiceController@store');
 });
 
@@ -250,36 +252,6 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::delete('terminales/destroy/{id}','TerminalController@destroy')->name('terminales.destroy');
 });
 
-//rutas pemex
-Route::group(['middleware' => 'auth'], function () {
-	Route::resource('pemex','PemexController');
-	Route::post('pemex/create','PemexController@create');
-	Route::post('pemex/store','PemexController@store');
-});
-
-// rutas terminales
-Route::group(['middleware' => 'auth'], function () {
-	Route::resource('fits','FitController');
-	Route::post('fits/update/{id}','FitController@update')->name('fits.update');
-	Route::post('fits/create','FitController@create');
-	Route::post('fits/store','FitController@store');
-	Route::delete('fits/destroy/{id}','FitController@destroy')->name('fits.destroy');
-});
-
-//rutas cotizador
-Route::group(['middleware' => 'auth'], function () {
-	Route::resource('cotizador','QuoteController');
-	Route::post('cotizador/store','QuoteController@store');
-	Route::any('cotizador_sele', 'QuoteController@cotizador_sele');
-	Route::any('calendario_selec', 'QuoteController@calendario_selec');
-});
-
-Route::group(['middleware' => 'auth'], function () {
-	Route::resource('table_descount','DiscountController');
-	Route::post('table_descount/create','DiscountController@create');
-	Route::post('table_descount/store','DiscountController@store');
-});
-
 
 //Route::get('estaciones', ['as' => 'estaciones.index', 'uses' => 'EstacionController@index']);
 //Route::group(['middleware' => 'auth'], function () {
@@ -293,8 +265,17 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['middleware' => 'auth'], function () {
 	Route::resource('facturas_diferentes','DifferentBillController');
 	Route::post('facturas_diferentes/create','DifferentBillController@create');
+	Route::post('facturas_diferentes/update','DifferentBillController@update')->name('facturas_diferentes.update');
+	Route::get('facturas_diferentes/{id}', 'DifferentBillController@show');
+	Route::post('facturas_diferentes/pay','DifferentBillController@pay')->name('facturas_diferentes.pay');
 	Route::post('facturas_diferentes/store','DifferentBillController@store');
-	Route::delete('facturas_diferentes/destroy/{id}','DifferentBillController@destroy')->name('facturas_diferentes.destroy');;
+	Route::delete('facturas_diferentes/destroy/{id}','DifferentBillController@destroy')->name('facturas_diferentes.destroy');
+	Route::delete('facturas_diferentes/destroy_payment/{id}','DifferentBillController@destroy_payment')->name('facturas_diferentes.destroy_payment');
+});
+
+
+Route::group(['middleware' => 'auth'], function () {
+	Route::resource('pagos_pedidos','OrderPaymentsController');
 });
 
 

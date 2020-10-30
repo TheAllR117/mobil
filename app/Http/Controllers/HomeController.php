@@ -11,7 +11,9 @@ use App\Valero;
 use App\Pipe;
 use App\Payment;
 use App\Order;
+use App\DifferentBill;
 use DB;
+use App\DifferentBillPayments;
 
 class HomeController extends Controller
 {
@@ -37,7 +39,13 @@ class HomeController extends Controller
         $terminals = Terminal::all();
 
         //informacion de ventas
-        $order_totales = $order::where('status_id','==','4')->count();
+        $order_totales = Order::where('status_id','5')->count();
+        //información de los pedidos
+        $info_pedidos = Order::all();
+        //información de las facturas diversas
+        $info_facturas = DifferentBill::all();
+        //información de las facturas diversas pagos
+        $info_facturas_pagos = DifferentBillPayments::all();
 
         //informacion de las estaciones
         if($request->user()->roles[0]->name == "Administrador" || $request->user()->roles[0]->name == "Logistica" || $request->user()->roles[0]->name == "Abonos & Pagos") {
@@ -124,8 +132,82 @@ class HomeController extends Controller
             array_push($nombre_estacion, $resultado_estaciones[$s][1]);  
         }
 
+       // array para almacenar los ultimos 12 meses
+       $meses_hasta_el_actual = [];
+       $nombre_del_mes = [];
+
+        // foreach para crear las fechas y almacenarlas en el array
+        for($i=1; $i<=11; $i++){
+            array_push($meses_hasta_el_actual, date("Y-m", mktime(0 ,0 ,0, date("m")-$i, date("d"), date("Y"))));
+            array_push($nombre_del_mes, date("M", mktime(0 ,0 ,0, date("m")-$i, date("d"), date("Y"))));
+        }
+        array_unshift($meses_hasta_el_actual, date("Y-m", mktime(0 ,0 ,0, date("m"), date("d"), date("Y"))));
+        array_unshift($nombre_del_mes, date("M", mktime(0 ,0 ,0, date("m"), date("d"), date("Y"))));
+
+        // revertimos el orden del array
+        $meses_hasta_el_actual = array_reverse($meses_hasta_el_actual);
+        $nombre_del_mes = array_reverse($nombre_del_mes);
+
+        // arrays para dividir los litros por mes
+        $meses_extra = [];
+        $meses_supreme = [];
+        $meses_diesel = [];
+
+        for($i=0; $i<12; $i++){
+            array_push($meses_extra, Order::where('producto','Extra')->where('status_id','5')->whereDate('created_at','like', '%'.$meses_hasta_el_actual[$i].'%')->count());
+            array_push($meses_supreme, Order::where('producto','Supreme')->where('status_id','5')->whereDate('created_at','like', '%'.$meses_hasta_el_actual[$i].'%')->count());
+            array_push($meses_diesel, Order::where('producto','Diesel')->where('status_id','5')->whereDate('created_at','like', '%'.$meses_hasta_el_actual[$i].'%')->count());
+        }
+
         //return geoip_continent_code_by_name($nombre_estacion[1]);
-        return view('dashboard', compact('fechas', 'terminales','estacion_total', 'saldo_total', 'pipas_total','abonos_pendientes', 'estaciones_deudoras','precios_actuales_estaciones', 'estaciones_info', 'order_totales', 'nombre_estacion', 'ventas_estacion'));
+        return view('dashboard', compact('fechas', 'terminales','estacion_total', 'saldo_total', 'pipas_total','abonos_pendientes', 'estaciones_deudoras','precios_actuales_estaciones', 'estaciones_info', 'order_totales', 'nombre_estacion', 'ventas_estacion', 'nombre_del_mes','meses_extra', 'meses_supreme', 'meses_diesel', 'info_pedidos', 'info_facturas', 'info_facturas_pagos'));
+    }
+
+    public function search(Request $request)
+    {
+        $request->user()->authorizeRoles(['Administrador','Logistica','Admin-Estacion','Abonos & Pagos']);
+
+        //información de las estaciones
+        $info_estaciones = Estacion::where('id', 40)->orderBy('nombre_sucursal')->get();
+        //información de los pedidos
+        $info_pedidos = Order::all();
+        //información de las facturas diversas
+        $info_facturas = DifferentBill::all();
+        //información de las facturas diversas pagos
+        $info_facturas_pagos = DifferentBillPayments::all();
+
+        $array_ventas_estaciones = [];
+        $array_facturas_estacione = [];
+        $array_ventas_estaciones_final = [];
+
+        foreach($info_estaciones as $estacion){
+            foreach($estacion->orders->where('status_id', '<=',4) as $ventas){
+                array_push($array_ventas_estaciones, $estacion->nombre_sucursal);
+                array_push($array_ventas_estaciones, $ventas->po.'-'.$ventas->producto.'-'.number_format($ventas->cantidad_lts, 0));
+                if($ventas->costo_real == ''){
+                    array_push($array_ventas_estaciones, '$'. number_format($ventas->costo_aprox, 2));
+                }
+                else{
+                    array_push($array_ventas_estaciones, number_format($ventas->costo_real, 2));
+                }
+                array_push($array_ventas_estaciones, number_format($ventas->total_abonado, 2));
+                array_push($array_ventas_estaciones, $ventas->fecha_expiracion);
+                array_push($array_ventas_estaciones_final, $array_ventas_estaciones);
+                $array_ventas_estaciones = [];
+            }
+            
+            foreach($estacion->differentbill->where('id_status', 1) as $factura){
+                array_push($array_facturas_estacione, $estacion->nombre_sucursal);
+                array_push($array_facturas_estacione, '$'. number_format($factura->quantity, 2));
+                array_push($array_facturas_estacione, '$'. number_format($factura->differentbills->where('id_status', 2)->sum('cantidad'), 2));
+                array_push($array_facturas_estacione, $factura->created_at->format('Y-m-d'));
+                array_push($array_ventas_estaciones_final, $array_facturas_estacione);
+                $array_facturas_estacione = [];
+            }
+
+        }
+
+        return $array_ventas_estaciones_final;
     }
 
 }

@@ -10468,7 +10468,7 @@ main {
 }
 
 .bg-blue {
-  background-color: #1A61AB !important;
+  background-image:linear-gradient(#1A61AB, #298cf2) !important;
 }
 
 a.bg-blue:hover,
@@ -17541,11 +17541,11 @@ textarea.form-control:active {
 .nav-pills.nav-pills-primary .nav-item .nav-link.active,
 .nav-pills.nav-pills-primary .nav-item .nav-link.active:focus,
 .nav-pills.nav-pills-primary .nav-item .nav-link.active:hover {
-  background: #e14eca;
-  background-image: -webkit-linear-gradient(to bottom left, #e14eca, #ba54f5, #e14eca);
-  background-image: -o-linear-gradient(to bottom left, #e14eca, #ba54f5, #e14eca);
-  background-image: -moz-linear-gradient(to bottom left, #e14eca, #ba54f5, #e14eca);
-  background-image: linear-gradient(to bottom left, #e14eca, #ba54f5, #e14eca);
+  background: #1A61AB;
+  background-image: -webkit-linear-gradient(to bottom left, #1A61AB, #0d7bf1 , #1A61AB);
+  background-image: -o-linear-gradient(to bottom left, #1A61AB, #0d7bf1 , #1A61AB);
+  background-image: -moz-linear-gradient(to bottom left, #1A61AB, #0d7bf1 , #1A61AB);
+  background-image: linear-gradient(to bottom left, #1A61AB, #0d7bf1 , #1A61AB);
   background-size: 210% 210%;
   background-position: top right;
 }
@@ -28871,7 +28871,7 @@ Copyright (c) 2015 Daniel Eden
 }
 
 .white-content .nav-pills .nav-item .nav-link:not(.active) {
-  background: #d3d7e9;
+  background: #ffffff;
   color: #1d253b;
 }
 

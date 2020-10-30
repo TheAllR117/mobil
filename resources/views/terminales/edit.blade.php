@@ -8,7 +8,7 @@
                 <form action="{{ route('terminales.update', $terminal) }}" autocomplete="off" class="form-horizontal" method="post">
                     @csrf
             		@method('post')
-                    <div class="card bg-danger">
+                    <div class="card bg-blue">
                         <div class="card-header card-header-primary">
                             <h4 class="card-title text-white">
                                 <a href="{{ route('terminales.index') }}" title="Regresar a la lista">
@@ -16,7 +16,7 @@
                                 </a>
                                 {{ __('Editar Terminal') }}
                             </h4>
-                            <p class="card-category text-white">
+                            <p class="card-category text-white mb-3">
                                 {{ __('Aquí puedes editar una terminal.') }}
                             </p>
                         </div>

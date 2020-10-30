@@ -5,12 +5,12 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
-          <div class="card bg-danger">
+          <div class="card bg-blue">
             <div class="card-header card-header-primary">
               <div class="row">
                 <div class="col-sm-6">
                   <h4 class="card-title text-white">{{ __('Pedidos para el día: ') }} {{$fecha}} {{$fecha_sig}}</h4>
-                  <p class="card-category text-white"> {{ __('Aquí puedes administrar todos los pedidos.') }}</p>
+                  <p class="card-category text-white mb-3"> {{ __('Aquí puedes administrar todos los pedidos.') }}</p>
                 </div>
                 <div class="col-sm-6">
                   @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3)

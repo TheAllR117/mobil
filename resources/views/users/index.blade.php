@@ -5,10 +5,10 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
-          <div class="card bg-danger">
+          <div class="card bg-blue">
             <div class="card-header card-header-primary text-white">
               <h4 class="card-title text-white">{{ __('Usuarios') }}</h4>
-              <p class="card-category text-white"> {{ __('Aquí puedes administrar a los usuarios.') }}</p>
+              <p class="card-category text-white mb-3"> {{ __('Aquí puedes administrar a los usuarios.') }}</p>
             </div>
           </div>
           <div class="card">

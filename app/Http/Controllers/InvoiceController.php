@@ -15,6 +15,7 @@ use App\Terminal;
 use App\Statu_order;
 use App\Invoice;
 use App\DifferentBill;
+use App\OrderPayments;
 
 class InvoiceController extends Controller
 {
@@ -147,9 +148,12 @@ class InvoiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+        $request->user()->authorizeRoles(['Administrador','Abonos & Pagos', 'Admin-Estacion']);
+
+        return view('facturas.show', ['facturas' => OrderPayments::where('id_order', $id)->get(), 'estacion' => Order::find($id)]);
+
     }
 
     /**
@@ -170,9 +174,54 @@ class InvoiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $orderPayment = OrderPayments::find($request->id);
+        $orderPayment->update(['id_status' => 2, 'cantidad' => $request->cantidad]);
+
+        $order = Order::find($orderPayment->id_order);
+        // if validación para cambiar el pedido a completado
+        if( $order->total_abonado + $request->cantidad ==  $order->costo_real){
+            $order->update(['total_abonado' => $order->total_abonado + $request->cantidad, 'pagado' => true]);
+        }else{
+            $order->update(['total_abonado' => $order->total_abonado + $request->cantidad]);
+        }
+        
+
+        $station = Estacion::find($order->estacion_id);
+
+        // credito de la estación
+        $credito = $station->credito;
+        // credito usado de la estación
+        $credito_usado = $station->credito_usado;
+        // credito disponible de la estación
+        $disponible = $credito - $credito_usado;
+
+        if(floatval($station->saldo) >= 0 && floatval($station->credito_usado) == 0){
+            $station->update(['saldo' => floatval($station->saldo) + $request->cantidad]);
+        } 
+        elseif (floatval($station->credito_usado) > 0) {
+            /*  
+                verificamos si la estación tiene credito usado mayor a cero, 
+                para agregar la cantidad abonada al credito_usado
+            */
+            $total = $request->cantidad + $disponible;
+
+            if($total == $credito){
+               $station->update(['credito_usado' => 0]);
+            }
+            elseif($total < $credito)
+            {
+                $station->update(['credito_usado' => $credito - $total]);
+            }
+            else
+            {
+                $station->update(['credito_usado' => 0 ,'saldo' => $info_estacion->saldo + abs($total) ]);
+            }
+        }
+
+        return redirect()->route('abonos.index')->withStatus(__('Abono Autorizado correctamente.'));
+        
     }
 
     /**

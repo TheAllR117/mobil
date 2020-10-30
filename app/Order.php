@@ -31,6 +31,11 @@ class Order extends Model
     {
         return $this->belongsTo(Pipe::class, 'pipe_id', 'id');
     }
+
+    public function orderpayment()
+    {
+        return $this->hasMany('App\OrderPayments', 'id_order');
+    }
     protected $fillable = [
         'id','control_id', 'estacion_id', 'terminal_id', 'status_id', 'camino', 'producto', 'clave_producto', 'so_number', 'cantidad_lts','costo_aprox','dia_entrega','po',
         'fecha_expiracion', 'pagado', 'metodo_pago', 'total_abonado', 'costo_real', 'cantidad_lts_final', 'factura_a', 'fecha_eliminacion'

@@ -5,7 +5,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
-            <div class="card bg-danger">
+            <div class="card bg-blue">
               <div class="card-header card-header-primary">
                 <h4 class="card-title text-white">
                   <a href="{{ route('fleteras.index') }}" title="Regresar a la lista">
@@ -13,7 +13,7 @@
                   </a>
                   {{ __('Pipas') }}
                 </h4>
-                <p class="card-category text-white"> {{ __('Aquí puedes administrar todas las pipas.') }}</p>
+                <p class="card-category text-white mb-3"> {{ __('Aquí puedes administrar todas las pipas.') }}</p>
               </div>
             </div>
             <div class="card">

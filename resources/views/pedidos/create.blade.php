@@ -69,7 +69,7 @@
                                 	<input class="form-control datetimepicker" id="input-dia_entrega" name="dia_entrega" type="text" value="" placeholder="Fecha">
                             	</div>
 
-                            	<div class="form-group{{ $errors->has('saldo') ? ' has-danger' : '' }} col-sm-4">
+                            	<div class="form-group{{ $errors->has('saldo') ? ' has-danger' : '' }} col-sm-4 d-none">
                             		<input type="hidden" id="input-saldo" name="saldo" value="">
 
                                 	<label for="saldo1">{{ __('Saldo actual') }}</label>
@@ -82,7 +82,7 @@
                                 	</input>
                               	</div>
 
-                              	<div class="form-group{{ $errors->has('credito') ? ' has-danger' : '' }} col-sm-4">
+                              	<div class="form-group{{ $errors->has('credito') ? ' has-danger' : '' }} col-sm-4 d-none">
 
                               		<input type="hidden" id="precio_producto_extra">
                               		<input type="hidden" id="precio_producto_supreme">
@@ -101,7 +101,7 @@
                             </div>
 
                             <div class="row mt-4">
-                            	<div class="form-group{{ $errors->has('disponible') ? ' has-danger' : '' }} col-sm-4">
+                            	<div class="form-group{{ $errors->has('disponible') ? ' has-danger' : '' }} col-sm-4 d-none">
                                 	<label for="disponible">{{ __('Credito disponible') }}</label>
                                 	<input aria-describedby="numero_economicoHelp" aria-required="true" class="form-control{{ $errors->has('disponible') ? ' is-invalid' : '' }}"  id="input-disponible" name="disponible" type="number" min="0.00" step="0.01" value="{{ old('disponible',0)}}" readonly>
                                   	@if ($errors->has('disponible'))
@@ -112,7 +112,7 @@
                                 	</input>
                               	</div>
 
-                              	<div class="form-group{{ $errors->has('numero_economico') ? ' has-danger' : '' }} col-sm-4">
+                              	<div class="form-group{{ $errors->has('numero_economico') ? ' has-danger' : '' }} col-sm-4 d-none">
                                 	<label for="credito_usado">{{ __('Credito restante') }}</label>
                                 	<input aria-describedby="credito_usadoHelp"  aria-required="true" class="form-control{{ $errors->has('numero_economico') ? ' is-invalid' : '' }}" id="input-credito_usado" name="credito_usado" type="number" min="0.00" step="0.01" value="{{ old('credito_usado',0)}}" readonly>
                                   	@if ($errors->has('credito_usado'))

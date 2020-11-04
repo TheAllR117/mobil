@@ -136,9 +136,13 @@ class InvoiceController extends Controller
 
         }
 
-        $order::where('id', $request->order_id)->update(['pdf' => $nombre_pdf, 'xml' => $nombre_xml, 'costo_real' => $costo_real, 'cantidad_lts_final' => $litros_final, 'fecha_expiracion'=> $request->fecha_expiracion]);
+        $fecha_vencimiento = date($request->fecha_expiracion);        
+    
+        $fecha_vencimiento = date("Y-m-d", strtotime($fecha_vencimiento."+ 10 days"));
 
-        return redirect()->route('facturas.index')->withStatus(__('PDF y XML agregados correctamente.'));
+        $order::where('id', $request->order_id)->update(['pdf' => $nombre_pdf, 'xml' => $nombre_xml, 'costo_real' => $costo_real, 'cantidad_lts_final' => $litros_final, 'fecha_expiracion'=> $fecha_vencimiento]);
+
+        return redirect()->route('facturas.index')->with('status', __('PDF y XML Agregados Correctamente.'))->with('color', 2);
         //dd($request->all());
     }
 
@@ -220,7 +224,7 @@ class InvoiceController extends Controller
             }
         }
 
-        return redirect()->route('abonos.index')->withStatus(__('Abono Autorizado correctamente.'));
+        return redirect()->route('abonos.index')->with('status', __('Abono Autorizado Correctamente.'))->with('color', 2);
         
     }
 

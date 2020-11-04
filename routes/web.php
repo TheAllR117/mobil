@@ -20,13 +20,13 @@ Route::get('/logout', function () {
 });
 
 Route::group(['middleware' => 'auth'], function () {
-	Route::get('/', 'HomeController@index')->name('home')->middleware('auth');	
+	Route::get('/', 'HomeController@index')->name('home')->middleware('auth');
+	Route::get('/search', 'HomeController@search')->name('search')->middleware('auth');
 });
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');
-Route::get('/search', 'HomeController@search')->name('search')->middleware('auth');
 
 
 Route::group(['middleware' => 'auth'], function () {
@@ -268,6 +268,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('facturas_diferentes/update','DifferentBillController@update')->name('facturas_diferentes.update');
 	Route::get('facturas_diferentes/{id}', 'DifferentBillController@show');
 	Route::post('facturas_diferentes/pay','DifferentBillController@pay')->name('facturas_diferentes.pay');
+	Route::post('facturas_diferentes/payments','DifferentBillController@payments')->name('facturas_diferentes.payments');
 	Route::post('facturas_diferentes/store','DifferentBillController@store');
 	Route::delete('facturas_diferentes/destroy/{id}','DifferentBillController@destroy')->name('facturas_diferentes.destroy');
 	Route::delete('facturas_diferentes/destroy_payment/{id}','DifferentBillController@destroy_payment')->name('facturas_diferentes.destroy_payment');
@@ -276,6 +277,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::resource('pagos_pedidos','OrderPaymentsController');
+	Route::post('pagos_pedidos/payments','OrderPaymentsController@payments')->name('pagos_pedidos.payments');
 });
 
 

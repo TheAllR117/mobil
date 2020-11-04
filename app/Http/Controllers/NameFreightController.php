@@ -41,7 +41,7 @@ class NameFreightController extends Controller
     {
         $request->user()->authorizeRoles(['Administrador','Logistica']);
         $freight->create($request->all());
-        return redirect()->route('registro_fleteras.index')->withStatus(__('Fletera agregada exitosamente.'));
+        return redirect()->route('registro_fleteras.index')->with('status', __('Fletera Agregada Exitosamente.'))->with('color', 2);
     }
 
     /**
@@ -65,7 +65,7 @@ class NameFreightController extends Controller
     {
         $request->user()->authorizeRoles(['Administrador','Logistica']);
         $namefreight_edit = $namefreight::findorfail($id);
-        return view('registro_fleteras.edit',compact('namefreight_edit'));
+        return view('registro_fleteras.edit', compact('namefreight_edit'));
     }
 
     /**
@@ -83,7 +83,7 @@ class NameFreightController extends Controller
 
         $freight_up->update($request->all());
 
-        return redirect()->route('registro_fleteras.index')->withStatus(__('Fletera editada correctamente.'));
+        return redirect()->route('registro_fleteras.index')->with('status', __('Fletera Editada Correctamente.'))->with('color', 2);
     }
 
     /**
@@ -99,6 +99,6 @@ class NameFreightController extends Controller
         $freight_de = $freight::findorfail($id);
         $freight_de->delete();
 
-        return redirect()->route('registro_fleteras.index')->withStatus(__('Fletera eliminada exitosamente.'));
+        return redirect()->route('registro_fleteras.index')->with('status', __('Fletera Eliminada Exitosamente.'))->with('color', 2);
     }
 }

@@ -46,8 +46,7 @@ class FreightController extends Controller
         $request->user()->authorizeRoles(['Administrador', 'Logistica']);
         $freight->create($request->all());
 
-        //dd($request->all());
-        return redirect()->route('fleteras.index')->withStatus(__('Relación establecida exitosamente.'));
+        return redirect()->route('fleteras.index')->with('status', __('Relación Establecida Exitosamente.'))->with('color', 2);
     }
 
     /**
@@ -85,7 +84,7 @@ class FreightController extends Controller
         $request->user()->authorizeRoles(['Administrador', 'Logistica']);
         $fletera = $freig::findorfail($id);
         $fletera->update($request->all());
-        return redirect()->route('fleteras.index')->withStatus(__('Edición exitosamente.'));
+        return redirect()->route('fleteras.index')->with('status', __('Edición Exitosamente.'))->with('color', 2);
     }
 
     /**
@@ -101,6 +100,6 @@ class FreightController extends Controller
         $fletera = $freig::findorfail($id);
         $fletera->delete();
 
-        return redirect()->route('fleteras.index')->withStatus(__('Relación eliminada correctamente.'));
+        return redirect()->route('fleteras.index')->with('status', __('Relación Eliminada Correctamente.'))->with('color', 2);
     }
 }

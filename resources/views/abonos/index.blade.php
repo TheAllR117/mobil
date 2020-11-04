@@ -6,17 +6,17 @@
 <ul class="nav nav-tabs-navigation nav-pills nav-pills-primary nav-pills-icons mb-5" role="tablist">
   <li class="nav-item col-sm-4 pl-0">
     <a class="nav-link active show" data-toggle="tab" href="#link10">
-      <i class="tim-icons icon-istanbul"></i>Abonos
+      <i class="tim-icons icon-money-coins"></i>Abonos
     </a>
   </li>
   <li class="nav-item col-sm-4">
     <a class="nav-link" data-toggle="tab" href="#link11">
-      <i class="tim-icons icon-settings"></i>Abonos Pedidos
+      <i class="tim-icons icon-delivery-fast"></i>Abonos Pedidos
     </a>
   </li>
   <li class="nav-item col-sm-4 pr-0">
     <a class="nav-link" data-toggle="tab" href="#link12">
-      <i class="tim-icons icon-settings"></i>Abonos Facturas Diversas
+      <i class="tim-icons icon-vector"></i>Abonos Facturas Diversas
     </a>
   </li>
 </ul>

@@ -49,7 +49,7 @@ class CompetitionController extends Controller
     {
         $request->user()->authorizeRoles(['Administrador']);
         $price->create($request->all());
-        return redirect()->route('competencia.index')->withStatus(__('Precio agregado correctamente.'));
+        return redirect()->route('competencia.index')->with('status', __('Precio agregado correctamente.'))->with('color', 2);
     }
 
     /**
@@ -87,7 +87,7 @@ class CompetitionController extends Controller
         $request->user()->authorizeRoles(['Administrador']);
         $competition = Price::findorfail($id);
         $competition->update($request->all());
-        return redirect()->route('competencia.index')->withStatus(__('Actualización correcta'));
+        return redirect()->route('competencia.index')->with('status', __('Actualización Correcta.'))->with('color', 2);
     }
 
     /**

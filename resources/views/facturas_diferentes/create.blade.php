@@ -8,7 +8,7 @@
                 <form action="{{ route('facturas_diferentes.store') }}" autocomplete="off" enctype="multipart/form-data" class="form-horizontal" method="post">
                   @csrf
                   @method('post')
-                    <div class="card bg-danger">
+                    <div class="card bg-blue">
                       <div class="card-header card-header-primary">
                           <h4 class="card-title text-white">
                               <a href="{{ route('facturas.index') }}" title="Regresar a la lista">
@@ -106,16 +106,23 @@
                             
                           </div>
 
-                          <!--div class="row mt-6 mb-6">
+                          <div class="row mt-6 mb-6">
+
+                            <div class="form-group{{ $errors->has('add_or_subtract') ? ' has-danger' : '' }} col-sm-6">
+                              <div class="form-group">
+                                <label>{{ __('Emición de Factura') }}</label>
+                                <input type="text" class="form-control datetimepicker bg-white mt-1" id="fecha_deposito" name="expiration_date" />
+                              </div>
+                            </div>
                             
                             <div class="form-group{{ $errors->has('add_or_subtract') ? ' has-danger' : '' }} col-sm-6">
-                              <label for="add_or_subtract">{{ __('Cobro o devolución') }}</label><br>
+                              <label for="add_or_subtract">{{ __('Pagos') }}</label><br>
                               <input type="checkbox" checked name="add_or_subtract" class="bootstrap-switch form-control{{ $errors->has('add_or_subtract') ? ' is-invalid' : '' }}"
-                                  data-on-label="-"
-                                  data-off-label="+"
+                                  data-on-label="Si"
+                                  data-off-label="No"
                               />
                             </div>
-                          </div-->
+                          </div>
 
                           <div class="card-footer ml-auto mr-auto">
                               <button class="btn btn-primary" type="submit">
@@ -130,3 +137,12 @@
     </div>
 </div>
 @endsection
+@push('js')
+<script>
+  const timeElapsed = Date.now();
+  const today = new Date(timeElapsed);
+  $(document).ready(function() {
+      init_calendar_2('fecha_deposito','01-01-2020', today.toISOString());
+    });
+</script>
+@endpush

@@ -19,6 +19,7 @@ class CreateDifferentBillPaymentsTable extends Migration
             $table->double('cantidad', 12, 2);
             $table->string('url');
             $table->unsignedBigInteger('id_status');
+            $table->dateTime('deposit_date');
             $table->timestamps();
 
             $table->foreign('id_different_bill')->references('id')->on('different_bills')->onDelete('cascade')

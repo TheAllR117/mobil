@@ -16,6 +16,6 @@ class DifferentBillPayments extends Model
         return $this->belongsTo('App\DifferentBill', 'id_different_bill');
     }
     protected $fillable = [
-        'id_different_bill', 'cantidad', 'url', 'id_status'
+        'id_different_bill', 'cantidad', 'url', 'id_status', 'deposit_date'
     ];
 }

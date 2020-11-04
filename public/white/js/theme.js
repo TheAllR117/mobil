@@ -1775,9 +1775,9 @@ demo = {
 
   },
 
-  showNotification: function(from, align, messages, icons) {
-    color = Math.floor((Math.random() * 4) + 1);
-
+  showNotification: function(from, align, messages, icons, colors) {
+    //color = Math.floor((Math.random() * 4) + 1);
+    color = colors;
     $.notify({
       icon: icons,
       message: messages

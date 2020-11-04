@@ -80,6 +80,26 @@
      });
  }
 
+ function init_calendar_2(id, min_date, max_date) {
+  $('#' + id).datetimepicker({
+
+     format: 'YYYY-MM-DD',
+     minDate: min_date,
+     maxDate: max_date,
+     icons: {
+         time: "fa fa-clock-o",
+         date: "fa fa-calendar",
+         up: "fa fa-chevron-up",
+         down: "fa fa-chevron-down",
+         previous: 'fa fa-chevron-left',
+         next: 'fa fa-chevron-right',
+         today: 'fa fa-screenshot',
+         clear: 'fa fa-trash',
+         close: 'fa fa-remove'
+     },
+  });
+}
+
  function destroy_calendar(id) {
      $('#' + id).data("DateTimePicker").destroy();
  }

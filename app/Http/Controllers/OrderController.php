@@ -303,7 +303,7 @@ class OrderController extends Controller
 
         $order->save();
 
-        return redirect()->route('pedidos.index')->withStatus(__('Pedido generado correctamente.'));
+        return redirect()->route('pedidos.index')->with('status', __('Pedido Generado Correctamente.'))->with('color', 2);
     }
 
     public function individual(Request $request, Control $control, Order $order, Pipe $pipe, Tractor $tractor, Driver $driver, Freight $freight)
@@ -353,9 +353,9 @@ class OrderController extends Controller
             $order_emer = $order::where('so_number', $request->id)->update(['control_id' => $order->control_id, 'status_id' => 3]);
             $order->update(['control_id' => null, 'status_id' => 2, 'dia_entrega' => date("Y-m-d", $_newDate)]);
 
-            return redirect()->route('pedidos.index')->withStatus(__('Pedido cambiado exitosamente.'));
+            return redirect()->route('pedidos.index')->with('status', __('Pedido Cambiado Exitosamente.'))->with('color', 2);
         } else {
-            return redirect()->route('pedidos.index')->withStatus(__('Error al cambiar el pedido.'));
+            return redirect()->route('pedidos.index')->with('status', __('Error al Cambiar el Pedido.'))->with('color', 2);
         }
     }
 
@@ -363,10 +363,14 @@ class OrderController extends Controller
     {
         $request->user()->authorizeRoles(['Administrador', 'Logistica']);
 
-        $order = $model::findorfail($request->id);
-        $order->update($request->all());
+        $fecha_actual = date("Y-m-d");        
+    
+        $fecha_actual = date("Y-m-d",strtotime($fecha_actual."+ 2 days"));
 
-        return json_encode('SO Number agregado Correctamente.');
+        $order = $model::findorfail($request->id);
+        $order->update($request->merge(['fecha_eliminacion' => $fecha_actual])->all());
+
+        return json_encode('SO Number Agregado Correctamente.');
     }
 
     /**
@@ -391,10 +395,10 @@ class OrderController extends Controller
         $request->user()->authorizeRoles(['Administrador', 'Logistica']);
         $orders=Order::where('control_id',$request->id)->get();
         foreach($orders as $order){
-            $order->status_id=6;
+            $order->status_id = 6;
             $order->update();
         }
-        return redirect()->route('pedidos.index')->withStatus(__('Pedido Eliminado.'));
+        return redirect()->route('pedidos.index')->with('status', __('Pedido Eliminado Correctamente.'))->with('color', 2);
     }
 
     public function cambiar_status(Request $request, $id, Order $model)
@@ -402,7 +406,7 @@ class OrderController extends Controller
         $request->user()->authorizeRoles(['Administrador', 'Logistica']);
         $order = $model::findorfail($request->id);
         $order->update(['status_id' => 4]);
-        return redirect()->route('pedidos.index')->withStatus(__('Pedido Concluido.'));
+        return redirect()->route('pedidos.index')->with('status', __('Pedido Concluido.'))->with('color', 2);
     }
 
     /**
@@ -458,7 +462,7 @@ class OrderController extends Controller
         //dd($orders->costo_aprox);
         $orders->delete();
 
-        return redirect()->route('pedidos.index')->withStatus(__('Pedido eliminado exitosamente.'));
+        return redirect()->route('pedidos.index')->with('status', __('Pedido Eliminado Exitosamente.'))->with('color', 2);
     }
 
 
@@ -488,7 +492,7 @@ class OrderController extends Controller
         $orders->status_id = 6;
         $orders->save();
 
-        return redirect()->route('pedidos.index')->withStatus(__('Pedido Cancelado correctamente.'));
+        return redirect()->route('pedidos.index')->with('status', __('Pedido Cancelado Correctamente.'))->with('color', 2);
     }
 
     public function liberar_flete(Request $request, Freight $freight, Pipe $pipe, Tractor $tractor, Driver $driver, Order $order, Control $control)
@@ -511,7 +515,7 @@ class OrderController extends Controller
         }
         $driver::where('id', $freights->id_chofer)->update(['id_status' => 1]);
 
-        return redirect()->route('pedidos.index')->withStatus(__('Flete liberado correctamente'));
+        return redirect()->route('pedidos.index')->with('status', __('Flete Liberado Correctamente.'))->with('color', 2);
     }
 
     public function getpipes(Request $request, Estacion $estacion)
@@ -675,10 +679,10 @@ class OrderController extends Controller
                 // echo $nuevo_array_so[$k].' - '.$nuevo_array_mo[$k].'<br>';
             }
 
-            return redirect()->route('pedidos.index')->withStatus(__('SO NUMBERS asignados correctamente.'));
+            return redirect()->route('pedidos.index')->with('status', __('SO NUMBERS asignados correctamente.'))->with('color', 2);
 
         }catch(Exception $e){
-            return redirect()->route('pedidos.index')->withStatus(__('PDF no valido.'));
+            return redirect()->route('pedidos.index')->with('status', __('PDF no Valido.'))->with('color', 4);
         }
     }
 

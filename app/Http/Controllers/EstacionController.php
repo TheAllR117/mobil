@@ -84,9 +84,8 @@ class EstacionController extends Controller
             $datos_fiscales = '0';
         }
 
-
         $model->create($request->merge(['status' => $status,'linea_credito' => $linea_credito,'datos_fiscales'=>$datos_fiscales])->all());
-        return redirect()->route('estaciones.index')->withStatus(__('Estación creada exitosamente.'));
+        return redirect()->route('estaciones.index')->with('status', __('Estación creada exitosamente.'))->with('color', 2);
     }
 
     /**
@@ -198,7 +197,7 @@ class EstacionController extends Controller
 
         $terminal_up->update($request->merge(['status' => $status,'linea_credito' => $linea_credito,'datos_fiscales'=>$datos_fiscales])->all());
 
-        return redirect()->route('estaciones.index')->withStatus(__('Estación editada correctamente.'));
+        return redirect()->route('estaciones.index')->with('status', __('Estación editada correctamente.'))->with('color', 2);
     }
 
     /**
@@ -214,7 +213,7 @@ class EstacionController extends Controller
         $estacion=Estacion::findorfail($id);
         $estacion->delete();
 
-        return redirect()->route('estaciones.index')->withStatus(__('Estación eliminada exitosamente.'));
+        return redirect()->route('estaciones.index')->with('status', __('Estación eliminada exitosamente.'))->with('color', 2);
 
     }
 
@@ -227,9 +226,9 @@ class EstacionController extends Controller
         $data = array($fecha);
 
         if(Excel::import(new PriceImport($data), $path)) {
-            return redirect()->route('estaciones.index')->withStatus(__('Excel importado correctamente.'));
+            return redirect()->route('estaciones.index')->with('status', __('Excel importado correctamente.'))->with('color', 2);
         } else {
-            return redirect()->route('estaciones.index')->withStatus(__('Error al importar el archivo Excel.'));
+            return redirect()->route('estaciones.index')->with('status', __('Error al importar el archivo Excel.'))->with('color', 4);
         }
 
 

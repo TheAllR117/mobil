@@ -73,7 +73,7 @@ class UserController extends Controller
         $user->roles()->attach($request->rol);
         
         // retornamos a la vista user.index 
-        return redirect()->route('user.index')->withStatus(__('Usuario creado exitosamente.'));
+        return redirect()->route('user.index')->with('status', __('Usuario Creado Exitosamente.'))->with('color', 2);
     }
 
     /**
@@ -136,7 +136,7 @@ class UserController extends Controller
         $user->roles()->updateExistingPivot($rol_actual,['role_id'=>$request->rol]);
         
 
-        return redirect()->route('user.index')->withStatus(__('Usuario actualizado con éxito.'));
+        return redirect()->route('user.index')->with('status', __('Usuario Actualizado con Éxito.'))->with('color', 2);
     }
 
     /**
@@ -151,6 +151,6 @@ class UserController extends Controller
 
         $user->delete();
 
-        return redirect()->route('user.index')->withStatus(__('Usuario eliminada con éxito.'));
+        return redirect()->route('user.index')->with('status', __('Usuario Eliminada con Éxito.'))->with('color', 2);
     }
 }

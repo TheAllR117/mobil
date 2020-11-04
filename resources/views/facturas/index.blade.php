@@ -48,9 +48,7 @@
                       <th>{{ __('Vencimiento') }}</th>
                       <th>{{ __('PDF') }}</th>
                       <th>{{ __('XML') }}</th>
-                      @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3 || auth()->user()->roles[0]->id == 4)
                       <th class="text-center th-actions">{{ __('Acciones') }}</th>
-                      @endif
                     </thead>
                     <tbody>
                       @foreach($orders as $order)
@@ -132,9 +130,7 @@
                       <th>{{ __('Vencimiento') }}</th>
                       <th>{{ __('PDF') }}</th>
                       <th>{{ __('XML') }}</th>
-                      
                       <th class="text-center th-actions">{{ __('Acciones') }}</th>
-                      
                     </thead>
                     <tbody>
                       @foreach($orders as $order)
@@ -808,17 +804,6 @@
         }
     });
 
-    const timeElapsed = Date.now();
-    const today = new Date(timeElapsed);
-
-    $(document).ready(function() {
-      init_calendar('input-dia_entrega','01-01-2020', '07-07-2025');
-
-      init_calendar_2('fecha_deposito','01-01-2020', today.toISOString());
-      init_calendar_2('fecha_deposito_2','01-01-2020', today.toISOString());
-      init_calendar_2('fecha_deposito_order','01-01-2020', today.toISOString());
-      init_calendar_2('fecha_deposito_orders','01-01-2020', today.toISOString());
-    });
 
   </script>
 @endpush

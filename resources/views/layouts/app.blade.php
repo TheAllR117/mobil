@@ -101,7 +101,7 @@
         <script src="{{ asset('white') }}/js/white-dashboard.js?v=1.0.0" type="text/javascript"></script>
         
         <script src="{{ asset('white') }}/js/plugins/bootstrap-switch.js"></script>
-        <script src="{{ asset('white') }}/jsjs/plugins/jquery.tablesorter.js"></script>
+        <script src="{{ asset('white') }}/js/plugins/jquery.tablesorter.js"></script>
         
         <script src="{{ asset('white') }}/js/theme.js"></script>
         <script src="{{ asset('white') }}/js/settings.js"></script>
@@ -116,6 +116,8 @@
         @stack('js')
 
         <script>
+
+            
 
             // funciones para la pagina de dashboard
             $('#select_dash_info_estado').change(function(){
@@ -527,6 +529,15 @@
             
             
                 $().ready(function() {
+
+                    const timeElapsed = Date.now();
+                    const today = new Date(timeElapsed);
+                    init_calendar('input-dia_entrega','01-01-2020', '07-07-2025');
+
+                    init_calendar_2('fecha_deposito','01-01-2020', today.toISOString());
+                    init_calendar_2('fecha_deposito_2','01-01-2020', today.toISOString());
+                    init_calendar_2('fecha_deposito_order','01-01-2020', today.toISOString());
+                    init_calendar_2('fecha_deposito_orders','01-01-2020', today.toISOString());
                     
                     //
                     iniciar_selector_de_archivos();

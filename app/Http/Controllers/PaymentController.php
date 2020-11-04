@@ -23,7 +23,7 @@ class PaymentController extends Controller
      */
     public function index(Request $request, Payment $payment)
     {
-        $request->user()->authorizeRoles(['Administrador','Abonos & Pagos']);
+        $request->user()->authorizeRoles(['Administrador','Abonos & Pagos','Admin-Estacion']);
 
         //validamos los roles
         if($request->user()->roles[0]->name == "Administrador" || $request->user()->roles[0]->name == "Logistica" || $request->user()->roles[0]->name == "Abonos & Pagos") {

@@ -50,7 +50,7 @@ class TractorController extends Controller
         // creamos el tractor correspondiente con la informacion proporcionada
         $model->create($request->all());
         
-        return redirect()->route('tractores.index')->withStatus(__('Tractor creado exitosamente.'));
+        return redirect()->route('tractores.index')->with('status', __('Tractor Creado Exitosamente.'))->with('color', 2);
     }
 
     /**
@@ -98,7 +98,7 @@ class TractorController extends Controller
         // actualizamos la informacion del tractor
         $tractor_up->update($request->all());
 
-        return redirect()->route('tractores.index')->withStatus(__('Tractor editado correctamente.'));
+        return redirect()->route('tractores.index')->with('status', __('Tractor Editado Correctamente.'))->with('color', 2);
     }
 
     /**
@@ -117,6 +117,6 @@ class TractorController extends Controller
         // eliminamos el tractor
         $tractor_de->delete();
 
-        return redirect()->route('tractores.index')->withStatus(__('Tractor eliminado exitosamente.'));
+        return redirect()->route('tractores.index')->with('status', __('Tractor Eliminado Exitosamente.'))->with('color', 2);
     }
 }

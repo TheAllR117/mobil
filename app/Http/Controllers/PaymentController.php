@@ -95,7 +95,7 @@ class PaymentController extends Controller
             ['id_estacion' => $request->id_estacion, 'cantidad' => $request->cantidad, 'url' => $nombre_fac, 'id_status' => $request->id_status, 'created_at' => date("Y-m-d H:i:s"),'updated_at' => date("Y-m-d H:i:s")]
         );
 
-        return redirect()->route('abonos.index')->withStatus(__('Abono creado exitosamente.'));
+        return redirect()->route('abonos.index')->with('status', __('Abono Creado Exitosamente.'))->with('color', 2);
     }
 
     // esta funcion se encarga de determinar si el abono se va tratar como saldo o credito para la estacion
@@ -228,7 +228,7 @@ class PaymentController extends Controller
         // borramos la imagen del servidor
         Storage::disk('estaciones')->delete($payments->id_estacion.'/'.$payments->url);
         $payments->delete();
-        return redirect()->route('abonos.index')->withStatus(__('Abono eliminado exitosamente.'));
+        return redirect()->route('abonos.index')->with('status', __('Abono Eliminado Exitosamente.'))->with('color', 2);
 
     }
 }

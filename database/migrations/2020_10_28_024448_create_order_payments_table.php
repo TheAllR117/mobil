@@ -19,6 +19,7 @@ class CreateOrderPaymentsTable extends Migration
             $table->double('cantidad', 12, 2);
             $table->string('url');
             $table->unsignedBigInteger('id_status');
+            $table->dateTime('deposit_date');
             $table->timestamps();
 
             $table->foreign('id_order')->references('id')->on('orders')->onDelete('cascade')

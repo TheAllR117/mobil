@@ -43,7 +43,7 @@ class DriverController extends Controller
     {
         $request->user()->authorizeRoles(['Administrador','Logistica']);
         $driver->create($request->all());
-        return redirect()->route('conductores.index')->withStatus(__('Conductor agregado exitosamente.'));
+        return redirect()->route('conductores.index')->with('status', __('Conductor Agregado Exitosamente.'))->with('color', 2);
     }
 
     /**
@@ -85,7 +85,7 @@ class DriverController extends Controller
 
         $conductor_up->update($request->all());
 
-        return redirect()->route('conductores.index')->withStatus(__('conductor editado correctamente.'));
+        return redirect()->route('conductores.index')->with('status', __('Conductor Editado Correctamente.'))->with('color', 2);
     }
 
     /**
@@ -101,6 +101,6 @@ class DriverController extends Controller
         $driver_up = $driver::findorfail($id);
         $driver_up->delete();
 
-        return redirect()->route('conductores.index')->withStatus(__('Conductor eliminado exitosamente.'));
+        return redirect()->route('conductores.index')->with('status', __('Conductor Eliminado Exitosamente.'))->with('color', 2);
     }
 }

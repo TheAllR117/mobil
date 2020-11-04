@@ -117,9 +117,119 @@
 
         <script>
 
-        
+            // funciones para la pagina de dashboard
+            $('#select_dash_info_estado').change(function(){
+                $.ajax({
+                    url: 'search',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        'id' : $('#select_dash_info_estado').val(),
+                    },
+                    headers:{
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response){
+                        // vaciamos la tabla
+                        $('#table_dash_info_estado').find('tbody').empty();
+                        //console.log(response.total_importe)
+
+                        // empezamos a imprimir la informacion en la tabla
+                        for(i=0; i<response.estado.length; i++){
+                            $("#table_dash_info_estado").find('tbody').append(
+                                '<tr><td>'+response.estado[i][0]+'</td><td>'+response.estado[i][1]+'</td><td>'+response.estado[i][2]+'</td><td>'+response.estado[i][3]+'</td><td>'+response.estado[i][4]+'</td></tr>'
+                            );
+                        }
+
+                        $("#table_dash_info_estado").find('tbody').append(
+                            '<tr><td colspan="2" class="text-right"></td><td>$'+response.total_importe.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+'</td><td colspan="2">$'+response.total_abonado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+'</td></tr>'
+                        );
+                        $("#table_dash_info_estado").find('tbody').append(
+                            '<tr><td colspan="2" scope="row" class="text-right">Total:</td><td>$'+(response.total_importe - response.total_abonado).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+'</td><td colspan="2"></td></tr>'
+                        );
+                    }
+                })
+            });
+
+            //funcion pagina de facturas para los pagos multiples
+            var ids = [];
+            var cantida = 0;
+            var pagado = 0;
+            $('#btnSubmit').click(function() {
+
+                $('.row-select input:checked').each(function() {
+                    var id;
+                    id = $(this).closest('tr').find('.id').val();
+                    cantida = (Number($(this).closest('tr').find('.maximo').html().replace(/[^0-9.-]+/g,"")) + cantida);
+                    pagado = (Number($(this).closest('tr').find('.pagado').html().replace(/[^0-9.-]+/g,"")) + pagado);
+                    ids.push(id);
+                });
+                
+                if(ids.length > 1){
+                    $('#ids_bills').val(ids);
+                    $('#cantidad_multi').prop('max', (cantida - pagado));
+                    
+                    $('#modalpagosmultiples').modal('toggle');
+                    $('#modalpagosmultiples').on('hidden.bs.modal', function (e) {
+                        ids = [];
+                        cantida = 0;
+                        pagado = 0;
+                        $('#ids_bills').val('');
+                        $("#cantidad_multi").val('');
+                        $("#btn_submit_pay_multi").prop('disabled', true);
+                        $( "#url_multi" ).val('')
+                    });
+                }else{
+                    ids = [];
+                    cantida = 0;
+                    pagado = 0;
+                    demo.showNotification('top','center','Debes Seleccionar al menos dos Facturas.', 'tim-icons icon-bell-55', '4');
+                }
+
+
+            });
+
+
+            var ids_facturas_orders = [];
+            var cantida_facturas_orders = 0;
+            var pagado_facturas_orders = 0;
+
+            $('#btnSubmit_2').click(function() {
+
+                $('.row-select-order input:checked').each(function() {
+                    var id;
+                    id = $(this).closest('tr').find('.id').val();
+                    cantida_facturas_orders = (Number($(this).closest('tr').find('.maximo').html().replace(/[^0-9.-]+/g,"")) + cantida_facturas_orders);
+                    pagado_facturas_orders = (Number($(this).closest('tr').find('.pagado').html().replace(/[^0-9.-]+/g,"")) + pagado_facturas_orders);
+                    ids_facturas_orders.push(id);
+                });
+                
+                if(ids_facturas_orders.length > 1){
+                    $('#ids_bills_orders').val(ids_facturas_orders);
+                    $('#cantidad_multi_orders').prop('max', (cantida_facturas_orders - pagado_facturas_orders));
+                    
+                    $('#modalpagosmultiplesorders').modal('toggle');
+                    $('#modalpagosmultiplesorders').on('hidden.bs.modal', function (e) {
+                        ids_facturas_orders = [];
+                        cantida_facturas_orders = 0;
+                        pagado_facturas_orders = 0;
+                        $('#ids_bills_orders').val('');
+                        $("#cantidad_multi_orders").val('');
+                        $("#btn_submit_pay_multi_orders").prop('disabled', true);
+                        $( "#url_multi_orders" ).val('')
+                    });
+                }else{
+                    ids_facturas_orders = [];
+                    cantida_facturas_orders = 0;
+                    pagado_facturas_orders = 0;
+                    demo.showNotification('top','center','Debes Seleccionar al menos dos Facturas.', 'tim-icons icon-bell-55', '4');
+                }
+
+
+            });
+
+
             // funciones para la pagina de solicitar pedidos
-            
             $('#input-estacion_id').change(function(){
                 $.ajax({
                     url: 'seleccionado',
@@ -161,7 +271,7 @@
                         if(datos.hay_adeudo === 1)
                         {
                             document.getElementById('btn-guardar-div').style.display = "none";
-                            demo.showNotification('top','center', 'La estación tiene un adeudo que no ha pagado y ya expiró el plazo de pago.', 'tim-icons icon-bell-55');
+                            demo.showNotification('top','center', 'La estación tiene un adeudo que no ha pagado y ya expiró el plazo de pago.', 'tim-icons icon-bell-55', '4');
                             // alert('La estaci贸n tiene un adeudo que no ha pagado y ya expir贸 el plazo de pago.');
                         }else{
                             document.getElementById('btn-guardar-div').style.display = "block";
@@ -202,7 +312,7 @@
                 if(parseFloat($('#input-costo_aprox').val()) <= parseFloat($('#input-saldo').val())){
 
                     // alert('se puede comprar con el saldo.');
-                    demo.showNotification('top','center', 'Se puede comprar con el saldo.', 'tim-icons icon-bell-55');
+                    demo.showNotification('top','center', 'Se puede comprar con el saldo.', 'tim-icons icon-bell-55', '4');
                     $('#input-saldo1').val($('#input-saldo').val() - $('#input-costo_aprox').val());
                     $('#input-credito_usado').val($('#input-disponible').val());
                     // $("#guardar").removeClass("ocultar");
@@ -218,7 +328,7 @@
                     var costo_apro = dividir(multiplicar(parseFloat( $('#input-costo_aprox').val())));
 
                     if(suma_disponible_saldo >= costo_apro) {
-                        demo.showNotification('top','center', 'credito y saldo suficientes para comprar.', 'tim-icons icon-bell-55');
+                        demo.showNotification('top','center', 'credito y saldo suficientes para comprar.', 'tim-icons icon-bell-55', '4');
                         //alert('credito y saldo suficientes para comprar');
                         $('#input-saldo1').val(0);
 
@@ -230,14 +340,14 @@
                         $('#input-saldo1').val($('#input-saldo').val());
 
                         // alert('credito y saldo insuficientes para realizar la comprar');
-                        demo.showNotification('top','center', 'credito y saldo insuficientes para realizar la compra.', 'tim-icons icon-bell-55');
+                        demo.showNotification('top','center', 'credito y saldo insuficientes para realizar la compra.', 'tim-icons icon-bell-55', '4');
                         // $("#guardar").addClass("ocultar");
                     }
 
                     }else{
 
                         // alert('credito insuficientes para comprar');
-                        demo.showNotification('top','center','credito insuficientes para comprar', 'tim-icons icon-bell-55');
+                        demo.showNotification('top','center','credito insuficientes para comprar', 'tim-icons icon-bell-55', '4');
                         // $("#guardar").addClass("ocultar");
 
                     }
@@ -254,21 +364,21 @@
                     if(parseFloat($('#input-disponible').val()) > parseFloat( $('#input-costo_aprox').val())) {
 
                         //alert('no hay saldo pero si credito suficiente');
-                        demo.showNotification('top', 'center','no hay saldo pero si credito suficiente', 'tim-icons icon-bell-55');
+                        demo.showNotification('top', 'center','no hay saldo pero si credito suficiente', 'tim-icons icon-bell-55', '4');
                         $('#input-credito_usado').val(dividir( multiplicar($('#input-disponible').val()) - multiplicar($('#input-costo_aprox').val())) ) ;
                         // $("#guardar").removeClass("ocultar");
 
                     }else{
 
                         //alert('credito insuficiente');
-                        demo.showNotification('top','center','credito insuficiente', 'tim-icons icon-bell-55');
+                        demo.showNotification('top','center','credito insuficiente', 'tim-icons icon-bell-55', '4');
                         // $("#guardar").addClass("ocultar");
 
                     }
 
                 } else {
                     document.getElementById('btn-guardar-div').style.display = "none";
-                    demo.showNotification('top','center', 'Excediste tu linea de credito.', 'tim-icons icon-bell-55');
+                    demo.showNotification('top','center', 'Excediste tu linea de credito.', 'tim-icons icon-bell-55', '4');
                     // $("#guardar").addClass("ocultar");
                 }
 
@@ -309,16 +419,39 @@
                     success: function(response){
                         $('#exampleModal').modal('toggle');
                         //alert(response);
-                        demo.showNotification('top','center', response, 'tim-icons icon-bell-55');
+                        demo.showNotification('top','center', response, 'tim-icons icon-bell-55', '4');
                         location.reload(true);
                     }
                 });
             });
+
             // funcion para las notificaciones 
-                @if (session('status'))
-                    demo.showNotification('top','center', '{{ session('status') }}', 'tim-icons icon-bell-55');
-                @endif
-            // funciones para la pagina de pedidos
+            @if (session('status'))
+                demo.showNotification('top','center', '{{ session('status') }}', 'tim-icons icon-bell-55', '{{ session('color') }}');
+            @endif
+
+            // funciones para la pagina de pedidos ---------------------
+            $('#guardar_so').click(function(){
+                $.ajax({
+                    url: 'pedidos/sonomber',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        '_token': $('input[name=_token]').val(),
+                        'id' : $("#input-estacion_id").val(),
+                        'status_id' : '2',
+                        'so_number': $("#input-so_number").val(),
+                    },
+                    headers:{ 
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 
+                    },
+                    success: function(response){
+                        $('#exampleModal').modal('toggle');
+                        demo.showNotification('top','center', response, 'tim-icons icon-bell-55', '2');
+                        location.reload(true);
+                    }
+                });
+            });
 
             $("#input-pdf").change(function() {
                 if($( "#input-pdf" ).val() != ""){
@@ -372,29 +505,29 @@
                     type: 'POST',
                     dataType: 'json',
                     data: {
-                    '_token': $('input[name=_token]').val(),
-                    'id_estacion' : $("#id").val(),
-                    'extra': $("#input-extra").val(),
-                    'supreme': $("#input-supreme").val(),
-                    'diesel': $("#input-diesel").val(),
-                    'extra_u': $("#input-extra_1").val(),
-                    'supreme_u': $("#input-supreme_1").val(),
-                    'diesel_u': $("#input-diesel_1").val(),
+                        '_token': $('input[name=_token]').val(),
+                        'id_estacion' : $("#id").val(),
+                        'extra': $("#input-extra").val(),
+                        'supreme': $("#input-supreme").val(),
+                        'diesel': $("#input-diesel").val(),
+                        'extra_u': $("#input-extra_1").val(),
+                        'supreme_u': $("#input-supreme_1").val(),
+                        'diesel_u': $("#input-diesel_1").val(),
                     },
                     headers:{
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response){
                     $('#exampleModal').modal('toggle');
-                    alert(response);
-                    demo.showNotification('top','center', response, 'tim-icons icon-bell-55');
+                        demo.showNotification('top','center', response, 'tim-icons icon-bell-55', '2');
                     }
                 });
             });
 
             
-            $(document).ready(function() {
+            
                 $().ready(function() {
+                    
                     //
                     iniciar_selector_de_archivos();
                     // tables inician aqui
@@ -504,7 +637,7 @@
                         $('body').removeClass('white-content');
                     });
                 });
-            });
+            
         </script>
         @stack('js')
     </body>

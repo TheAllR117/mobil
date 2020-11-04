@@ -48,7 +48,7 @@ class PipeController extends Controller
         // return $request->all();
         $model->create($request->all());
 
-        return redirect()->route('pipas.index')->withStatus(__('Pipa creada exitosamente.'));
+        return redirect()->route('pipas.index')->with('status', __('Pipa Creada Exitosamente.'))->with('color', 2);
     }
 
     /**
@@ -91,7 +91,7 @@ class PipeController extends Controller
 
         $pipe_up->update($request->all());
 
-        return redirect()->route('pipas.index')->withStatus(__('Pipa editada correctamente.'));
+        return redirect()->route('pipas.index')->with('status', __('Pipa Editada Correctamente.'))->with('color', 2);
     }
 
     /**
@@ -107,6 +107,6 @@ class PipeController extends Controller
         $pipa = Pipe::findorfail($id);
         $pipa->delete();
 
-        return redirect()->route('pipas.index')->withStatus(__('Pipa eliminada exitosamente.'));
+        return redirect()->route('pipas.index')->with('status', __('Pipa Eliminada Exitosamente.'))->with('color', 2);
     }
 }

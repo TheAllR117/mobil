@@ -17,6 +17,6 @@ class OrderPayments extends Model
     }
 
     protected $fillable = [
-        'id_order', 'cantidad', 'url', 'id_status'
+        'id_order', 'cantidad', 'url', 'id_status', 'deposit_date'
     ];
 }

@@ -58,7 +58,11 @@ class DifferentBillController extends Controller
     {
         $request->user()->authorizeRoles(['Administrador']);
 
-        //$cobro_devolucion = false;
+        $fecha_actual = date($request->expiration_date);        
+    
+        $fecha_actual = date("Y-m-d",strtotime($fecha_actual."+ 10 days"));
+
+        $cobro_devolucion = false;
 
         $file_pdf = $request->file('file_pdf');
         $file_xml = $request->file('file_xml');
@@ -68,19 +72,19 @@ class DifferentBillController extends Controller
 
         Storage::disk('facturas_pdf_2')->put('/'.$request->id_estacion.'/'.$nombre_pdf, \File::get($file_pdf));
         Storage::disk('facturas_xml_2')->put('/'.$request->id_estacion.'/'.$nombre_xml, \File::get($file_xml));
-        /*if($request->add_or_subtract == 'on'){
+        if($request->add_or_subtract == 'on'){
             $cobro_devolucion = true;
-        }*/
-        $new = $model->create($request->merge(['add_or_subtract' => 1, 'file_pdf' => $nombre_pdf, 'file_xml' => $nombre_xml, 'id_status' => 1])->all());
+        }
+        $new = $model->create($request->merge(['add_or_subtract' => 1, 'file_pdf' => $nombre_pdf, 'file_xml' => $nombre_xml, 'id_status' => 1, 'expiration_date' => $fecha_actual])->all());
         $new->update(['file_pdf' => $nombre_pdf, 'file_xml' => $nombre_xml]);
 
         $estacion_selecionada = $estacion::find($request->id_estacion);
 
-        /*if($request->add_or_subtract == true){*/
-            $estacion_selecionada->update(['credito_usado' => ($estacion_selecionada->credito_usado + $request->quantity)]);
-        /*} else {
-            $estacion_selecionada->update(['credito_usado' => ($estacion_selecionada->credito_usado - $request->quantity)]);
-        }*/
+        //if($request->add_or_subtract == true){
+        $estacion_selecionada->update(['credito_usado' => ($estacion_selecionada->credito_usado + $request->quantity)]);
+        //} else {
+            //$estacion_selecionada->update(['credito_usado' => ($estacion_selecionada->credito_usado - $request->quantity)]);
+        //}
 
         return redirect()->route('facturas.index')->withStatus(__('Factura cargada exitosamente.'));        
        
@@ -167,7 +171,7 @@ class DifferentBillController extends Controller
             }
         }
 
-        return redirect()->route('abonos.index')->withStatus(__('Abono Autorizado correctamente.'));
+        return redirect()->route('abonos.index')->with('status', __('Abono Autorizado Correctamente.'))->with('color', 2);
 
     }
 
@@ -187,22 +191,99 @@ class DifferentBillController extends Controller
         
         $factura->delete();
 
-        return redirect()->route('facturas.index')->withStatus(__('Factura eliminada.'));
+        return redirect()->route('facturas.index')->with('status', __('Factura Eliminada.'))->with('color', 2);
+    }
+
+    public function payments(Request $request, DifferentBillPayments $model)
+    {
+        $request->user()->authorizeRoles(['Administrador', 'Admin-Estacion']);
+
+        $deuda_suma = 0;
+        $pagos_suma = 0;
+        $suma_tem = 0;
+
+        $array_facturas_diversas = explode(",", $request->ids_bills);
+
+        $facturas_escogidas = DifferentBill::find($array_facturas_diversas);
+
+        foreach($facturas_escogidas as $key => $factura){
+            $deuda_suma = $factura->quantity + $deuda_suma;
+            $pagos_suma = $factura->differentbills->where('id_status', 2)->sum('cantidad') + $pagos_suma;
+            
+            if($request->cantidad_multi >= ($deuda_suma - $pagos_suma) &&  $key < (count($facturas_escogidas)-1))
+            {
+                //echo 'Permitido';
+                $suma_tem = $deuda_suma - $pagos_suma;
+            }
+            elseif($request->cantidad_multi >= ($deuda_suma - $pagos_suma) && $key == (count($facturas_escogidas)-1))
+            {
+                // abono igual a la deuda
+                //return $deuda_suma - $pagos_suma;
+            }
+            elseif($request->cantidad_multi > $suma_tem && $key == (count($facturas_escogidas)-1))
+            {
+                //echo 'Permitido';
+                //return $suma_tem;
+            }
+            else
+            {
+                return redirect()->route('facturas.index')->with('status', __('No se cumple con la cantidad minima de pago.'))->with('color', 4);
+            }
+        }
+
+        $deuda_suma = 0;
+        $pagos_suma = 0;
+        $restante = 0;
+
+        $resta = $request->cantidad_multi;
+
+        foreach($facturas_escogidas as $key => $factura_up){
+            $deuda_suma = $factura_up->quantity;
+            $pagos_suma = $factura_up->differentbills->where('id_status', 2)->sum('cantidad');
+            $restante = $deuda_suma - $pagos_suma;
+            $resta = $resta - $restante;
+
+            $file_img = $request->file('url_multi');
+            $nombre_img = $factura_up->id_estacion.'-'.date("dmY-His").'.'.$file_img->getClientOriginalExtension();
+
+            if($key < (count($facturas_escogidas)-1) )
+            {
+                //echo $restante.' <br>';
+                $new = $model->create($request->merge(['id_different_bill' => $factura_up->id , 'cantidad' => $restante, 'url'=> $nombre_img, 'id_status' => 1])->all());
+            }
+            elseif($resta >= $restante && $key == (count($facturas_escogidas)-1)){
+                //echo $restante.'-- <br>';
+                $new = $model->create($request->merge(['id_different_bill' => $factura_up->id , 'cantidad' => $restante, 'url'=> $nombre_img, 'id_status' => 1])->all());
+            }
+            else
+            {
+                //echo $restante - abs($resta).'--- <br>';
+                $new = $model->create($request->merge(['id_different_bill' => $factura_up->id , 'cantidad' => $restante - abs($resta) ,'url'=> $nombre_img, 'id_status' => 1])->all());
+            }
+
+            $new->update(['url'=> $nombre_img]);
+            
+            Storage::disk('bill_payment')->put('/'.$factura_up->id_estacion.'/'.$nombre_img, \File::get($file_img));
+        }
+
+        return redirect()->route('facturas.index')->with('status', __('Abonos Solicitados Correctamente, Espere Hasta que sean Autorizados.'))->with('color', 2);
     }
 
     public function pay(Request $request, DifferentBillPayments $model)
     {
         $request->user()->authorizeRoles(['Administrador', 'Admin-Estacion']);
 
+        //return $request->all();
+
         $file_img = $request->file('url');
         $nombre_img = $request->id_estacion.'-'.date("dmY-His").'.'.$file_img->getClientOriginalExtension();
 
         $new = $model->create($request->merge(['url'=> $nombre_img, 'id_status' => 1])->all());
-        $new->update(['url'=> $nombre_img]);
+        $new->update(['url'=> $nombre_img, 'deposit_date' => $request->deposit_date]);
         
         Storage::disk('bill_payment')->put('/'.$request->id_estacion.'/'.$nombre_img, \File::get($file_img));
         
-        return redirect()->route('facturas.index')->withStatus(__('Abono solicitado correctamente, espere hasta que sea autorizado.'));        
+        return redirect()->route('facturas.index')->with('status', __('Abono Solicitado Correctamente, Espere Hasta que sea Autorizado.'))->with('color', 2);       
        
     }
 
@@ -212,7 +293,7 @@ class DifferentBillController extends Controller
 
         $DifferentBill = DifferentBillPayments::findorfail($id);
         $DifferentBill->delete();
-        return redirect()->route('abonos.index')->withStatus(__('Abono eliminado correctamente.'));
+        return redirect()->route('abonos.index')->with('status', __('Abono Eliminado Correctamente.'))->with('color', 2);
 
     }
 }

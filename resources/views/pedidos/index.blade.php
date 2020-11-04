@@ -700,28 +700,6 @@
 @push('js')
   <script>
 
-    $('#guardar_so').click(function(){
-      $.ajax({
-        url: 'pedidos/sonomber',
-        type: 'POST',
-        dataType: 'json',
-        data: {
-          '_token': $('input[name=_token]').val(),
-          'id' : $("#input-estacion_id").val(),
-          'status_id' : '2',
-          'so_number': $("#input-so_number").val(),
-        },
-        headers:{ 
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 
-        },
-        success: function(response){
-          $('#exampleModal').modal('toggle');
-          // alert(response);
-          demo.showNotification('top','center', response, 'tim-icons icon-bell-55');
-          location.reload(true);
-        }
-      });
-    });
 
     $(".sonomber").click(function() {
       //data-toggle="modal" data-target="#exampleModal"

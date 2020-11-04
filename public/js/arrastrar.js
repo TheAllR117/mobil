@@ -114,7 +114,7 @@
         pipas = $('#input-pipa_id').prop('selected', true).val();
         
         $.ajax({
-          url: '../../control/pipa_escogida',
+          url: '/control/pipa_escogida',
           type: 'POST',
           dataType: 'json',
           data: {

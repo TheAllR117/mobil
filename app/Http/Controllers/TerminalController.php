@@ -44,7 +44,7 @@ class TerminalController extends Controller
     {
         $request->user()->authorizeRoles(['Administrador']);
         $model->create($request->all());
-        return redirect()->route('terminales.index')->withStatus(__('Terminal creada con éxito'));
+        return redirect()->route('terminales.index')->with('status', __('Terminal Creada con Éxito'))->with('color', 2);
     }
 
     /**
@@ -83,7 +83,7 @@ class TerminalController extends Controller
         $request->user()->authorizeRoles(['Administrador']);
         $terminal=Terminal::findorfail($id);
         $terminal->update($request->all());
-        return redirect()->route('terminales.index')->withStatus(__('Terminal actualizada correctamente.'));
+        return redirect()->route('terminales.index')->with('status', __('Terminal Actualizada Correctamente.'))->with('color', 2);
     }
 
     /**
@@ -97,6 +97,6 @@ class TerminalController extends Controller
         $request->user()->authorizeRoles(['Administrador']);
         $terminal=Terminal::findorfail($id);
         $terminal->delete();
-        return redirect()->route('terminales.index')->withStatus(__('Terminal eliminada exitosamente.'));
+        return redirect()->route('terminales.index')->with('status', __('Terminal Eliminada Exitosamente.'))->with('color', 2);
     }
 }

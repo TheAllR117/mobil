@@ -213,7 +213,7 @@ class ControlController extends Controller
                     break;
             }
         }
-        return redirect()->route('pedidos.index')->withStatus(__('Armado de pedido exitoso.'));
+        return redirect()->route('pedidos.index')->with('status', __('Armado de Pedido Exitoso.'))->with('color', 2);
     }
 
 
@@ -317,7 +317,7 @@ class ControlController extends Controller
                     break;
             }
         }
-        return redirect()->route('pedidos.index')->withStatus(__('Armado de pedido exitoso.'));
+        return redirect()->route('pedidos.index')->with('status', __('Armado de Pedido Exitoso.'))->with('color', 2);
     }
 
     /**

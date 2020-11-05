@@ -692,4 +692,48 @@ class OrderController extends Controller
         return Excel::download(new OrdersExport, 'invoices.xls');
     }
 
+    public function contar_pipas_disponibles(Request $request) 
+    {
+        $capacidad_completa = Pipe::distinct()->get(['capacidad']);
+        $capacidad_1_unica = Pipe::distinct()->get(['capacidad_1']);
+        $capacidad_2_unica = Pipe::distinct()->get(['capacidad_2']);
+
+        $pipas_compleatas = [];
+        $pipas_capacidad_1 = [];
+        $pipas_capacidad_2 = [];
+
+        for($i=0; $i<count($capacidad_completa); $i++){
+            array_push($pipas_compleatas, ['type_container' => $capacidad_completa[$i]->capacidad, 'total_containers' => Pipe::where('capacidad', $capacidad_completa[$i]->capacidad)->count()]);
+        }
+
+        for($j=0; $j<count($capacidad_1_unica); $j++){
+            array_push($pipas_capacidad_1, ['type_container' => $capacidad_1_unica[$j]->capacidad_1, 'total_containers' => Pipe::where('capacidad_1', $capacidad_1_unica[$j]->capacidad_1)->count()]);
+        }
+
+        for($k=0; $k<count($capacidad_2_unica); $k++){
+            array_push($pipas_capacidad_2, ['type_container' => $capacidad_2_unica[$k]->capacidad_2, 'total_containers' => Pipe::where('capacidad_2', $capacidad_2_unica[$k]->capacidad_2)->count()]);
+        }
+
+        // ultimos arrays
+
+        $pipas_compleatas_c = [];
+        $pipas_capacidad_1_c = [];
+        $pipas_capacidad_2_c = [];
+
+        for($x=0; $x<count($pipas_compleatas); $x++){
+            array_push($pipas_compleatas_c, ['type_container' => $capacidad_completa[$x]->capacidad, 'total_containers' =>Order::where([['cantidad_lts', $pipas_compleatas[$x]['type_container']], ['dia_entrega', '2020-10-19']])->count()]);
+        }
+
+        for($z=0; $z<count($pipas_capacidad_1); $z++){
+            array_push($pipas_capacidad_1_c, ['type_container' => $capacidad_1_unica[$z]->capacidad_1, 'total_containers' =>Order::where([['cantidad_lts', $pipas_capacidad_1[$z]['type_container']], ['dia_entrega', '2020-10-19']])->count()]);
+        }
+
+        for($z=0; $z<count($pipas_capacidad_2); $z++){
+            array_push($pipas_capacidad_2_c, ['type_container' => $capacidad_2_unica[$z]->capacidad_2, 'total_containers' =>Order::where([['cantidad_lts', $pipas_capacidad_2[$z]['type_container']], ['dia_entrega', '2020-10-19']])->count()]);
+        }
+
+        return $pipas_compleatas_c;
+
+    }
+
 }

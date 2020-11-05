@@ -160,6 +160,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('pedidos/updateEstatus','OrderController@updateEstatus');
 	Route::post('pedidos/import_pdf','OrderController@import_pdf')->name('pedidos.import_pdf');
 	Route::get('exportar_excel', 'OrderController@exportar_excel')->name('exportar_excel');
+	Route::get('contar_pipas_disponibles', 'OrderController@contar_pipas_disponibles')->name('pedidos.contar_pipas_disponibles');
 });
  
 

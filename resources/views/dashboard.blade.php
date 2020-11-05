@@ -350,7 +350,7 @@
                         <div class="card-header ">
                             <div class="row">
                                 <div class="col-sm-6 text-left">
-                                    <h2 class="card-title text-info">Pedidos Totales </h2>
+                                    <h2 class="card-title text-info">Pedidos Totales</h2>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">

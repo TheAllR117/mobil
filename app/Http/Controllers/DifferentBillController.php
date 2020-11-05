@@ -60,7 +60,7 @@ class DifferentBillController extends Controller
 
         $fecha_actual = date($request->expiration_date);        
     
-        $fecha_actual = date("Y-m-d",strtotime($fecha_actual."+ 10 days"));
+        $fecha_actual = date("Y-m-d", strtotime($fecha_actual."+ 10 days"));
 
         $cobro_devolucion = false;
 

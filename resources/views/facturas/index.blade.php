@@ -332,17 +332,13 @@
                   <table cellspacing="0" class="table  table-hover"
                       id="datatables_3" style="width:100%" width="100%">
                     <thead class="text-primary">
-                      @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3)
                       <th>{{ __('Estación')}}</th>
-                      @endif
                       <th>{{ __('Descripción')}}</th>
                       <th>{{ __('Costo')}}</th>
                       <th>{{ __('PDF')}}</th>
                       <th>{{ __('XML')}}</th>
                       <th>{{ __('Fecha del último pago')}}</th>
-                      @if(auth()->user()->roles[0]->id == 1)
                       <th class="disabled-sorting text-right">Acciones</th>
-                      @endif
                     </thead>
                     <tbody>
                       @foreach($facturas as $factura)
@@ -354,7 +350,7 @@
                         <td>
                           {{ $factura->description }}
                         </td>
-                        <td class="text-center">
+                        <td>
                           ${{ number_format($factura->quantity, 2) }}
                         </td>
                         <td>

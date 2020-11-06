@@ -535,12 +535,6 @@
             
                 $().ready(function() {
 
-                    @if(auth()->user()->roles[0]->name == 'Administrador' || auth()->user()->roles[0]->name == 'Logistica')
-                        init_calendar('input_dia_entrega_p', now(), '{{ date("Y-m-d", strtotime(now()."+ 3 days")) }}');
-                    @else
-                        init_calendar('input_dia_entrega_p', '{{ date("Y-m-d", strtotime(now()."+ 1 days")) }}', '{{ date("Y-m-d", strtotime(now()."+ 3 days")) }}');
-                    @endif
-
                     const timeElapsed = Date.now();
                     const today = new Date(timeElapsed);
                     init_calendar('input-dia_entrega','01-01-2020', '07-07-2025');

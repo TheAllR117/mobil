@@ -169,7 +169,11 @@
 @push('js')
   <script>
 
-
+    @if(auth()->user()->roles[0]->name == 'Administrador' || auth()->user()->roles[0]->name == 'Logistica')
+        init_calendar('input_dia_entrega_p', now(), '{{ date("Y-m-d", strtotime(now()."+ 3 days")) }}');
+    @else
+        init_calendar('input_dia_entrega_p', '{{ date("Y-m-d", strtotime(now()."+ 1 days")) }}', '{{ date("Y-m-d", strtotime(now()."+ 3 days")) }}');
+    @endif
     $(".selectpicker").change(function() {
         $("#pipa_id").val( $("#input-pipa_id").val());
         $("#tractor_id").val($("#input-tractor_id").val());

@@ -498,18 +498,22 @@
                                             @if($ventas->costo_real == '')
                                             ${{ number_format($ventas->costo_aprox, 2) }}
                                                 @php
-                                                    $total_cantidad = $total_cantidad + $ventas->costo_aprox + $ventas->total_abonado;
+                                                    $total_cantidad = $total_cantidad + $ventas->costo_aprox;
                                                 @endphp
                                             @else
                                             ${{ number_format($ventas->costo_real, 2) }}
                                                 @php
-                                                    $total_cantidad = $total_cantidad + $ventas->costo_real + $ventas->total_abonado;
+                                                    $total_cantidad = $total_cantidad + $ventas->costo_real;
                                                 @endphp
                                             @endif
                                         </td>
                                         <td>${{ number_format($ventas->total_abonado, 2) }}</td>
                                         <td>{{ Carbon\Carbon::parse($ventas->fecha_expiracion)->format('d/m/Y') }}</td>
                                     </tr>
+                                    @php
+                                        $total_suma = $total_suma + $ventas->total_abonado;
+                                    @endphp
+
                                     @endforeach
                                     @foreach($estacion_1->differentbill->where('id_status', 1) as $factura)
                                     @if(Carbon\Carbon::parse($factura->expiration_date)->format('d/m/Y') <= now()->format('d/m/Y'))

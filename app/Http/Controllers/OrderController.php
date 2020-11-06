@@ -721,18 +721,41 @@ class OrderController extends Controller
         $pipas_capacidad_2_c = [];
 
         for($x=0; $x<count($pipas_compleatas); $x++){
-            array_push($pipas_compleatas_c, ['type_container' => $capacidad_completa[$x]->capacidad, 'total_containers' =>Order::where([['cantidad_lts', $pipas_compleatas[$x]['type_container']], ['dia_entrega', '2020-10-19']])->count()]);
+            array_push($pipas_compleatas_c, ['type_container' => $capacidad_completa[$x]->capacidad, 'total_containers' =>Order::where([['cantidad_lts', $pipas_compleatas[$x]['type_container']], ['dia_entrega', $request->fecha], ['status_id', '<=', 4]])->count()]);
         }
 
         for($z=0; $z<count($pipas_capacidad_1); $z++){
-            array_push($pipas_capacidad_1_c, ['type_container' => $capacidad_1_unica[$z]->capacidad_1, 'total_containers' =>Order::where([['cantidad_lts', $pipas_capacidad_1[$z]['type_container']], ['dia_entrega', '2020-10-19']])->count()]);
+            array_push($pipas_capacidad_1_c, ['type_container' => $capacidad_1_unica[$z]->capacidad_1, 'total_containers' =>Order::where([['cantidad_lts', $pipas_capacidad_1[$z]['type_container']], ['dia_entrega', $request->fecha], ['status_id', '<=', 4]])->count()]);
         }
 
         for($z=0; $z<count($pipas_capacidad_2); $z++){
             array_push($pipas_capacidad_2_c, ['type_container' => $capacidad_2_unica[$z]->capacidad_2, 'total_containers' =>Order::where([['cantidad_lts', $pipas_capacidad_2[$z]['type_container']], ['dia_entrega', '2020-10-19']])->count()]);
         }
 
-        return $pipas_compleatas_c;
+
+        // ultimo arreglo
+
+        $new_array = [];
+
+        for($c=0; $c < count($pipas_capacidad_1_c); $c++){
+
+            array_push($new_array, ['type_container' => $pipas_capacidad_1_c[$c]['type_container'], 'total_containers' => $pipas_capacidad_1[$c]['total_containers'] - $pipas_capacidad_1_c[$c]['total_containers'] ]);
+
+        }
+
+        for($c=0; $c < count($pipas_capacidad_2_c); $c++){
+            if($new_array[$c]['type_container'] == $pipas_capacidad_2_c[$c]['type_container']){
+                $new_array[$c]['total_containers'] = $new_array[$c]['total_containers']  + $pipas_capacidad_2[$c]['total_containers'] - $pipas_capacidad_2_c[$c]['total_containers'];
+            }else{
+                array_push($new_array, ['type_container' => $pipas_capacidad_2_c[$c]['type_container'],'total_containers' => $new_array[$c]['total_containers']  + $pipas_capacidad_2[$c]['total_containers'] - $pipas_capacidad_2_c[$c]['total_containers'] ]);
+            }
+        }
+
+        for($c=0; $c < count($pipas_compleatas_c); $c++){
+            array_push($new_array, ['type_container' => $pipas_compleatas_c[$c]['type_container'], 'total_containers' => $pipas_compleatas[$c]['total_containers'] - $pipas_compleatas_c[$c]['total_containers'] ]);
+        }
+
+        return $new_array;
 
     }
 

@@ -75,7 +75,7 @@ class DifferentBillController extends Controller
         if($request->add_or_subtract == 'on'){
             $cobro_devolucion = true;
         }
-        $new = $model->create($request->merge(['add_or_subtract' => 1, 'file_pdf' => $nombre_pdf, 'file_xml' => $nombre_xml, 'id_status' => 1, 'expiration_date' => $fecha_actual])->all());
+        $new = $model->create($request->merge(['add_or_subtract' => $cobro_devolucion, 'file_pdf' => $nombre_pdf, 'file_xml' => $nombre_xml, 'id_status' => 1, 'expiration_date' => $fecha_actual])->all());
         $new->update(['file_pdf' => $nombre_pdf, 'file_xml' => $nombre_xml]);
 
         $estacion_selecionada = $estacion::find($request->id_estacion);
@@ -205,6 +205,10 @@ class DifferentBillController extends Controller
         $array_facturas_diversas = explode(",", $request->ids_bills);
 
         $facturas_escogidas = DifferentBill::find($array_facturas_diversas);
+
+        //$facturas_escogidas->groupBy('add_or_subtract');
+
+        // return $facturas_escogidas;
 
         foreach($facturas_escogidas as $key => $factura){
             $deuda_suma = $factura->quantity + $deuda_suma;

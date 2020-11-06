@@ -232,6 +232,33 @@
 
 
             // funciones para la pagina de solicitar pedidos
+
+            $('#input_dia_entrega_p').blur(function(){
+                $.ajax({
+                    url: '{{ route("pedidos.contar_pipas_disponibles") }}',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        'fecha' : $('#input_dia_entrega_p').val(),
+                    },
+                    headers:{
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response){
+                        demo.showNotification('top','center', 'Disponibilidad de contenedores actualizada', 'tim-icons icon-bell-55', '4');
+                        $('#input-cantidad_lts').children().remove();
+                        $('#input-cantidad_lts').append('<option disabled selected>-- Seleccionar --</option>');
+                        //console.log(response.length);
+                        for(i=0; i<response.length; i++){
+                            $('#input-cantidad_lts').append('<option value="'+response[i]['type_container']+'">'+response[i]['type_container']+'L - '+response[i]['total_containers']+' Disponibles para la fecha</option>');
+                        }
+                        $('#input-cantidad_lts').selectpicker('render');
+                        $('#input-cantidad_lts').selectpicker('refresh');
+                    }
+                })
+            });
+
+
             $('#input-estacion_id').change(function(){
                 $.ajax({
                     url: 'seleccionado',
@@ -249,9 +276,6 @@
                         $('#input-saldo1').val(datos.estacion.saldo);
                         $('#input-credito').val(datos.estacion.credito);
                         $('#input-disponible').val(dividir( multiplicar(datos.estacion.credito) - multiplicar(datos.estacion.credito_usado) ));
-                        // $('#precio_producto_extra').val(datos.price[datos.price.length - 1].extra_u);
-                        // $('#precio_producto_supreme').val(datos.price[datos.price.length - 1].supreme_u);
-                        // $('#precio_producto_diesel').val(datos.price[datos.price.length - 1].diesel_u);
                         $('#input-credito_usado').val(0);
                         $('#input-costo_aprox').val(0);
 
@@ -274,7 +298,6 @@
                         {
                             document.getElementById('btn-guardar-div').style.display = "none";
                             demo.showNotification('top','center', 'La estación tiene un adeudo que no ha pagado y ya expiró el plazo de pago.', 'tim-icons icon-bell-55', '4');
-                            // alert('La estaci贸n tiene un adeudo que no ha pagado y ya expir贸 el plazo de pago.');
                         }else{
                             document.getElementById('btn-guardar-div').style.display = "block";
                         }
@@ -322,8 +345,6 @@
                 }else{
                     //el saldo no es suficiente
 
-                    //alert('hola');
-
                     if(parseFloat($('#input-disponible').val()) >= 0 ){
                     //se usara saldo y credito
                     var suma_disponible_saldo = dividir( multiplicar(parseFloat($('#input-disponible').val())) + multiplicar(parseFloat($('#input-saldo').val())));
@@ -331,7 +352,6 @@
 
                     if(suma_disponible_saldo >= costo_apro) {
                         demo.showNotification('top','center', 'credito y saldo suficientes para comprar.', 'tim-icons icon-bell-55', '4');
-                        //alert('credito y saldo suficientes para comprar');
                         $('#input-saldo1').val(0);
 
                         $('#input-credito_usado').val(dividir( multiplicar(suma_disponible_saldo) - multiplicar($('#input-costo_aprox').val())) ) ;
@@ -340,42 +360,27 @@
                     }else{
 
                         $('#input-saldo1').val($('#input-saldo').val());
-
-                        // alert('credito y saldo insuficientes para realizar la comprar');
                         demo.showNotification('top','center', 'credito y saldo insuficientes para realizar la compra.', 'tim-icons icon-bell-55', '4');
                         // $("#guardar").addClass("ocultar");
                     }
 
                     }else{
-
-                        // alert('credito insuficientes para comprar');
                         demo.showNotification('top','center','credito insuficientes para comprar', 'tim-icons icon-bell-55', '4');
                         // $("#guardar").addClass("ocultar");
-
                     }
-
                 }
-
-
-
             }else{
                 //no hay saldo
                 //determinar si hay credito disponible suficiente
                 if(parseFloat($('#input-disponible').val()) != 0 && parseFloat($('#input-disponible').val()) >= 100000){
 
                     if(parseFloat($('#input-disponible').val()) > parseFloat( $('#input-costo_aprox').val())) {
-
-                        //alert('no hay saldo pero si credito suficiente');
                         demo.showNotification('top', 'center','no hay saldo pero si credito suficiente', 'tim-icons icon-bell-55', '4');
                         $('#input-credito_usado').val(dividir( multiplicar($('#input-disponible').val()) - multiplicar($('#input-costo_aprox').val())) ) ;
                         // $("#guardar").removeClass("ocultar");
-
                     }else{
-
-                        //alert('credito insuficiente');
                         demo.showNotification('top','center','credito insuficiente', 'tim-icons icon-bell-55', '4');
                         // $("#guardar").addClass("ocultar");
-
                     }
 
                 } else {
@@ -529,6 +534,12 @@
             
             
                 $().ready(function() {
+
+                    @if(auth()->user()->roles[0]->name == 'Administrador' || auth()->user()->roles[0]->name == 'Logistica')
+                        init_calendar('input_dia_entrega_p', now(), '{{ date("Y-m-d", strtotime(now()."+ 3 days")) }}');
+                    @else
+                        init_calendar('input_dia_entrega_p', '{{ date("Y-m-d", strtotime(now()."+ 1 days")) }}', '{{ date("Y-m-d", strtotime(now()."+ 3 days")) }}');
+                    @endif
 
                     const timeElapsed = Date.now();
                     const today = new Date(timeElapsed);

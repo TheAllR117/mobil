@@ -178,7 +178,6 @@
                 </div>
               </div>
             </div>
-
 	        </div>
 	      </div>
 	    </div>
@@ -240,18 +239,17 @@
                       <th>{{ __('Costo cubierto') }}</th>
                       <th>{{ __('PDF')}}</th>
                       <th>{{ __('XML')}}</th>
-                      <th>{{ __('Fecha de Deposito')}}</th>
+                      <th>{{ __('Tipo de pago')}}</th>
                       <th>{{ __('Emición')}}</th>
-                      <th>{{ __('Vencimiento')}}</th>
-                      @if(auth()->user()->roles[0]->id == 1)
+                      <th>{{ __('Vencimiento')}}</th>   
                       <th class="disabled-sorting text-right">Acciones</th>
-                      @endif
                     </thead>
                     <tbody>
                       @foreach($facturas as $factura)
                       @if( $factura->id_status == 1)
                       <tr class="row-select">
                         <td>
+                          @if($factura->add_or_subtract == 1)
                           <div class="form-check">
                             <label class="form-check-label">
                               <input class="form-check-input id" type="checkbox" value="{{ $factura->id }}">
@@ -260,6 +258,7 @@
                               </span>
                             </label>
                           </div>
+                          @endif
                         </td>
                         <td>
                           {{ $factura->estacions[0]->nombre_sucursal}}
@@ -283,9 +282,11 @@
                             <i class="material-icons-outlined text-info">insert_drive_file</i>
                           </a>
                         </td>
-                        <td class="text-center">
-                          @if(count($factura->differentbills) > 0)
-                          {{ Carbon\Carbon::parse($factura->differentbills[count($factura->differentbills) -1]->deposit_date)->format('d/m/Y') }}
+                        <td class="text-center tipo_pago">
+                          @if($factura->add_or_subtract == 1)
+                            Pagos
+                          @else
+                            Contado
                           @endif
                         </td>
                         <td class="text-center">
@@ -294,7 +295,6 @@
                         <td class="text-center">
                           {{ Carbon\Carbon::parse($factura->expiration_date)->format('d/m/Y')  }}
                         </td>
-                        @if(auth()->user()->roles[0]->id == 1)
                         <td class="td-actions text-right">
                           <form action="{{ route('facturas_diferentes.destroy', $factura->id) }}" method="post">
                             @csrf
@@ -302,7 +302,7 @@
                             @if($factura->differentbills->where('id_status', 2)->sum('cantidad') < $factura->quantity)
                             <a class="btn btn-success btn-link abonar" data-original-title="Abonar a esta factura."
                               href="#" rel="tooltip"
-                              title=" Abonar a esta factura." onclick="data_factura({{$factura->id_estacion}}, {{$factura->id}}, {{$factura->quantity - $factura->differentbills->where('id_status', 2)->sum('cantidad') }});">
+                              title=" Abonar a esta factura." onclick="data_factura({{$factura->id_estacion}}, {{$factura->id}}, {{$factura->quantity - $factura->differentbills->where('id_status', 2)->sum('cantidad') }}, {{$factura->add_or_subtract}});">
                               <i class="tim-icons icon-money-coins"></i>
                             </a>
                             @endif
@@ -315,14 +315,13 @@
                               </i>
                             </a>
                             @endif
-                            @if($factura->differentbills->where('id_status', 2)->sum('cantidad') == 0)
+                            @if($factura->differentbills->where('id_status', 2)->sum('cantidad') == 0 && auth()->user()->roles[0]->id == 1)
                             <button type="button" class="btn btn-danger btn-link" data-original-title="" title="Eliminar esta factura." onclick="confirm('{{ __("¿Estás seguro de que deseas eliminar esta factura?") }}') ? this.parentElement.submit() : ''">
                               <i class="tim-icons icon-trash-simple"></i>
                             </button>
                             @endif
                           </form>
                         </td>
-                        @endif
                       </tr>
                       @endif
                       @endforeach
@@ -701,10 +700,14 @@
       $("#order_id").val(id);
     }
 
-    function data_factura(id_estacion, id_different_bill, limite_abono){
+    function data_factura(id_estacion, id_different_bill, limite_abono, pagos_contado){
       $("#id_different_bill").val(id_different_bill);
       $("#id_estacion").val(id_estacion);
-      $("#cantidad").prop('max', limite_abono);
+      if(pagos_contado == 1){
+        $("#cantidad").prop('max', limite_abono);
+      }else{
+        $("#cantidad").prop('max', limite_abono).prop('min', limite_abono);
+      }
     }
 
     function data_order(id_order, limite_abono){

@@ -105,7 +105,7 @@
  }
 
 
- function iniciar_selector_de_archivos()
+function iniciar_selector_de_archivos()
 {
     // FileInput
   $('.form-file-simple .inputFileVisible').click(function() {

@@ -25,6 +25,22 @@
                               <p>Precios actualizados <span id="span-fecha-ultima-actualizacion"></span></p>
                             </div>
                           </div>
+                            <div class="row mt-4">
+                              <div class="form-group col-sm-4">
+                                <label class="label-control">Fecha de entrega</label>
+                                <input class="form-control datetimepicker" id="input_dia_entrega_p" name="dia_entrega" type="text" placeholder="Fecha" >
+                            	</div>
+                              <div class="form-group{{ $errors->has('costo_aprox') ? ' has-danger' : '' }} col-sm-4">
+                                	<label for="costo_aprox">{{ __('Costo aproximado') }}</label>
+                                	<input aria-describedby="costo_aproxHelp" aria-required="true" class="form-control{{ $errors->has('costo_aprox') ? ' is-invalid' : '' }}" id="input-costo_aprox" name="costo_aprox" type="number" min="0.00" step="0.01" value="{{ old('costo_aprox', 0)}}" readonly>
+                                  	@if ($errors->has('costo_aprox'))
+                                    <span class="error text-danger" for="input-costo_aprox" id="costo_aprox-error">
+                                      {{ $errors->first('costo_aprox') }}
+                                    </span>
+                                  	@endif
+                                	</input>
+                              	</div>
+                            </div>
 
                             <div class="row mt-4">
                             	<div class="col-lg-4 col-md-4 col-sm-4">
@@ -42,11 +58,10 @@
                               	<div class="col-lg-4 col-md-4 col-sm-4 justify-content-center">
                               		<label class="label-control">Tipo de contenedor</label><br>
                                 	<select class="selectpicker sele" data-style="btn btn-primary" data-width="100%" id="input-cantidad_lts" name="cantidad_lts">
-                                      <option disabled selected>-- Seleccionar --</option>
-                                      @for($i=0; $i<count($tem); $i++)
-                                        <option value="{{$tem[$i]}}">{{number_format($tem[$i],0)}}Lts</option>
-                                      @endfor
-                                  		
+                                    <option disabled selected>-- Seleccionar --</option>
+                                    @for($i=0; $i<count($tem); $i++)
+                                    <!--option value="{{$tem[$i]}}">{{number_format($tem[$i],0)}}Lts</option-->
+                                    @endfor
                                 	</select>
                               	</div>
 
@@ -63,11 +78,6 @@
                             </div>
 
                             <div class="row mt-4">
-
-                            	<div class="form-group col-sm-4">
-                                	<label class="label-control">Fecha de entrega</label>
-                                	<input class="form-control datetimepicker" id="input-dia_entrega" name="dia_entrega" type="text" value="" placeholder="Fecha">
-                            	</div>
 
                             	<div class="form-group{{ $errors->has('saldo') ? ' has-danger' : '' }} col-sm-4 d-none">
                             		<input type="hidden" id="input-saldo" name="saldo" value="">
@@ -123,16 +133,7 @@
                                 	</input>
                               	</div>
 
-                              	<div class="form-group{{ $errors->has('costo_aprox') ? ' has-danger' : '' }} col-sm-4">
-                                	<label for="costo_aprox">{{ __('Costo aproximado') }}</label>
-                                	<input aria-describedby="costo_aproxHelp" aria-required="true" class="form-control{{ $errors->has('costo_aprox') ? ' is-invalid' : '' }}" id="input-costo_aprox" name="costo_aprox" type="number" min="0.00" step="0.01" value="{{ old('costo_aprox', 0)}}" readonly>
-                                  	@if ($errors->has('costo_aprox'))
-                                    <span class="error text-danger" for="input-costo_aprox" id="costo_aprox-error">
-                                      {{ $errors->first('costo_aprox') }}
-                                    </span>
-                                  	@endif
-                                	</input>
-                              	</div>
+                              	
                             </div>
                             {{-- <div class="row mt-4">
                               <div class="form-group{{ $errors->has('po') ? ' has-danger' : '' }} col-sm-3">
@@ -163,12 +164,8 @@
 
 @push('js')
 <script>
-	    
-  @if(auth()->user()->roles[0]->name == 'Administrador' || auth()->user()->roles[0]->name == 'Logistica')
-    init_calendar('input-dia_entrega', now(), '07-07-2025');
-  @else
-    init_calendar('input-dia_entrega', manana(), '07-07-2025');
-  @endif
+ 
+  
 
 </script>
 @endpush

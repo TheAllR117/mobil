@@ -287,10 +287,10 @@
                             Contado
                           @endif
                         </td>
-                        <td class="text-center">
+                        <td>
                           {{ date("d/m/Y",strtotime($factura->expiration_date."- 10 days")) }}
                         </td>
-                        <td class="text-center">
+                        <td>
                           {{ Carbon\Carbon::parse($factura->expiration_date)->format('d/m/Y')  }}
                         </td>
                         <td class="td-actions text-right">

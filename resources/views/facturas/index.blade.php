@@ -232,7 +232,7 @@
                     <thead class="text-primary">
                       <th>{{ __('#') }}</th>
                       <th>{{ __('Estacion')}}</th>
-                      <th>{{ __('Descripcion')}}</th>
+                      <th>{{ __('Descripción')}}</th>
                       <th>{{ __('Costo')}}</th>
                       <th>{{ __('Costo cubierto') }}</th>
                       <th>{{ __('PDF')}}</th>
@@ -337,6 +337,7 @@
                       <th>{{ __('Costo')}}</th>
                       <th>{{ __('PDF')}}</th>
                       <th>{{ __('XML')}}</th>
+                      <th>{{ __('Tipo de pago')}}</th>
                       <th>{{ __('Fecha del último pago')}}</th>
                       <th class="disabled-sorting text-right">Acciones</th>
                     </thead>
@@ -362,6 +363,13 @@
                           <a href="{{url('storage/facturas_xml_2/'.$factura->id_estacion.'/'.$factura->file_xml ) }}" download="{{ $factura->file_xml }}">
                             <i class="material-icons-outlined text-info">insert_drive_file</i>
                           </a>
+                        </td>
+                        <td>
+                          @if($factura->add_or_subtract == 1)
+                            Pagos
+                          @else
+                            Contado
+                          @endif
                         </td>
                         <td>
                           {{ $factura->differentbills[count($factura->differentbills)-1]->created_at->format('d/m/Y')  }}

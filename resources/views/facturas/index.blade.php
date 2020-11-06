@@ -231,9 +231,7 @@
                       id="datatables_2" style="width:100%" width="100%">
                     <thead class="text-primary">
                       <th>{{ __('#') }}</th>
-                      @if(auth()->user()->roles[0]->id == 1 || auth()->user()->roles[0]->id == 3)
                       <th>{{ __('Estacion')}}</th>
-                      @endif
                       <th>{{ __('Descripcion')}}</th>
                       <th>{{ __('Costo')}}</th>
                       <th>{{ __('Costo cubierto') }}</th>

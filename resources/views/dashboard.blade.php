@@ -487,6 +487,7 @@
                                 <tbody>
                                 @php
                                     $total_suma = 0;
+                                    $total_cantidad = 0;
                                 @endphp
                                 @foreach($estaciones_info as $estacion_1)
                                     @foreach($estacion_1->orders->where('status_id', '<=',5)->where('pagado', '==', 'FALSE') as $ventas)
@@ -524,22 +525,23 @@
                                     @endif
                                     @php
                                         $total_suma = $total_suma + $factura->differentbills->where('id_status', 2)->sum('cantidad');
+                                        $total_cantidad = $total_cantidad + $factura->quantity;
                                     @endphp
                                     @endforeach
                                 @endforeach
                                     <tr>
                                         <td colspan="2" scope="row" class="text-right"></td>
                                         <td>
-                                            ${{ number_format($info_pedidos->where('status_id', '<=',5)->where('pagado', '==', 'FALSE')->sum('costo_real') + $info_pedidos->where('status_id', '<=',5)->where('costo_real', '==', '')->where('pagado', 'FALSE')->sum('costo_aprox') + $info_facturas->where('id_status', 1)->sum('quantity'), 2 )}}
+                                            ${{ number_format($total_cantidad, 2 )}}
                                         </td>
                                         <td colspan="2">
-                                            ${{ number_format($info_pedidos->where('status_id', '<=',5)->where('pagado', 'FALSE')->sum('total_abonado') + $total_suma, 2 )}}
+                                            ${{ number_format($total_suma, 2 )}}
                                         </td>
                                     </tr>
                                     <tr>
                                         <td colspan="2" scope="row" class="text-right">Total:</td>
                                         <td colspan="3">
-                                            ${{ number_format($info_pedidos->where('status_id', '<=',5)->where('pagado', 'FALSE')->sum('costo_real') + $info_pedidos->where('status_id', '<=',5)->where('costo_real', '==', '')->where('pagado', 'FALSE')->sum('costo_aprox') + $info_facturas->where('id_status', 1)->sum('quantity') - $info_pedidos->where('status_id', '<=',5)->where('pagado', 'FALSE')->sum('total_abonado') - $total_suma, 2 )}}
+                                            ${{ number_format($total_cantidad - $total_suma, 2 )}}
                                         </td>
                                     </tr>             
                                 </tbody>

@@ -266,10 +266,10 @@
                         <td>
                           {{ $factura->description }}
                         </td>
-                        <td class="text-center maximo">
+                        <td class="maximo">
                           ${{ number_format($factura->quantity, 2) }}
                         </td>
-                        <td class="text-center pagado">
+                        <td class="pagado">
                           ${{ number_format($factura->differentbills->where('id_status', 2)->sum('cantidad'), 2) }}
                         </td>
                         <td>
@@ -282,7 +282,7 @@
                             <i class="material-icons-outlined text-info">insert_drive_file</i>
                           </a>
                         </td>
-                        <td class="text-center tipo_pago">
+                        <td class="tipo_pago">
                           @if($factura->add_or_subtract == 1)
                             Pagos
                           @else

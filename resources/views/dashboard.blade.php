@@ -498,12 +498,12 @@
                                             @if($ventas->costo_real == '')
                                             ${{ number_format($ventas->costo_aprox, 2) }}
                                                 @php
-                                                    $total_cantidad = $total_cantidad + $ventas->costo_aprox;
+                                                    $total_cantidad = $total_cantidad + $ventas->costo_aprox + $ventas->total_abonado;
                                                 @endphp
                                             @else
                                             ${{ number_format($ventas->costo_real, 2) }}
                                                 @php
-                                                    $total_cantidad = $total_cantidad + $ventas->costo_real;
+                                                    $total_cantidad = $total_cantidad + $ventas->costo_real + $ventas->total_abonado;
                                                 @endphp
                                             @endif
                                         </td>

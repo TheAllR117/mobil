@@ -497,8 +497,10 @@
                                         <td>
                                             @if($ventas->costo_real == '')
                                             ${{ number_format($ventas->costo_aprox, 2) }}
+                                            $total_cantidad = $total_cantidad + $ventas->costo_aprox;
                                             @else
                                             ${{ number_format($ventas->costo_real, 2) }}
+                                            $total_cantidad = $total_cantidad + $ventas->costo_real;
                                             @endif
                                         </td>
                                         <td>${{ number_format($ventas->total_abonado, 2) }}</td>

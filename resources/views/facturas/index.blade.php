@@ -52,7 +52,7 @@
                     </thead>
                     <tbody>
                       @foreach($orders as $order)
-                      
+                        @if($order->pagado == 'FALSE')
                         <tr class="row-select-order">
                           <td>
                             @if($order->costo_real > 0)
@@ -112,6 +112,7 @@
                             </form>
                           </td>
                         </tr>
+                        @endif
                       @endforeach
                     </tbody>
                   </table>
@@ -134,7 +135,7 @@
                     </thead>
                     <tbody>
                       @foreach($orders as $order)
-                      @if($order->orderpayment->where('id_status', 2)->sum('cantidad') == $order->costo_real)
+                      @if($order->pagado == 'TRUE')
                         <tr>
                           <td>{{ $order->id }}</td>
                           <td>{{ $order->estacions[0]->nombre_sucursal }}</td>
@@ -490,7 +491,7 @@
                 </div>
                 <div class="col-sm-6">
                   <div class="form-group">
-                    <label>{{ __('Fecha de Deposito') }}</label>
+                    <label>{{ __('Fecha de Depósito') }}</label>
                     <input type="text" class="form-control datetimepicker bg-white mt-1" id="fecha_deposito_2" name="deposit_date" />
                   </div>
                 </div>
@@ -544,7 +545,7 @@
                 </div>
                 <div class="col-sm-6">
                   <div class="form-group">
-                    <label>{{ __('Fecha de Deposito') }}</label>
+                    <label>{{ __('Fecha de Depósito') }}</label>
                     <input type="text" class="form-control datetimepicker bg-white mt-1" id="fecha_deposito_order" name="deposit_date" />
                   </div>
                 </div>
@@ -598,7 +599,7 @@
                 </div>
                 <div class="col-sm-6">
                   <div class="form-group">
-                    <label>{{ __('Fecha de Deposito') }}</label>
+                    <label>{{ __('Fecha de Depósito') }}</label>
                     <input type="text" class="form-control datetimepicker bg-white mt-1" id="fecha_deposito" name="deposit_date" />
                   </div>
                 </div>
@@ -654,7 +655,7 @@
                 </div>
                 <div class="col-sm-6">
                   <div class="form-group">
-                    <label>{{ __('Fecha de Deposito') }}</label>
+                    <label>{{ __('Fecha de Depósito') }}</label>
                     <input type="text" class="form-control datetimepicker bg-white mt-1" id="fecha_deposito_orders" name="deposit_date" />
                   </div>
                 </div>

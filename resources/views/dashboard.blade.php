@@ -134,36 +134,53 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-12">
-            <div class="card card-tasks">
-                <div class="card-header mb-1">
+		<div class="col-md-12">
+            <div class="card bg-blue">
+                <div class="card-header card-header-primary">
                     <div class="row">
-                        <div class="col-sm-3">
-                            <h3 class="card-title">Estado de Cuenta</h3>
+                        <div class="col-sm-5">
+                            <h4 class="card-title text-white p-0 m-0">{{ __('Estado de Cuenta') }}</h4>
                         </div>
-                        <div class="col-sm-9">
-                            <div class="form-group col-sm-3 float-right p-0 m-0">
-                                <select id="select_dash_info_estado" class="selectpicker show-menu-arrow mt-0 pt-0" data-style="btn-primary" data-live-search="true" data-width="100%">
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <input type="text" class="form-control datetimepicker bg-white" id="fecha_ini" name="deposit_date" />
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                            <input type="text" class="form-control datetimepicker bg-white" id="fecha_fin" name="deposit_date" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <select id="select_dash_info_estado" class="selectpicker show-menu-arrow " data-style="btn-danger" data-live-search="true" data-width="100%">
                                     <option value="*">Todas</option>
-                                @foreach($estaciones_info as $estacion)
+                                    @foreach($estaciones_info as $estacion)
                                     <option value="{{ $estacion->id }}">{{ $estacion->nombre_sucursal }}</option>
-                                @endforeach
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card-body pt-0 pb-0">
-                    <div class="row">
-                        <div class="table-full-width table-responsive col-sm-4">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="card card-tasks">
+                <div class="card-body pt-4 pb-0">
+                    <div class="row m-0 p-0">
+                        <div class="table-full-width table-responsive col-sm-12 mr-0 ml-0 pr-0 pl-0">
                             <table class="table">
                                 <thead class=" text-primary">
                                     <th>{{ __('Estación') }}</th>
-                                    <th>{{ __('Credito utilizado') }}</th>
+                                    <th>{{ __('Crédito utilizado') }}</th>
                                 </thead>
                                 <tbody>
                                     @foreach($estaciones_info as $estacion_1)
-                                    @if($estacion_1->credito_usado > 0)
+                                    @if($estacion_1->credito_usado >= 0)
                                     <tr>
                                         <td>
                                             <p class="title text-info">{{ $estacion_1->nombre_sucursal }}</p>
@@ -184,81 +201,184 @@
                                     </tr>              
                                 </tbody>
                             </table>
-                            
                         </div>
-                        <div class="table-full-width table-responsive col-sm-8">
-                            <table class="table"  id="table_dash_info_estado">
-                                <thead class=" text-primary">
-                                    <th>{{ __('Estación') }}</th>
-                                    <th>{{ __('Descripción') }}</th>
-                                    <th>{{ __('Importe') }}</th>
-                                    <th>{{ __('Cubierto') }}</th>
-                                    <th>{{ __('Fecha de expiración') }}</th>
-                                </thead>
-                                <tbody>
-                                @php
-                                    $total_suma = 0;
-                                @endphp
-                                @foreach($estaciones_info as $estacion_1)
-                                    @foreach($estacion_1->orders->where('status_id', '<=',5)->where('pagado', '==', 'FALSE') as $ventas)
-                                    <tr>
-                                        <td>{{ $estacion_1->nombre_sucursal }}</td>
-                                        <td>{{ $ventas->po }} - {{ $ventas->producto }} - {{  number_format($ventas->cantidad_lts, 0) }}L</td>
-                                        <td>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-9">
+            <div class="card card-tasks">
+                <div class="card-body pt-4 pb-0 pr-0 pl-0">
+                    <div class="table-full-width table-responsive col-sm-12 pr-1 pl-1">
+                        <table class="table"  id="table_dash_info_estado">
+                            <thead class=" text-primary">
+                                <th>{{ __('Fecha de expiración') }}</th>
+                                <th>{{ __('Estación') }}</th>
+                                <th>{{ __('Descripción') }}</th>
+                                <th>{{ __('Importe') }}</th>
+                                <th>{{ __('Depositos') }}</th>
+                                <th>{{ __('Fecha de deposito') }}</th>
+                                <th>{{ __('Costo Cubierto') }}</th>
+                            </thead>
+                            <tbody>
+
+                            @php
+                                $total_suma = 0;
+                            @endphp
+
+                            @foreach($estaciones_info as $estacion_1)
+                                @foreach($estacion_1->orders->where('status_id', '<=',5) as $ventas)
+                                @if(Carbon\Carbon::parse($ventas->fecha_expiracion)->format('d/m/Y') <= now()->format('d/m/Y'))
+                                <tr>
+                                    <td><p class="text-danger">{{ Carbon\Carbon::parse($ventas->fecha_expiracion)->format('d/m/Y') }}</p></td>
+                                    <td><p class="text-danger">{{ $estacion_1->nombre_sucursal }}</p></td>
+                                    <td><p class="text-danger">{{ $ventas->po }} - {{ $ventas->producto }} - {{  number_format($ventas->cantidad_lts, 0) }}L</p></td>
+                                    <td>
+                                        <p class="text-danger">
                                             @if($ventas->costo_real == '')
                                             ${{ number_format($ventas->costo_aprox, 2) }}
                                             @else
                                             ${{ number_format($ventas->costo_real, 2) }}
                                             @endif
-                                        </td>
-                                        <td>${{ number_format($ventas->total_abonado, 2) }}</td>
-                                        <td>{{ Carbon\Carbon::parse($ventas->fecha_expiracion)->format('d/m/Y') }}</td>
-                                    </tr>
-                                    @endforeach
-                                    @foreach($estacion_1->differentbill->where('id_status', 1) as $factura)
-                                    @if(Carbon\Carbon::parse($factura->expiration_date)->format('d/m/Y') <= now()->format('d/m/Y'))
-                                    <tr>
-                                        <td><p class="text-danger">{{ $estacion_1->nombre_sucursal }}</p></td>
-                                        <td><p class="text-danger">{{ $factura->description }}</p></td>
-                                        <td class="td-number"><p class="text-danger">${{ number_format($factura->quantity, 2) }}</p></td>
-                                        <td class="td-number"><p class="text-danger">${{ number_format($factura->differentbills->where('id_status', 2)->sum('cantidad'), 2) }}</p></td>
-                                        <td><p class="text-danger">{{ Carbon\Carbon::parse($factura->expiration_date)->format('d/m/Y') }}</p></td>
-                                    </tr>
+                                        </p>
+                                    </td>
+
+                                    @if(count($ventas->orderpayment->where('id_status', 2))> 0)
+                                    <td class="td-number"><p class="text-danger">${{ number_format($ventas->orderpayment[0]->cantidad, 2) }}</p></td>
+                                    <td><p class="text-danger">{{ Carbon\Carbon::parse($ventas->orderpayment[0]->deposit_date)->format('d/m/Y') }}</p></td>
                                     @else
+                                    <td class="td-number"></td>
+                                    <td></td>
+                                    @endif
+
+                                    <td><p class="text-danger">${{ number_format($ventas->total_abonado, 2) }}</p></td>
+                                </tr>
+
+                                @foreach($ventas->orderpayment->where('id_status', 2) as $key => $factur)
+                                @if($key >= 1)
+                                <tr>
+                                    <td colspan="4"></td>
+                                    <td>${{ number_format($factur->cantidad, 2)}}</td>
+                                    <td colspan="2">{{ Carbon\Carbon::parse($factur->deposit_date)->format('d/m/Y')}}</td>
+                                </tr>
+                                @endif
+                                @endforeach
+
+                                @else
+                                <tr>
+                                    <td>{{ Carbon\Carbon::parse($ventas->fecha_expiracion)->format('d/m/Y') }}</td>
+                                    <td>{{ $estacion_1->nombre_sucursal }}</td>
+                                    <td>{{ $ventas->po }} - {{ $ventas->producto }} - {{  number_format($ventas->cantidad_lts, 0) }}L</td>
+                                    <td>
+                                        @if($ventas->costo_real == '')
+                                        ${{ number_format($ventas->costo_aprox, 2) }}
+                                        @else
+                                        ${{ number_format($ventas->costo_real, 2) }}
+                                        @endif
+                                    </td>
+
+                                    @if(count($ventas->orderpayment->where('id_status', 2))> 0)
+                                    <td class="td-number">${{ number_format($ventas->orderpayment[0]->cantidad, 2) }}</td>
+                                    <td>{{ Carbon\Carbon::parse($ventas->orderpayment[0]->deposit_date)->format('d/m/Y') }}</td>
+                                    @else
+                                    <td class="td-number"></td>
+                                    <td></td>
+                                    @endif
+                                    
+                                    <td>${{ number_format($ventas->total_abonado, 2) }}</td>
+                                </tr>
+
+                                @foreach($ventas->orderpayment->where('id_status', 2) as $key => $factur)
+                                @if($key >= 1)
+                                <tr>
+                                    <td colspan="4"></td>
+                                    <td>${{ number_format($factur->cantidad, 2)}}</td>
+                                    <td colspan="2">{{ Carbon\Carbon::parse($factur->deposit_date)->format('d/m/Y')}}</td>
+                                </tr>
+                                @endif
+                                @endforeach
+
+                                @endif
+                                @endforeach
+
+                                @foreach($estacion_1->differentbill as $factura)
+                                @if(Carbon\Carbon::parse($factura->expiration_date)->format('d/m/Y') <= now()->format('d/m/Y'))
+                                <tr>
+                                    <td><p class="text-danger">{{ Carbon\Carbon::parse($factura->expiration_date)->format('d/m/Y') }}</p></td>
+                                    <td><p class="text-danger">{{ $estacion_1->nombre_sucursal }}</p></td>
+                                    <td><p class="text-danger">{{ $factura->description }}</p></td>
+                                    <td class="td-number"><p class="text-danger">${{ number_format($factura->quantity, 2) }}</p></td>
+
+                                    @if(count($factura->differentbills->where('id_status', 2))> 0)
+                                    <td class="td-number"><p class="text-danger">${{ number_format($factura->differentbills[0]->cantidad, 2) }}</p></td>
+                                    <td><p class="text-danger">{{ Carbon\Carbon::parse($factura->differentbills[0]->deposit_date)->format('d/m/Y') }}</p></td>
+                                    @else
+                                    <td class="td-number"></td>
+                                    <td></td>
+                                    @endif
+
+                                    <td><p class="text-danger">${{ number_format($factura->differentbills->where('id_status', 2)->sum('cantidad'), 2) }}</p></td>
+                                
+                                    @foreach($factura->differentbills->where('id_status', 2) as $key => $factur)
+                                    @if($key >= 1)
                                     <tr>
-                                        <td>{{ $estacion_1->nombre_sucursal }}</td>
-                                        <td>{{ $factura->description }}</td>
-                                        <td>${{ number_format($factura->quantity, 2) }}</td>
-                                        <td>${{ number_format($factura->differentbills->where('id_status', 2)->sum('cantidad'), 2) }}</td>
-                                        <td>{{ Carbon\Carbon::parse($factura->expiration_date)->format('d/m/Y') }}</td>
+                                        <td colspan="4"></td>
+                                        <td><p class="text-danger">${{ number_format($factur->cantidad, 2)}}</p></td>
+                                        <td colspan="2"><p class="text-danger">{{ Carbon\Carbon::parse($factur->deposit_date)->format('d/m/Y')}}</p></td>
                                     </tr>
                                     @endif
-                                    @php
-                                        $total_suma = $total_suma + $factura->differentbills->where('id_status', 2)->sum('cantidad');
-                                    @endphp
                                     @endforeach
-                                @endforeach
+                                </tr>
+                                @else
+                                <tr>
+                                    <td>{{ Carbon\Carbon::parse($factura->expiration_date)->format('d/m/Y') }}</td>
+                                    <td>{{ $estacion_1->nombre_sucursal }}</td>
+                                    <td>{{ $factura->description }}</td>
+                                    <td>${{ number_format($factura->quantity, 2) }}</td>
+                                    @if(count($factura->differentbills->where('id_status', 2))> 0)
+                                    <td class="td-number">${{ number_format($factura->differentbills[0]->cantidad, 2) }}</td>
+                                    <td>{{ Carbon\Carbon::parse($factura->differentbills[0]->deposit_date)->format('d/m/Y') }}</td>
+                                    @else
+                                    <td class="td-number"></td>
+                                    <td></td>
+                                    @endif
+                                    <td>${{ number_format($factura->differentbills->where('id_status', 2)->sum('cantidad'), 2) }}</td>
+                                </tr>
+                                    @foreach($factura->differentbills->where('id_status', 2) as $key => $factur)
+                                    @if($key >= 1)
                                     <tr>
-                                        <td colspan="2" scope="row" class="text-right"></td>
-                                        <td>
-                                            ${{ number_format($info_pedidos->where('status_id', '<=',5)->where('pagado', '==', 'FALSE')->sum('costo_real') + $info_pedidos->where('status_id', '<=',5)->where('costo_real', '==', '')->where('pagado', 'FALSE')->sum('costo_aprox') + $info_facturas->where('id_status', 1)->sum('quantity'), 2 )}}
-                                        </td>
-                                        <td colspan="2">
-                                            ${{ number_format($info_pedidos->where('status_id', '<=',5)->where('pagado', 'FALSE')->sum('total_abonado') + $total_suma, 2 )}}
-                                        </td>
+                                        <td colspan="4"></td>
+                                        <td>${{ number_format($factur->cantidad, 2)}}</td>
+                                        <td colspan="2">{{ Carbon\Carbon::parse($factur->deposit_date)->format('d/m/Y')}}</td>
                                     </tr>
-                                    <tr>
-                                        <td colspan="2" scope="row" class="text-right">Total:</td>
-                                        <td colspan="3">
-                                            ${{ number_format($info_pedidos->where('status_id', '<=',5)->where('pagado', 'FALSE')->sum('costo_real') + $info_pedidos->where('status_id', '<=',5)->where('costo_real', '==', '')->where('pagado', 'FALSE')->sum('costo_aprox') + $info_facturas->where('id_status', 1)->sum('quantity') - $info_pedidos->where('status_id', '<=',5)->where('pagado', 'FALSE')->sum('total_abonado') - $total_suma, 2 )}}
-                                        </td>
-                                    </tr>             
-                                </tbody>
-                            </table>
-                            
-                        </div>
+                                    @endif
+                                    @endforeach
+                                @endif
+                                @php
+                                    $total_suma = $total_suma + $factura->differentbills->where('id_status', 2)->sum('cantidad');
+                                @endphp
+                                @endforeach
+                            @endforeach
+                                <tr>
+                                    <td colspan="3" scope="row" class="text-right"></td>
+                                    <td>
+                                        ${{ number_format($info_pedidos->where('status_id', '<=',5)->where('pagado', '==', 'FALSE')->sum('costo_real') + $info_pedidos->where('status_id', '<=',5)->where('costo_real', '==', '')->where('pagado', 'FALSE')->sum('costo_aprox') + $info_facturas->where('id_status', 1)->sum('quantity'), 2 )}}
+                                    </td>
+                                    <td colspan="2" scope="row" class="text-right"></td>
+                                    <td>
+                                        ${{ number_format($info_pedidos->where('status_id', '<=',5)->where('pagado', 'FALSE')->sum('total_abonado') + $total_suma, 2 )}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" scope="row" class="text-right">Total:</td>
+                                    <td>
+                                        ${{ number_format($info_pedidos->where('status_id', '<=',5)->where('pagado', 'FALSE')->sum('costo_real') + $info_pedidos->where('status_id', '<=',5)->where('costo_real', '==', '')->where('pagado', 'FALSE')->sum('costo_aprox') + $info_facturas->where('id_status', 1)->sum('quantity') - $info_pedidos->where('status_id', '<=',5)->where('pagado', 'FALSE')->sum('total_abonado') - $total_suma, 2 )}}
+                                    </td>
+                                    <td colspan="3"></td>
+                                </tr>             
+                            </tbody>
+                        </table>
                     </div>
-                    
                 </div>
             </div>
         </div>
@@ -270,7 +390,7 @@
             <div class="card card-chart card-tasks">
                 <div class="card-header">
                     <h3 class="card-title mt-2">Estaciones con más Compras</h3>
-                    <h4 class="card-title mt-2"><i class="tim-icons icon-delivery-fast text-info"></i> 3,500</h4>
+                    <!--h4 class="card-title mt-2"><i class="tim-icons icon-delivery-fast text-info"></i> 3,500</h4-->
                 </div>
                 <div class="card-body">
                     <div class="chart-area mt-5">
@@ -341,7 +461,9 @@
             </div>
         </div>
     </div>
+
     @else
+
     <div class="row">
         <div class="col-lg-8 col-md-6">
             <div class="row">
@@ -402,8 +524,8 @@
                                     <td>
                                         <p class="title text-info">{{ $estacion_1->nombre_sucursal }}</p>
                                         <p class="text-muted">Saldo ${{ number_format($estacion_1->saldo, 2) }}</p>
-                                        <p class="text-muted">Credito ${{ number_format($estacion_1->credito, 2) }}</p>
-                                        <p class="text-muted">Credito Utilizado ${{ number_format($estacion_1->credito_utilizado, 2) }}</p>
+                                        <p class="text-muted">Crédito ${{ number_format($estacion_1->credito, 2) }}</p>
+                                        <p class="text-muted">Crédito Utilizado ${{ number_format($estacion_1->credito_utilizado, 2) }}</p>
                                     </td>
                                     <td class="td-actions text-right">
                                         <a class="btn btn-danger btn-link" data-original-title=""
@@ -423,36 +545,52 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-12">
-            <div class="card card-tasks">
-                <div class="card-header mb-1">
+		<div class="col-md-12">
+            <div class="card bg-blue">
+                <div class="card-header card-header-primary">
                     <div class="row">
-                        <div class="col-sm-3">
-                            <h3 class="card-title">Estado de Cuenta</h3>
+                        <div class="col-sm-5">
+                            <h4 class="card-title text-white p-0 m-0">{{ __('Estado de Cuenta') }}</h4>
                         </div>
-                        <div class="col-sm-9">
-                            <div class="form-group col-sm-3 float-right p-0 m-0 d-none">
-                                <select id="select_dash_info_estado" class="selectpicker show-menu-arrow mt-0 pt-0" data-style="btn-primary" data-live-search="true" data-width="100%">
-                                    <option value="*">Todas</option>
-                                @foreach($estaciones_info as $estacion)
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <input type="text" class="form-control datetimepicker bg-white" id="fecha_ini" name="deposit_date" />
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                            <input type="text" class="form-control datetimepicker bg-white" id="fecha_fin" name="deposit_date" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <select id="select_dash_info_estado" class="selectpicker show-menu-arrow " data-style="btn-danger" data-live-search="true" data-width="100%">
+                                    @foreach($estaciones_info as $estacion)
                                     <option value="{{ $estacion->id }}">{{ $estacion->nombre_sucursal }}</option>
-                                @endforeach
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card-body pt-0 pb-0">
-                    <div class="row">
-                        <div class="table-full-width table-responsive col-sm-4">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="card card-tasks">
+                <div class="card-body pt-4 pb-0">
+                    <div class="row m-0 p-0">
+                        <div class="table-full-width table-responsive col-sm-12 mr-0 ml-0 pr-0 pl-0">
                             <table class="table">
                                 <thead class=" text-primary">
                                     <th>{{ __('Estación') }}</th>
-                                    <th>{{ __('Credito utilizado') }}</th>
+                                    <th>{{ __('Crédito utilizado') }}</th>
                                 </thead>
                                 <tbody>
                                     @foreach($estaciones_info as $estacion_1)
-                                    @if($estacion_1->credito_usado > 0)
+                                    @if($estacion_1->credito_usado >= 0)
                                     <tr>
                                         <td>
                                             <p class="title text-info">{{ $estacion_1->nombre_sucursal }}</p>
@@ -473,93 +611,184 @@
                                     </tr>              
                                 </tbody>
                             </table>
-                            
-                        </div>
-                        <div class="table-full-width table-responsive col-sm-8">
-                            <table class="table"  id="table_dash_info_estado">
-                                <thead class=" text-primary">
-                                    <th>{{ __('Estación') }}</th>
-                                    <th>{{ __('Descripción') }}</th>
-                                    <th>{{ __('Importe') }}</th>
-                                    <th>{{ __('Cubierto') }}</th>
-                                    <th>{{ __('Fecha de expiración') }}</th>
-                                </thead>
-                                <tbody>
-                                @php
-                                    $total_suma = 0;
-                                    $total_cantidad = 0;
-                                @endphp
-                                @foreach($estaciones_info as $estacion_1)
-                                    @foreach($estacion_1->orders->where('status_id', '<=',5)->where('pagado', '==', 'FALSE') as $ventas)
-                                    <tr>
-                                        <td>{{ $estacion_1->nombre_sucursal }}</td>
-                                        <td>{{ $ventas->po }} - {{ $ventas->producto }} - {{  number_format($ventas->cantidad_lts, 0) }}L</td>
-                                        <td>
-                                            @if($ventas->costo_real == '')
-                                            ${{ number_format($ventas->costo_aprox, 2) }}
-                                                @php
-                                                    $total_cantidad = $total_cantidad + $ventas->costo_aprox;
-                                                @endphp
-                                            @else
-                                            ${{ number_format($ventas->costo_real, 2) }}
-                                                @php
-                                                    $total_cantidad = $total_cantidad + $ventas->costo_real;
-                                                @endphp
-                                            @endif
-                                        </td>
-                                        <td>${{ number_format($ventas->total_abonado, 2) }}</td>
-                                        <td>{{ Carbon\Carbon::parse($ventas->fecha_expiracion)->format('d/m/Y') }}</td>
-                                    </tr>
-                                    @php
-                                        $total_suma = $total_suma + $ventas->total_abonado;
-                                    @endphp
-
-                                    @endforeach
-                                    @foreach($estacion_1->differentbill->where('id_status', 1) as $factura)
-                                    @if(Carbon\Carbon::parse($factura->expiration_date)->format('d/m/Y') <= now()->format('d/m/Y'))
-                                    <tr>
-                                        <td><p class="text-danger">{{ $estacion_1->nombre_sucursal }}</p></td>
-                                        <td><p class="text-danger">{{ $factura->description }}</p></td>
-                                        <td class="td-number"><p class="text-danger">${{ number_format($factura->quantity, 2) }}</p></td>
-                                        <td class="td-number"><p class="text-danger">${{ number_format($factura->differentbills->where('id_status', 2)->sum('cantidad'), 2) }}</p></td>
-                                        <td><p class="text-danger">{{ Carbon\Carbon::parse($factura->expiration_date)->format('d/m/Y') }}</p></td>
-                                    </tr>
-                                    @else
-                                    <tr>
-                                        <td>{{ $estacion_1->nombre_sucursal }}</td>
-                                        <td>{{ $factura->description }}</td>
-                                        <td>${{ number_format($factura->quantity, 2) }}</td>
-                                        <td>${{ number_format($factura->differentbills->where('id_status', 2)->sum('cantidad'), 2) }}</td>
-                                        <td>{{ Carbon\Carbon::parse($factura->expiration_date)->format('d/m/Y') }}</td>
-                                    </tr>
-                                    @endif
-                                    @php
-                                        $total_suma = $total_suma + $factura->differentbills->where('id_status', 2)->sum('cantidad');
-                                        $total_cantidad = $total_cantidad + $factura->quantity;
-                                    @endphp
-                                    @endforeach
-                                @endforeach
-                                    <tr>
-                                        <td colspan="2" scope="row" class="text-right"></td>
-                                        <td>
-                                            ${{ number_format($total_cantidad, 2 )}}
-                                        </td>
-                                        <td colspan="2">
-                                            ${{ number_format($total_suma, 2 )}}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2" scope="row" class="text-right">Total:</td>
-                                        <td colspan="3">
-                                            ${{ number_format($total_cantidad - $total_suma, 2 )}}
-                                        </td>
-                                    </tr>             
-                                </tbody>
-                            </table>
-                            
                         </div>
                     </div>
-                    
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-9">
+            <div class="card card-tasks">
+                <div class="card-body pt-4 pb-0 pr-0 pl-0">
+                    <div class="table-full-width table-responsive col-sm-12 pr-1 pl-1">
+                        <table class="table"  id="table_dash_info_estado">
+                            <thead class=" text-primary">
+                                <th>{{ __('Fecha de expiración') }}</th>
+                                <th>{{ __('Estación') }}</th>
+                                <th>{{ __('Descripción') }}</th>
+                                <th>{{ __('Importe') }}</th>
+                                <th>{{ __('Depositos') }}</th>
+                                <th>{{ __('Fecha de deposito') }}</th>
+                                <th>{{ __('Costo Cubierto') }}</th>
+                            </thead>
+                            <tbody>
+
+                            @php
+                                $total_suma = 0;
+                            @endphp
+
+                            @foreach($estaciones_info as $estacion_1)
+                                @foreach($estacion_1->orders->where('status_id', '<=',5) as $ventas)
+                                @if(Carbon\Carbon::parse($ventas->fecha_expiracion)->format('d/m/Y') <= now()->format('d/m/Y'))
+                                <tr>
+                                    <td><p class="text-danger">{{ Carbon\Carbon::parse($ventas->fecha_expiracion)->format('d/m/Y') }}</p></td>
+                                    <td><p class="text-danger">{{ $estacion_1->nombre_sucursal }}</p></td>
+                                    <td><p class="text-danger">{{ $ventas->po }} - {{ $ventas->producto }} - {{  number_format($ventas->cantidad_lts, 0) }}L</p></td>
+                                    <td>
+                                        <p class="text-danger">
+                                            @if($ventas->costo_real == '')
+                                            ${{ number_format($ventas->costo_aprox, 2) }}
+                                            @else
+                                            ${{ number_format($ventas->costo_real, 2) }}
+                                            @endif
+                                        </p>
+                                    </td>
+
+                                    @if(count($ventas->orderpayment->where('id_status', 2))> 0)
+                                    <td class="td-number"><p class="text-danger">${{ number_format($ventas->orderpayment[0]->cantidad, 2) }}</p></td>
+                                    <td><p class="text-danger">{{ Carbon\Carbon::parse($ventas->orderpayment[0]->deposit_date)->format('d/m/Y') }}</p></td>
+                                    @else
+                                    <td class="td-number"></td>
+                                    <td></td>
+                                    @endif
+
+                                    <td><p class="text-danger">${{ number_format($ventas->total_abonado, 2) }}</p></td>
+                                </tr>
+
+                                @foreach($ventas->orderpayment->where('id_status', 2) as $key => $factur)
+                                @if($key >= 1)
+                                <tr>
+                                    <td colspan="4"></td>
+                                    <td>${{ number_format($factur->cantidad, 2)}}</td>
+                                    <td colspan="2">{{ Carbon\Carbon::parse($factur->deposit_date)->format('d/m/Y')}}</td>
+                                </tr>
+                                @endif
+                                @endforeach
+
+                                @else
+                                <tr>
+                                    <td>{{ Carbon\Carbon::parse($ventas->fecha_expiracion)->format('d/m/Y') }}</td>
+                                    <td>{{ $estacion_1->nombre_sucursal }}</td>
+                                    <td>{{ $ventas->po }} - {{ $ventas->producto }} - {{  number_format($ventas->cantidad_lts, 0) }}L</td>
+                                    <td>
+                                        @if($ventas->costo_real == '')
+                                        ${{ number_format($ventas->costo_aprox, 2) }}
+                                        @else
+                                        ${{ number_format($ventas->costo_real, 2) }}
+                                        @endif
+                                    </td>
+
+                                    @if(count($ventas->orderpayment->where('id_status', 2))> 0)
+                                    <td class="td-number">${{ number_format($ventas->orderpayment[0]->cantidad, 2) }}</td>
+                                    <td>{{ Carbon\Carbon::parse($ventas->orderpayment[0]->deposit_date)->format('d/m/Y') }}</td>
+                                    @else
+                                    <td class="td-number"></td>
+                                    <td></td>
+                                    @endif
+                                    
+                                    <td>${{ number_format($ventas->total_abonado, 2) }}</td>
+                                </tr>
+
+                                @foreach($ventas->orderpayment->where('id_status', 2) as $key => $factur)
+                                @if($key >= 1)
+                                <tr>
+                                    <td colspan="4"></td>
+                                    <td>${{ number_format($factur->cantidad, 2)}}</td>
+                                    <td colspan="2">{{ Carbon\Carbon::parse($factur->deposit_date)->format('d/m/Y')}}</td>
+                                </tr>
+                                @endif
+                                @endforeach
+
+                                @endif
+                                @endforeach
+
+                                @foreach($estacion_1->differentbill as $factura)
+                                @if(Carbon\Carbon::parse($factura->expiration_date)->format('d/m/Y') <= now()->format('d/m/Y'))
+                                <tr>
+                                    <td><p class="text-danger">{{ Carbon\Carbon::parse($factura->expiration_date)->format('d/m/Y') }}</p></td>
+                                    <td><p class="text-danger">{{ $estacion_1->nombre_sucursal }}</p></td>
+                                    <td><p class="text-danger">{{ $factura->description }}</p></td>
+                                    <td class="td-number"><p class="text-danger">${{ number_format($factura->quantity, 2) }}</p></td>
+
+                                    @if(count($factura->differentbills->where('id_status', 2))> 0)
+                                    <td class="td-number"><p class="text-danger">${{ number_format($factura->differentbills[0]->cantidad, 2) }}</p></td>
+                                    <td><p class="text-danger">{{ Carbon\Carbon::parse($factura->differentbills[0]->deposit_date)->format('d/m/Y') }}</p></td>
+                                    @else
+                                    <td class="td-number"></td>
+                                    <td></td>
+                                    @endif
+
+                                    <td><p class="text-danger">${{ number_format($factura->differentbills->where('id_status', 2)->sum('cantidad'), 2) }}</p></td>
+                                
+                                    @foreach($factura->differentbills->where('id_status', 2) as $key => $factur)
+                                    @if($key >= 1)
+                                    <tr>
+                                        <td colspan="4"></td>
+                                        <td><p class="text-danger">${{ number_format($factur->cantidad, 2)}}</p></td>
+                                        <td colspan="2"><p class="text-danger">{{ Carbon\Carbon::parse($factur->deposit_date)->format('d/m/Y')}}</p></td>
+                                    </tr>
+                                    @endif
+                                    @endforeach
+                                </tr>
+                                @else
+                                <tr>
+                                    <td>{{ Carbon\Carbon::parse($factura->expiration_date)->format('d/m/Y') }}</td>
+                                    <td>{{ $estacion_1->nombre_sucursal }}</td>
+                                    <td>{{ $factura->description }}</td>
+                                    <td>${{ number_format($factura->quantity, 2) }}</td>
+                                    @if(count($factura->differentbills->where('id_status', 2))> 0)
+                                    <td class="td-number">${{ number_format($factura->differentbills[0]->cantidad, 2) }}</td>
+                                    <td>{{ Carbon\Carbon::parse($factura->differentbills[0]->deposit_date)->format('d/m/Y') }}</td>
+                                    @else
+                                    <td class="td-number"></td>
+                                    <td></td>
+                                    @endif
+                                    <td>${{ number_format($factura->differentbills->where('id_status', 2)->sum('cantidad'), 2) }}</td>
+                                </tr>
+                                    @foreach($factura->differentbills->where('id_status', 2) as $key => $factur)
+                                    @if($key >= 1)
+                                    <tr>
+                                        <td colspan="4"></td>
+                                        <td>${{ number_format($factur->cantidad, 2)}}</td>
+                                        <td colspan="2">{{ Carbon\Carbon::parse($factur->deposit_date)->format('d/m/Y')}}</td>
+                                    </tr>
+                                    @endif
+                                    @endforeach
+                                @endif
+                                @php
+                                    $total_suma = $total_suma + $factura->differentbills->where('id_status', 2)->sum('cantidad');
+                                @endphp
+                                @endforeach
+                            @endforeach
+                                <tr>
+                                    <td colspan="3" scope="row" class="text-right"></td>
+                                    <td>
+                                        ${{ number_format($info_pedidos->where('status_id', '<=',5)->where('pagado', '==', 'FALSE')->sum('costo_real') + $info_pedidos->where('status_id', '<=',5)->where('costo_real', '==', '')->where('pagado', 'FALSE')->sum('costo_aprox') + $info_facturas->where('id_status', 1)->sum('quantity'), 2 )}}
+                                    </td>
+                                    <td colspan="2" scope="row" class="text-right"></td>
+                                    <td>
+                                        ${{ number_format($info_pedidos->where('status_id', '<=',5)->where('pagado', 'FALSE')->sum('total_abonado') + $total_suma, 2 )}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" scope="row" class="text-right">Total:</td>
+                                    <td>
+                                        ${{ number_format($info_pedidos->where('status_id', '<=',5)->where('pagado', 'FALSE')->sum('costo_real') + $info_pedidos->where('status_id', '<=',5)->where('costo_real', '==', '')->where('pagado', 'FALSE')->sum('costo_aprox') + $info_facturas->where('id_status', 1)->sum('quantity') - $info_pedidos->where('status_id', '<=',5)->where('pagado', 'FALSE')->sum('total_abonado') - $total_suma, 2 )}}
+                                    </td>
+                                    <td colspan="3"></td>
+                                </tr>             
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

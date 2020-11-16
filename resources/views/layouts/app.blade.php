@@ -117,21 +117,24 @@
 
         <script>
 
-            
-
             // funciones para la pagina de dashboard
             $('#select_dash_info_estado').change(function(){
+
                 $.ajax({
                     url: 'search',
                     type: 'GET',
                     dataType: 'json',
                     data: {
                         'id' : $('#select_dash_info_estado').val(),
+                        'ini' : $('#fecha_ini').val(),
+                        'fin' : $('#fecha_fin').val(),
                     },
                     headers:{
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response){
+                        demo.showNotification('top','center', 'Actualizando información...', 'tim-icons icon-bell-55', '1');
+
                         // vaciamos la tabla
                         $('#table_dash_info_estado').find('tbody').empty();
                         //console.log(response.total_importe)
@@ -139,15 +142,14 @@
                         // empezamos a imprimir la informacion en la tabla
                         for(i=0; i<response.estado.length; i++){
                             $("#table_dash_info_estado").find('tbody').append(
-                                '<tr><td>'+response.estado[i][0]+'</td><td>'+response.estado[i][1]+'</td><td>'+response.estado[i][2]+'</td><td>'+response.estado[i][3]+'</td><td>'+response.estado[i][4]+'</td></tr>'
+                                '<tr><td>'+response.estado[i][0]+'</td><td>'+response.estado[i][1]+'</td><td>'+response.estado[i][2]+'</td><td>'+response.estado[i][3]+'</td><td>'+response.estado[i][4]+'</td><td>'+response.estado[i][5]+'</td><td>'+response.estado[i][6]+'</td></tr>'
                             );
                         }
-
                         $("#table_dash_info_estado").find('tbody').append(
-                            '<tr><td colspan="2" class="text-right"></td><td>$'+response.total_importe.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+'</td><td colspan="2">$'+response.total_abonado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+'</td></tr>'
+                            '<tr><td colspan="3" class="text-right"></td><td>$'+response.total_importe.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+'</td><td colspan="2"></td><td>$'+response.total_abonado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+'</td></tr>'
                         );
                         $("#table_dash_info_estado").find('tbody').append(
-                            '<tr><td colspan="2" scope="row" class="text-right">Total:</td><td>$'+(response.total_importe - response.total_abonado).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+'</td><td colspan="2"></td></tr>'
+                            '<tr><td colspan="3" scope="row" class="text-right">Total:</td><td>$'+(response.total_importe - response.total_abonado).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+'</td><td colspan="3"></td></tr>'
                         );
                     }
                 })
@@ -250,7 +252,11 @@
                         $('#input-cantidad_lts').append('<option disabled selected>-- Seleccionar --</option>');
                         //console.log(response.length);
                         for(i=0; i<response.length; i++){
-                            $('#input-cantidad_lts').append('<option value="'+response[i]['type_container']+'">'+response[i]['type_container']+'L - '+response[i]['total_containers']+' Disponibles para la fecha</option>');
+                            if(response[i]['total_containers'] > 0){
+                                $('#input-cantidad_lts').append('<option value="'+response[i]['type_container']+'">'+response[i]['type_container']+'L - '+response[i]['total_containers']+' Disponibles para la fecha</option>');
+                            }else{
+                                $('#input-cantidad_lts').append('<option value="'+response[i]['type_container']+'" disabled>'+response[i]['type_container']+'L - '+response[i]['total_containers']+' Disponibles para la fecha</option>');
+                            }
                         }
                         $('#input-cantidad_lts').selectpicker('render');
                         $('#input-cantidad_lts').selectpicker('refresh');
@@ -375,7 +381,7 @@
                 if(parseFloat($('#input-disponible').val()) != 0 && parseFloat($('#input-disponible').val()) >= 100000){
 
                     if(parseFloat($('#input-disponible').val()) > parseFloat( $('#input-costo_aprox').val())) {
-                        demo.showNotification('top', 'center','no hay saldo pero si credito suficiente', 'tim-icons icon-bell-55', '4');
+                        demo.showNotification('top', 'center','No hay saldo pero si credito suficiente', 'tim-icons icon-bell-55', '4');
                         $('#input-credito_usado').val(dividir( multiplicar($('#input-disponible').val()) - multiplicar($('#input-costo_aprox').val())) ) ;
                         // $("#guardar").removeClass("ocultar");
                     }else{
@@ -538,12 +544,14 @@
                     const timeElapsed = Date.now();
                     const today = new Date(timeElapsed);
                     init_calendar('input-dia_entrega','01-01-2020', '07-07-2025');
-
+                    // facturas
                     init_calendar_2('fecha_deposito','01-01-2020', today.toISOString());
                     init_calendar_2('fecha_deposito_2','01-01-2020', today.toISOString());
                     init_calendar_2('fecha_deposito_order','01-01-2020', today.toISOString());
                     init_calendar_2('fecha_deposito_orders','01-01-2020', today.toISOString());
-                    
+                    // home
+                    init_calendar_2('fecha_ini','01-01-2020', today.toISOString());
+                    init_calendar_2('fecha_fin','01-01-2020', today.toISOString());
                     //
                     iniciar_selector_de_archivos();
                     // tables inician aqui

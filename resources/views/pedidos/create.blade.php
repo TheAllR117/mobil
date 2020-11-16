@@ -31,7 +31,7 @@
                                 <input class="form-control datetimepicker" id="input_dia_entrega_p" name="dia_entrega" type="text" placeholder="Fecha" >
                             	</div>
                               <div class="form-group{{ $errors->has('costo_aprox') ? ' has-danger' : '' }} col-sm-4">
-                                	<label for="costo_aprox">{{ __('Costo aproximado') }}</label>
+                                	<label for="costo_aprox">{{ __('Costo apróximado') }}</label>
                                 	<input aria-describedby="costo_aproxHelp" aria-required="true" class="form-control{{ $errors->has('costo_aprox') ? ' is-invalid' : '' }}" id="input-costo_aprox" name="costo_aprox" type="number" min="0.00" step="0.01" value="{{ old('costo_aprox', 0)}}" readonly>
                                   	@if ($errors->has('costo_aprox'))
                                     <span class="error text-danger" for="input-costo_aprox" id="costo_aprox-error">
@@ -71,7 +71,7 @@
                                   		<option disabled selected>-- Seleccionar --</option>
                                   		<option value="Extra">Extra</option>
                                   		<option value="Supreme">Supreme</option>
-                                  		<option value="Diesel">Diesel</option>
+                                  		<option value="Diésel">Diésel</option>
                                 	</select>
                               	</div>
 
@@ -135,19 +135,7 @@
 
                               	
                             </div>
-                            {{-- <div class="row mt-4">
-                              <div class="form-group{{ $errors->has('po') ? ' has-danger' : '' }} col-sm-3">
-                                  <label for="po">{{ __('PO') }}</label>
-                                  <input aria-describedby="poHelp" aria-required="true" class="form-control{{ $errors->has('po') ? ' is-invalid' : '' }}" id="input-po" name="po" type="text" value="{{ old('po')}}">
-                                    @if ($errors->has('po'))
-                                    <span class="error text-danger" for="input-po" id="po-error">
-                                      {{ $errors->first('po') }}
-                                    </span>
-                                    @endif
-                                  </input>
-                                </div>
-                            </div> --}}
-
+                            
                             <div class="card-footer ml-auto mr-auto" id="btn-guardar-div">
                                 <button class="btn btn-primary d-none" type="submit" id="guardar">
                                     {{ __('Guardar') }}

@@ -228,7 +228,7 @@
 
                             @foreach($estaciones_info as $estacion_1)
                                 @foreach($estacion_1->orders->where('status_id', '<=',5) as $ventas)
-                                @if(Carbon\Carbon::parse($ventas->fecha_expiracion)->format('d/m/Y') <= now()->format('d/m/Y'))
+                                @if(Carbon\Carbon::parse($ventas->fecha_expiracion)->format('d/m/Y') >= now()->format('d/m/Y'))
                                 <tr>
                                     <td><p class="text-danger">{{ Carbon\Carbon::parse($ventas->fecha_expiracion)->format('d/m/Y') }}</p></td>
                                     <td><p class="text-danger">{{ $estacion_1->nombre_sucursal }}</p></td>

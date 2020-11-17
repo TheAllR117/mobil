@@ -236,7 +236,7 @@ class HomeController extends Controller
                 $total_abonado = $total_abonado + $ventas->total_abonado;
             }
             
-            foreach($estacion->differentbill->whereBetween('created_at', [$request->ini, $request->fin]) as $factura){
+            foreach($estacion->differentbill->whereBetween('created_at', [$request->ini, date("Y-m-d", strtotime($request->fin."+ 1 days"))]) as $factura){
                 array_push($array_facturas_estacione, Carbon::parse($factura->expiration_date)->format('d/m/Y'));
                 array_push($array_facturas_estacione, $estacion->nombre_sucursal);
                 array_push($array_facturas_estacione, $factura->description);

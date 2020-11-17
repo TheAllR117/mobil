@@ -69,7 +69,7 @@ class HomeController extends Controller
         //consulta de informacion
         $estacion_total = $estacion::where('razon_social','!=','*')->count();
 
-        $abonos_pendientes = $payment::where('id_status','1')->count() + DifferentBill::where('id_status', 1)->count() + DifferentBillPayments::where('id_status', 1)->count();
+        $abonos_pendientes = strval(intval($payment::where('id_status','1')->count()) + intval(DifferentBill::where('id_status', 1)->count()) + intval(DifferentBillPayments::where('id_status', 1)->count()));
 
         $estacion_saldo = $estacion::select('saldo')->get();
         //dd($estacion_saldo[0]->saldo);

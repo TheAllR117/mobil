@@ -14,6 +14,7 @@ use App\Order;
 use App\DifferentBill;
 use DB;
 use App\DifferentBillPayments;
+use App\OrderPayments;
 use Carbon\Carbon;
 
 class HomeController extends Controller
@@ -69,7 +70,7 @@ class HomeController extends Controller
         //consulta de informacion
         $estacion_total = $estacion::where('razon_social','!=','*')->count();
 
-        $abonos_pendientes = strval(intval($payment::where('id_status','1')->count()) + intval(DifferentBill::where('id_status', 1)->count()) + intval(DifferentBillPayments::where('id_status', 1)->count()));
+        $abonos_pendientes = strval(intval($payment::where('id_status','1')->count()) + intval(OrderPayments::where('id_status', 1)->count()) + intval(DifferentBillPayments::where('id_status', 1)->count()));
 
         $estacion_saldo = $estacion::select('saldo')->get();
         //dd($estacion_saldo[0]->saldo);
@@ -176,13 +177,7 @@ class HomeController extends Controller
             $info_estaciones = Estacion::where('id', $request->id)->orderBy('nombre_sucursal')->get();
             //$info_estaciones = Estacion::where('id', 10)->orderBy('nombre_sucursal')->get();
         }
-        //información de los pedidos
-        $info_pedidos = Order::all();
-        //información de las facturas diversas
-        $info_facturas = DifferentBill::all();
-        //información de las facturas diversas pagos
-        $info_facturas_pagos = DifferentBillPayments::all();
-
+        
         $array_ventas_estaciones = [];
         $array_facturas_estacione = [];
         $array_ventas_estaciones_final = [];

@@ -26,7 +26,7 @@
                 <div class="row mt-5">
 
                   <div class="form-group{{ $errors->has('razon_social') ? ' has-danger' : '' }} col-sm-4">
-                    <label for="razon_social">{{ __('Razon social') }}</label>
+                    <label for="razon_social">{{ __('Razón social') }}</label>
                     <input type="text" class="form-control{{ $errors->has('razon_social') ? ' is-invalid' : '' }}" id="input-razon_social" aria-describedby="razon_socialHelp"  value="{{ old('razon_social')}}" aria-required="true" name="razon_social">
                     @if ($errors->has('razon_social'))
                       <span id="razon_social-error" class="error text-danger" for="input-razon_social">
@@ -189,7 +189,7 @@
               	</div>
 
   				<div class="form-group  col-sm-4 text-center">
-  					<label for="credito">{{ __('Activar Credito') }}</label>
+  					<label for="credito">{{ __('Activar Crédito') }}</label>
   					<div class="togglebutton">
   						<label>
   							<input type="checkbox" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" name="linea_credito" id="input-linea_credito">

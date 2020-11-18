@@ -26,7 +26,7 @@
                             <div class="row mt-5">
                                 <div class="form-group{{ $errors->has('razon_social') ? ' has-danger' : '' }} col-sm-4">
                                     <label for="razon_social">
-                                        {{ __('Razon social') }}
+                                        {{ __('Razón social') }}
                                     </label>
                                     <input aria-describedby="razon_socialHelp" aria-required="true" class="form-control{{ $errors->has('razon_social') ? ' is-invalid' : '' }}" id="input-razon_social" name="razon_social" required="true" type="text" value="{{ old('razon_social', $estacion_edit->razon_social)}}">
                                         @if ($errors->has('razon_social'))
@@ -220,7 +220,7 @@
                                 </div>
                                 <div class="form-group col-sm-4 text-center">
                                     <label for="credito">
-                                        {{ __('Activar Credito') }}
+                                        {{ __('Activar Crédito') }}
                                     </label>
                                     <div class="togglebutton">
                                         <label>

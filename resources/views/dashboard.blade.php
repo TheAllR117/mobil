@@ -216,7 +216,7 @@
                                 <th>{{ __('Estación') }}</th>
                                 <th>{{ __('Descripción') }}</th>
                                 <th>{{ __('Importe') }}</th>
-                                <th>{{ __('Depositos') }}</th>
+                                <th>{{ __('Depósitos') }}</th>
                                 <th>{{ __('Fecha de deposito') }}</th>
                                 <th>{{ __('Costo Cubierto') }}</th>
                             </thead>
@@ -403,7 +403,7 @@
         <div class="col-lg-6">
             <div class="card card-tasks">
                 <div class="card-header">
-                    <h3 class="card-title mt-2">Ultima Actualización de Precios</h3>
+                    <h3 class="card-title mt-2">Última Actualización de Precios</h3>
                 </div>
                 <div class="card-body pt-0 pb-0">
                     <div class="table-full-width table-responsive">

@@ -232,7 +232,7 @@
                       id="datatables_2" style="width:100%" width="100%">
                     <thead class="text-primary">
                       <th>{{ __('#') }}</th>
-                      <th>{{ __('Estacion')}}</th>
+                      <th>{{ __('Estación')}}</th>
                       <th>{{ __('Descripción')}}</th>
                       <th>{{ __('Costo')}}</th>
                       <th>{{ __('Costo cubierto') }}</th>

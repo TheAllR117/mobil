@@ -357,7 +357,7 @@
                     var costo_apro = dividir(multiplicar(parseFloat( $('#input-costo_aprox').val())));
 
                     if(suma_disponible_saldo >= costo_apro) {
-                        demo.showNotification('top','center', 'credito y saldo suficientes para comprar.', 'tim-icons icon-bell-55', '4');
+                        demo.showNotification('top','center', 'Crédito y saldo suficientes para comprar.', 'tim-icons icon-bell-55', '4');
                         $('#input-saldo1').val(0);
 
                         $('#input-credito_usado').val(dividir( multiplicar(suma_disponible_saldo) - multiplicar($('#input-costo_aprox').val())) ) ;
@@ -366,12 +366,12 @@
                     }else{
 
                         $('#input-saldo1').val($('#input-saldo').val());
-                        demo.showNotification('top','center', 'credito y saldo insuficientes para realizar la compra.', 'tim-icons icon-bell-55', '4');
+                        demo.showNotification('top','center', 'Crédito y saldo insuficientes para realizar la compra.', 'tim-icons icon-bell-55', '4');
                         // $("#guardar").addClass("ocultar");
                     }
 
                     }else{
-                        demo.showNotification('top','center','credito insuficientes para comprar', 'tim-icons icon-bell-55', '4');
+                        demo.showNotification('top','center','Crédito insuficientes para comprar', 'tim-icons icon-bell-55', '4');
                         // $("#guardar").addClass("ocultar");
                     }
                 }
@@ -381,17 +381,17 @@
                 if(parseFloat($('#input-disponible').val()) != 0 && parseFloat($('#input-disponible').val()) >= 100000){
 
                     if(parseFloat($('#input-disponible').val()) > parseFloat( $('#input-costo_aprox').val())) {
-                        demo.showNotification('top', 'center','No hay saldo pero si credito suficiente', 'tim-icons icon-bell-55', '4');
+                        demo.showNotification('top', 'center','No hay saldo pero si Crédito suficiente', 'tim-icons icon-bell-55', '4');
                         $('#input-credito_usado').val(dividir( multiplicar($('#input-disponible').val()) - multiplicar($('#input-costo_aprox').val())) ) ;
                         // $("#guardar").removeClass("ocultar");
                     }else{
-                        demo.showNotification('top','center','credito insuficiente', 'tim-icons icon-bell-55', '4');
+                        demo.showNotification('top','center','Crédito insuficiente', 'tim-icons icon-bell-55', '4');
                         // $("#guardar").addClass("ocultar");
                     }
 
                 } else {
                     document.getElementById('btn-guardar-div').style.display = "none";
-                    demo.showNotification('top','center', 'Excediste tu linea de credito.', 'tim-icons icon-bell-55', '4');
+                    demo.showNotification('top','center', 'Excediste tu linea de Crédito.', 'tim-icons icon-bell-55', '4');
                     // $("#guardar").addClass("ocultar");
                 }
 

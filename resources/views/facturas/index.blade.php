@@ -439,12 +439,12 @@
               <div class="row">
                 <div class="col-sm-4">
                   <div class="form-group">
-                    <input type="number" class="form-control" placeholder="Costo final" name="costo_real">
+                    <input type="number" step="0.001" class="form-control" placeholder="Costo final" name="costo_real">
                   </div>
                 </div>
                 <div class="col-sm-4">
                   <div class="form-group">
-                      <input type="number" class="form-control" placeholder="Litros finales" name="litros_final">
+                      <input type="number" step="0.001" class="form-control" placeholder="Litros finales" name="litros_final">
                   </div>
                 </div>
             

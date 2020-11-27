@@ -106,14 +106,16 @@
                   <div class="form-group{{ $errors->has('razon_social') ? ' has-danger' : '' }} col-md-3">
                     <label for="input-razon_social">Estacion</label>
                     <select id="input-razon_social" name="razon_social[]" class="selectpicker show-menu-arrow{{ $errors->has('razon_social') ? ' is-invalid' : '' }}" multiple  data-style="btn-primary" data-live-search="true" data-width="100%">
-                    @foreach($user->estacions as $estaci)
-                      @foreach($estacion as $esta)
-                        @if($esta->id == $estaci->id)
-                          <option value="{{ $esta->id }}" selected>{{ $esta->nombre_sucursal }}</option>
-                        @else
-                          <option value="{{ $esta->id }}">{{ $esta->nombre_sucursal }}</option>
-                        @endif
-                      @endforeach
+                    @foreach($estaciones_sele as $estaci)
+                      <option value="{{ $estaci->id }}" selected>{{ $estaci->nombre_sucursal }}</option>
+                    @endforeach
+
+                    @foreach($estacion as $esta)
+                      @if($esta->nombre_sucursal == '*')
+                      <option value="{{ $esta->id }}">Todas</option>
+                      @else
+                      <option value="{{ $esta->id }}">{{ $esta->nombre_sucursal }}</option>
+                      @endif
                     @endforeach
                     </select>
                   </div>

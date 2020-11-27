@@ -87,9 +87,20 @@ class UserController extends Controller
         $request->user()->authorizeRoles(['Administrador']);
         
         //cargamos la informacion para llenar los selects de la vista editar
-        $estacion = Estacion::all();
+        //return $user->estacions;
+
+        $estaciones = array();
+
+        for($i=0; $i<count($user->estacions); $i++){
+            array_push($estaciones, $user->estacions[$i]->nombre_sucursal);
+        }        
+        
+        $estacion = Estacion::whereNotIn('nombre_sucursal', $estaciones)->get();
+
+        $estaciones_sele = Estacion::whereIn('nombre_sucursal', $estaciones)->get();
+
         $roles = Role::all();
-        return view('users.edit', compact('user','estacion','roles'));
+        return view('users.edit', compact('user','estacion','estaciones_sele','roles'));
     }
 
     /**

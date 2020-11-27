@@ -525,7 +525,7 @@
                                         <p class="title text-info">{{ $estacion_1->nombre_sucursal }}</p>
                                         <p class="text-muted">Saldo ${{ number_format($estacion_1->saldo, 2) }}</p>
                                         <p class="text-muted">Crédito ${{ number_format($estacion_1->credito, 2) }}</p>
-                                        <p class="text-muted">Crédito Utilizado ${{ number_format($estacion_1->credito_utilizado, 2) }}</p>
+                                        <p class="text-muted">Crédito Utilizado ${{ number_format($estacion_1->credito_usado, 2) }}</p>
                                     </td>
                                     <td class="td-actions text-right">
                                         <a class="btn btn-danger btn-link" data-original-title=""

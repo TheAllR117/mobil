@@ -95,7 +95,7 @@
                   </div>
                 </div>
                 <div class="col-7 col-sm-7">
-                  <strong class="text-dark">Crédito total</strong><br>
+                  <strong class="text-dark">Limite de crédito</strong><br>
                   ${{ number_format($estacion->credito,2) }}
                 </div>
               </div>
@@ -107,7 +107,7 @@
                   </div>
                 </div>
                 <div class="col-7 col-sm-7">
-                  <strong class="text-dark">Crédito utilizado</strong><br>
+                  <strong class="text-dark">Saldo Actual</strong><br>
                   ${{ number_format($estacion->credito_usado,2) }}
                 </div>
               </div>

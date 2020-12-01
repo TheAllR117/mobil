@@ -109,11 +109,11 @@
                                     <td>
                                         <p class="title text-info">{{ $estacion_1->nombre_sucursal }}</p>
                                         <p class="text-muted">Saldo ${{ number_format($estacion_1->saldo, 2) }}</p>
-                                        <p class="text-muted">Crédito ${{ number_format($estacion_1->credito, 2) }}</p>
+                                        <p class="text-muted">Limite de crédito ${{ number_format($estacion_1->credito, 2) }}</p>
                                         @if($estacion_1->credito_usado > $estacion_1->credito)
-                                        <p class="text-danger">Crédito utilizado ${{ number_format($estacion_1->credito_usado, 2) }}</p>
+                                        <p class="text-danger">Saldo actual ${{ number_format($estacion_1->credito_usado, 2) }}</p>
                                         @else
-                                        <p class="text-muted">Crédito utilizado ${{ number_format($estacion_1->credito_usado, 2) }}</p>
+                                        <p class="text-muted">Saldo actual ${{ number_format($estacion_1->credito_usado, 2) }}</p>
                                         @endif
                                     </td>
                                     <td class="td-actions text-right">
@@ -524,8 +524,8 @@
                                     <td>
                                         <p class="title text-info">{{ $estacion_1->nombre_sucursal }}</p>
                                         <p class="text-muted">Saldo ${{ number_format($estacion_1->saldo, 2) }}</p>
-                                        <p class="text-muted">Crédito ${{ number_format($estacion_1->credito, 2) }}</p>
-                                        <p class="text-muted">Crédito Utilizado ${{ number_format($estacion_1->credito_usado, 2) }}</p>
+                                        <p class="text-muted">Limite de crédito ${{ number_format($estacion_1->credito, 2) }}</p>
+                                        <p class="text-muted">Saldo actual ${{ number_format($estacion_1->credito_usado, 2) }}</p>
                                     </td>
                                     <td class="td-actions text-right">
                                         <a class="btn btn-danger btn-link" data-original-title=""

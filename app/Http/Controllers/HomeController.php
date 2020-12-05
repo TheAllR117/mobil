@@ -172,12 +172,12 @@ class HomeController extends Controller
         //información de las estaciones
         if($request->id == "*"){
             $info_estaciones = Estacion::where('nombre_sucursal', '!=' ,$request->id)->orderBy('nombre_sucursal')->get();
-            //$info_estaciones = Estacion::where('nombre_sucursal', '!=', 10)->orderBy('nombre_sucursal')->get();
+            //$info_estaciones = Estacion::where('nombre_sucursal', '!=', '*')->orderBy('nombre_sucursal')->get();
         } else {
             $info_estaciones = Estacion::where('id', $request->id)->orderBy('nombre_sucursal')->get();
-            //$info_estaciones = Estacion::where('id', 10)->orderBy('nombre_sucursal')->get();
+            //$info_estaciones = Estacion::where('id', 55)->orderBy('nombre_sucursal')->get();
         }
-        
+        $array_titulo = [];
         $array_ventas_estaciones = [];
         $array_facturas_estacione = [];
         $array_ventas_estaciones_final = [];
@@ -187,10 +187,36 @@ class HomeController extends Controller
         $total_abonado = 0;
 
         foreach($info_estaciones as $estacion){
+            array_push($array_titulo, '<p class="title text-dark">'.$estacion->nombre_sucursal.'</p>');
+            array_push($array_titulo, '');
+            array_push($array_titulo, '');
+            array_push($array_titulo, '');
+            array_push($array_titulo, '');
+            array_push($array_titulo, '');
+            array_push($array_titulo, '');
+
+            array_push($array_ventas_estaciones_final, $array_titulo);
+
+            $array_titulo = [];
+
+            array_push($array_titulo, '');
+            array_push($array_titulo, '<p class="title text-dark">Fecha</p>');
+            array_push($array_titulo, '<p class="title text-dark">Concepto</p>');
+            array_push($array_titulo, '<p class="title text-dark">Descripción</p>');
+            array_push($array_titulo, '<p class="title text-dark">Cargos</p>');
+            array_push($array_titulo, '<p class="title text-dark">Depósitos</p>');
+            array_push($array_titulo, '<p class="title text-dark">Costo Cubierto</p>');
+
+            array_push($array_ventas_estaciones_final, $array_titulo);
+
+            $array_titulo = [];
+
             foreach($estacion->orders->where('status_id', '<=',5)->whereBetween('created_at', [$request->ini, date("Y-m-d", strtotime($request->fin."+ 1 days"))]) as $ventas){
+                array_push($array_ventas_estaciones, '');
                 array_push($array_ventas_estaciones, Carbon::parse($ventas->fecha_expiracion)->format('d/m/Y'));
-                array_push($array_ventas_estaciones, $estacion->nombre_sucursal);
+                array_push($array_ventas_estaciones, 'Venta');
                 array_push($array_ventas_estaciones, $ventas->po.'-'.$ventas->producto.'-'.number_format($ventas->cantidad_lts, 0));
+                
                 if($ventas->costo_real == ''){
                     $total_importe = $total_importe + $ventas->costo_aprox;
                     array_push($array_ventas_estaciones, '$'. number_format($ventas->costo_aprox, 2));
@@ -199,69 +225,49 @@ class HomeController extends Controller
                     $total_importe = $total_importe + $ventas->costo_real;
                     array_push($array_ventas_estaciones, number_format($ventas->costo_real, 2));
                 }
-
-                if(count($ventas->orderpayment)> 0){
-                    array_push($array_ventas_estaciones, '$'. number_format($ventas->orderpayment[0]->cantidad, 2));
-                    array_push($array_ventas_estaciones, Carbon::parse($ventas->orderpayment[0]->deposit_date)->format('d/m/Y'));
-                }else{
-                    array_push($array_ventas_estaciones, '');
-                    array_push($array_ventas_estaciones, '');
-                }
-                array_push($array_ventas_estaciones, '$'. number_format($ventas->orderpayment->where('id_status', 2)->sum('cantidad'), 2));
-                
+                array_push($array_ventas_estaciones, '');
                 array_push($array_ventas_estaciones, number_format($ventas->total_abonado, 2));
+
                 array_push($array_ventas_estaciones_final, $array_ventas_estaciones);
                 $array_ventas_estaciones = [];
 
                 foreach($ventas->orderpayment->where('id_status', 2) as $key => $orderBill){
-                    if($key >= 1){
-                        array_push($array_ventas_estaciones, '');
-                        array_push($array_ventas_estaciones, '');
-                        array_push($array_ventas_estaciones, '');
-                        array_push($array_ventas_estaciones, '');
-                        array_push($array_ventas_estaciones, '$'.number_format($orderBill->cantidad, 2));
-                        array_push($array_ventas_estaciones, Carbon::parse($orderBill->deposit_date)->format('d/m/Y'));
-                        array_push($array_ventas_estaciones, '');
-
-                        array_push($array_ventas_estaciones_final, $array_ventas_estaciones);
-                        $array_ventas_estaciones = [];
-                    }
+                    array_push($array_ventas_estaciones, '');
+                    array_push($array_ventas_estaciones, Carbon::parse($orderBill->deposit_date)->format('d/m/Y'));
+                    array_push($array_ventas_estaciones, 'Depósito');
+                    array_push($array_ventas_estaciones, '');
+                    array_push($array_ventas_estaciones, '');
+                    array_push($array_ventas_estaciones, '$'.number_format($orderBill->cantidad, 2));
+                    array_push($array_ventas_estaciones, '');
+                    array_push($array_ventas_estaciones_final, $array_ventas_estaciones);
+                    $array_ventas_estaciones = [];
                 }
                 
                 $total_abonado = $total_abonado + $ventas->total_abonado;
             }
             
             foreach($estacion->differentbill->whereBetween('created_at', [$request->ini, date("Y-m-d", strtotime($request->fin."+ 1 days"))]) as $factura){
+                array_push($array_facturas_estacione, '');
                 array_push($array_facturas_estacione, Carbon::parse($factura->expiration_date)->format('d/m/Y'));
-                array_push($array_facturas_estacione, $estacion->nombre_sucursal);
+                array_push($array_facturas_estacione, 'Diversa');
                 array_push($array_facturas_estacione, $factura->description);
                 array_push($array_facturas_estacione, '$'. number_format($factura->quantity, 2));
-                if(count($factura->differentbills)> 0){
-                    array_push($array_facturas_estacione, '$'. number_format($factura->differentbills[0]->cantidad, 2));
-                    array_push($array_facturas_estacione, Carbon::parse($factura->differentbills[0]->deposit_date)->format('d/m/Y'));
-                }else{
-                    array_push($array_facturas_estacione, '');
-                    array_push($array_facturas_estacione, '');
-                }
+                array_push($array_facturas_estacione, '');
                 array_push($array_facturas_estacione, '$'. number_format($factura->differentbills->where('id_status', 2)->sum('cantidad'), 2));
-                
                 array_push($array_ventas_estaciones_final, $array_facturas_estacione);
 
                 $array_facturas_estacione = [];
 
                 foreach($factura->differentbills->where('id_status', 2) as $key => $bill){
-                    if($key >= 1){
-                        array_push($array_facturas_estacione, '');
-                        array_push($array_facturas_estacione, '');
-                        array_push($array_facturas_estacione, '');
-                        array_push($array_facturas_estacione, '');
-                        array_push($array_facturas_estacione, '$'.number_format($bill->cantidad, 2));
-                        array_push($array_facturas_estacione, Carbon::parse($bill->deposit_date)->format('d/m/Y'));
-                        array_push($array_facturas_estacione, '');
-
-                        array_push($array_ventas_estaciones_final, $array_facturas_estacione);
-                        $array_facturas_estacione = [];
-                    }
+                    array_push($array_facturas_estacione, '');
+                    array_push($array_facturas_estacione, Carbon::parse($bill->deposit_date)->format('d/m/Y'));
+                    array_push($array_facturas_estacione, 'Depósito');
+                    array_push($array_facturas_estacione, '');
+                    array_push($array_facturas_estacione, '');
+                    array_push($array_facturas_estacione, '$'.number_format($bill->cantidad, 2));
+                    array_push($array_facturas_estacione, '');
+                    array_push($array_ventas_estaciones_final, $array_facturas_estacione);
+                    $array_facturas_estacione = [];
                 }
 
                 $total_importe = $total_importe + $factura->quantity;

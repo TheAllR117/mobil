@@ -129,7 +129,7 @@
             <div class="card bg-blue">
                 <div class="card-header card-header-primary">
                     <div class="row">
-                        <div class="col-sm-5">
+                        <div class="col-sm-4">
                             <h4 class="card-title text-white p-0 m-0">{{ __('Estado de Cuenta') }}</h4>
                         </div>
                         <div class="col-sm-2">
@@ -151,6 +151,13 @@
                                     @endforeach
                                 </select>
                             </div>
+                        </div>
+                        <div class="col-sm-1">
+                            
+                            <button class="btn btn-round mt-0" data-toggle="modal" data-target="#loginModal" id="select_dash_info_estado_button">
+                                <i class="tim-icons icon-zoom-split"></i>
+                            </button>
+                           
                         </div>
                     </div>
                 </div>

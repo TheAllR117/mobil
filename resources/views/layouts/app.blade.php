@@ -118,7 +118,7 @@
         <script>
 
             // funciones para la pagina de dashboard
-            $('#select_dash_info_estado').change(function(){
+            $('#select_dash_info_estado_button').on( "click", function(){
 
                 $.ajax({
                     url: 'search',
@@ -146,10 +146,10 @@
                             );
                         }
                         $("#table_dash_info_estado").find('tbody').append(
-                            '<tr><td colspan="3" class="text-right"></td><td>$'+response.total_importe.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+'</td><td colspan="2"></td><td>$'+response.total_abonado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+'</td></tr>'
+                            '<tr><td colspan="4" class="text-right"></td><td>$'+response.total_importe.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+'</td><td></td><td>$'+response.total_abonado.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+'</td></tr>'
                         );
                         $("#table_dash_info_estado").find('tbody').append(
-                            '<tr><td colspan="3" scope="row" class="text-right">Total:</td><td>$'+(response.total_importe - response.total_abonado).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+'</td><td colspan="3"></td></tr>'
+                            '<tr><td colspan="4" scope="row" class="text-right">Total:</td><td>$'+(response.total_importe - response.total_abonado).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+'</td><td colspan="2"></td></tr>'
                         );
                     }
                 })

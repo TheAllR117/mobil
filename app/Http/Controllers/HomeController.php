@@ -162,7 +162,7 @@ class HomeController extends Controller
         }
 
         //return geoip_continent_code_by_name($nombre_estacion[1]);
-        return view('dashboard', compact('fechas', 'terminales','estacion_total', 'saldo_total', 'pipas_total','abonos_pendientes', 'estaciones_deudoras','precios_actuales_estaciones', 'estaciones_info', 'order_totales', 'nombre_estacion', 'ventas_estacion', 'nombre_del_mes','meses_extra', 'meses_supreme', 'meses_diesel', 'info_pedidos', 'info_facturas', 'info_facturas_pagos'));
+        return view('dashboard', compact('terminales','estacion_total', 'saldo_total', 'pipas_total','abonos_pendientes', 'estaciones_deudoras','precios_actuales_estaciones', 'estaciones_info', 'order_totales', 'nombre_estacion', 'ventas_estacion', 'nombre_del_mes','meses_extra', 'meses_supreme', 'meses_diesel', 'info_pedidos', 'info_facturas', 'info_facturas_pagos'));
     }
 
     public function search(Request $request)
